@@ -6,4 +6,5 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
 {
     resize(1080, 1080);
     
+    this->config = new Config();
 }

@@ -48,12 +48,14 @@ QT += widgets
 
 # Input
 HEADERS += \
-    src/main_window.h
+    src/main_window.h \
+    src/config.h
     
 
 SOURCES += \
     src/trinitrotoluol.cpp \
-    src/main_window.cpp
+    src/main_window.cpp \
+    src/config.cpp
 
 RESOURCES += \
     resources.qrc
