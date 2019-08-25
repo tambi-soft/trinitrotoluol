@@ -37,7 +37,6 @@ Config::Config(QObject *parent) : QObject(parent)
     }
     
     this->settings = new QSettings(config_file->fileName(), QSettings::IniFormat);
-    //this->deckpath_var = this->settings->value("kulanday/deckpath").toString();
     
     initializeWithDefaultValues(config_dir);
 }
@@ -45,7 +44,7 @@ Config::Config(QObject *parent) : QObject(parent)
 void Config::initializeWithDefaultValues(QDir *config_dir)
 {
     QString path = this->settings->value("tnt/db_path").toString();
-    if (path == 0)
+    if (path == nullptr)
     {
         this->settings->setValue("tnt/db_path", config_dir->absolutePath());
         this->settings->sync();

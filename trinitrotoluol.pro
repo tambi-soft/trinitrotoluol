@@ -44,18 +44,23 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 CONFIG += qt debug #release
 #CONFIG += qt release
-QT += widgets
+QT += widgets \
+    sql
 
 # Input
 HEADERS += \
     src/main_window.h \
-    src/config.h
+    src/config.h \
+    src/db_adapter.h \
+    src/people_list.h
     
 
 SOURCES += \
+    src/people_list.cpp \
     src/trinitrotoluol.cpp \
     src/main_window.cpp \
-    src/config.cpp
+    src/config.cpp \
+    src/db_adapter.cpp
 
 RESOURCES += \
     resources.qrc
