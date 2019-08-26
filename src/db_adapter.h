@@ -19,8 +19,8 @@ class DbAdapter : public QObject
 public:
     explicit DbAdapter(Config *config, QObject *parent = nullptr);
     void insertNewPerson(QString name, QString group, QString email, QString address, QString phone);
-    QList<QMap<QString, QVariant>> selectPerson(qlonglong id);
-    QList<QMap<QString, QVariant> > selectAllPerons();
+    QMap<QString, QString> selectPerson(qlonglong id);
+    QList<QMap<QString, QVariant> > selectAllPersons();
     
 private:
     QSqlDatabase db;

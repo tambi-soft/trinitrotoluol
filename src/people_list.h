@@ -3,9 +3,12 @@
 
 #include <QObject>
 #include <QWidget>
-#include <QTabWidget>
+#include <QTableWidget>
+#include <QTableWidgetItem>
+#include <QAbstractItemView>
 #include <QVBoxLayout>
 #include <QPushButton>
+#include <QIcon>
 
 #include "db_adapter.h"
 
@@ -14,9 +17,10 @@ class PeopleList : public QWidget
     Q_OBJECT
 public:
     explicit PeopleList(DbAdapter *db, QWidget *parent = nullptr);
+    void showPeople();
     
 private:
-    QTabWidget *table_widget = new QTabWidget();
+    QTableWidget *table_widget = new QTableWidget();
     DbAdapter *db;
     
 signals:

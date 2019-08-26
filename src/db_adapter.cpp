@@ -74,17 +74,29 @@ void DbAdapter::initializeTables()
         \"agreed_mail\"	INTEGER,\
         \"agreed_prayer\"	INTEGER,\
         \"agreement\"	TEXT,\
+        \"date_collected\"  INTEGER,\
+        \"date_last_changed\" INTEGER,\
         \"notes\"	TEXT\
     )", this->db);
     
     QSqlQuery query_view_groups("CREATE VIEW IF NOT EXISTS groups AS\
         SELECT \"group\" FROM people GROUP BY \"group\";", this->db);
+    
+    QSqlQuery query_sent_mail("CREATE TABLE IF NOT EXISTS \"mail_sent\" (\
+        \"people_rowid\"    INTEGER,\
+        \"mail_id\"         INTEGER,\
+        \"mail_number\"     INTEGER,\
+        \"date\"            INTEGER\
+    )", this->db);
+    
+    //qDebug() << this->db.lastError();
+    //qDebug() << query_sent_mail.lastQuery();
 }
 
 void DbAdapter::insertNewPerson(QString name, QString group, QString email, QString address, QString phone)
 {
     QSqlQuery query(this->db);
-    query.prepare("INSERT INTO people (name, group, email, address, phone) VALUES (:name, :group, :email, :address, :phone)");
+    query.prepare("INSERT INTO people (\"name\", \"group\", \"email\", \"address\", \"phone\") VALUES (:name, :group, :email, :address, :phone)");
     query.bindValue(":name", name);
     query.bindValue(":group", group);
     query.bindValue(":email", email);
@@ -93,18 +105,18 @@ void DbAdapter::insertNewPerson(QString name, QString group, QString email, QStr
     query.exec();
 }
 
-QList<QMap<QString,QVariant>> DbAdapter::selectPerson(qlonglong id)
+QMap<QString,QString> DbAdapter::selectPerson(qlonglong id)
 {
     QSqlQuery query(this->db);
-    query.prepare("SELECT name, group, email, address, phone FROME people WHERE id=:id");
+    query.prepare("SELECT \"name\", \"group\", \"email\", \"address\", \"phone\" FROME people WHERE id=:id");
     query.bindValue(":id", id);
     
-    return dbIteratorToMapList(query);
+    return dbIteratorToMap(query);
 }
 
-QList<QMap<QString,QVariant>> DbAdapter::selectAllPerons()
+QList<QMap<QString,QVariant>> DbAdapter::selectAllPersons()
 {
-    QSqlQuery query("SELECT name, group, email, address, phone FROM people", this->db);
+    QSqlQuery query("SELECT \"name\", \"group\", \"email\", \"agreed_mail\", \"agreed_prayer\", \"agreement\" FROM people", this->db);
     
     return dbIteratorToMapList(query);
 }
