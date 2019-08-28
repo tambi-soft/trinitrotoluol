@@ -12,6 +12,8 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
     this->people_list = new PeopleList(this->db, this);
     connect(this->people_list, &PeopleList::editPersonSignal, this, &QTNTMainWindow::addPersonEditTab);
     
+    connect(this->tab_widget, &QTabWidget::tabCloseRequested, this, &QTNTMainWindow::closeTab);
+    
     setCentralWidget(this->tab_widget);
     tab_widget->setTabsClosable(true);
     tab_widget->setMovable(true);
@@ -25,17 +27,49 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
 
 void QTNTMainWindow::onTabMoved(int from, int to)
 {
-    
+    // adjust the map to match the new tab ids
+    for (auto k : this->open_tabs.keys())
+    {
+        int value = this->open_tabs[k];
+        
+        if (value == from)
+        {
+            this->open_tabs[k] = to;
+        }
+        if (value == to)
+        {
+            this->open_tabs[k] = from;
+        }
+        
+    }
 }
 
 void QTNTMainWindow::activateNewTab()
 {
-    this->tab_widget->setCurrentIndex(tab_widget->count()-1);
+    this->tab_widget->setCurrentIndex(this->tab_widget->count()-1);
 }
 
 void QTNTMainWindow::closeTab(int tab_id)
 {
+    QWidget *tab_to_delete = tab_widget->widget(tab_id);
+    tab_widget->removeTab(tab_id);
+    tab_to_delete->deleteLater();
     
+    // We want to have a "deck item widget" just open once for every deck to avoid synchronization issues. We keep track of them by storing every active instance in the map open_tabs. So on closing an according widget, we need to update the map accordingly.
+    for (auto k : this->open_tabs.keys())
+    {
+        int value = this->open_tabs[k];
+        // remove key->value pair from the map
+        if (value == tab_id)
+        {
+            this->open_tabs.remove(k);
+        }
+        // adjust the map to match the new tab ids
+        else if (value > tab_id)
+        {
+            this->open_tabs[k] = value -1;
+        }
+    }
 }
 
 void QTNTMainWindow::deactivatePeopleListCloseButton()
@@ -46,6 +80,17 @@ void QTNTMainWindow::deactivatePeopleListCloseButton()
 
 void QTNTMainWindow::addPersonEditTab(qlonglong rowid, QString name)
 {
-    PersonEdit *person = new PersonEdit(this->db, rowid);
-    this->tab_widget->addTab(person, "Edit: "+name);
+    QString tab_name = "Edit: "+name;
+    if (this->open_tabs.contains(tab_name))
+    {
+        int index = this->open_tabs[tab_name];
+        this->tab_widget->setCurrentIndex(index);
+    }
+    else
+    {
+        PersonEdit *person = new PersonEdit(this->db, rowid);
+        this->tab_widget->addTab(person, tab_name);
+        activateNewTab();
+        this->open_tabs[tab_name] = this->tab_widget->currentIndex();
+    }
 }

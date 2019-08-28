@@ -25,6 +25,7 @@ private:
     PeopleList *people_list;
     DbAdapter *db;
     void deactivatePeopleListCloseButton();
+    QMap<QString, int> open_tabs; // {tab_name} -> tab widget id
     
     
 private slots:
