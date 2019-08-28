@@ -125,14 +125,14 @@ QMap<QString,QString> DbAdapter::selectPerson(qlonglong id)
 
 QList<QMap<QString,QVariant>> DbAdapter::selectAllPersons()
 {
-    QSqlQuery query("SELECT \"name\", \"group\", \"email\", \"agreed_mail\", \"agreed_prayer\", \"agreement\" FROM people", this->db);
+    QSqlQuery query("SELECT rowid, \"name\", \"group\", \"email\", \"agreed_mail\", \"agreed_prayer\", \"agreement\" FROM people", this->db);
     
     return dbIteratorToMapList(query);
 }
 QList<QMap<QString,QVariant>> DbAdapter::selectAllPersonsFiltered(QString filter)
 {
     QSqlQuery query(this->db);
-    query.prepare("SELECT \"name\", \"group\", \"email\", \"agreed_mail\", \"agreed_prayer\", \"agreement\" FROM people WHERE \"group\"=:group");
+    query.prepare("SELECT rowid, \"name\", \"group\", \"email\", \"agreed_mail\", \"agreed_prayer\", \"agreement\" FROM people WHERE \"group\"=:group");
     query.bindValue(":group", filter);
     query.exec();
     

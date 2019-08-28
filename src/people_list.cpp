@@ -74,6 +74,9 @@ void PeopleList::showPeople()
         
         QPushButton *button_edit = new QPushButton("edit");
         button_edit->setMaximumWidth(40);
+        qlonglong rowid = person["rowid"].toLongLong();
+        QString name = person["name"].toString();
+        connect(button_edit, &QPushButton::clicked, this, [this, rowid, name]{ PeopleList::onEditPersonButtonClicked(rowid, name); });
         
         this->table_widget->setCellWidget(i, 0, button_edit);
         this->table_widget->setItem(i, 1, new QTableWidgetItem(person["name"].toString()));
@@ -113,6 +116,9 @@ void PeopleList::onGroupsFilterChanged()
 void PeopleList::onNewPersonButtonClicked()
 {
     
-    
-    
+}
+
+void PeopleList::onEditPersonButtonClicked(qlonglong rowid, QString name)
+{
+    emit editPersonSignal(rowid, name);
 }

@@ -31,10 +31,12 @@ private:
     QLineEdit *line_edit_filter;
     
 signals:
+    void editPersonSignal(qlonglong rowid, QString name);
     
 public slots:
     void onGroupsFilterChanged();
     void onNewPersonButtonClicked();
+    void onEditPersonButtonClicked(qlonglong rowid, QString name);
 };
 
 #endif // PEOPLE_LIST_H

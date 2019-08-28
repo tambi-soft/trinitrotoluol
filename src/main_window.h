@@ -10,6 +10,7 @@
 #include "config.h"
 #include "people_list.h"
 #include "db_adapter.h"
+#include "person_edit.h"
 
 class QTNTMainWindow : public QMainWindow
 {
@@ -23,7 +24,14 @@ private:
     QTabWidget *tab_widget;
     PeopleList *people_list;
     DbAdapter *db;
+    void deactivatePeopleListCloseButton();
+    
     
 private slots:
     void onTabMoved(int from, int to);
+    void activateNewTab();
+    void closeTab(int tab_id);
+    
+    void addPersonEditTab(qlonglong rowid, QString name);
+    
 };
