@@ -21,6 +21,8 @@ public:
     void insertNewPerson(QString name, QString group, QString email, QString address, QString phone);
     QMap<QString, QString> selectPerson(qlonglong id);
     QList<QMap<QString, QVariant> > selectAllPersons();
+    QList<QMap<QString, QVariant> > selectAllPersonsFiltered(QString filter);
+    QList<QMap<QString, QVariant> > selectGroups();
     
 private:
     QSqlDatabase db;

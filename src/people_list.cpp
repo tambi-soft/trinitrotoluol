@@ -3,29 +3,57 @@
 PeopleList::PeopleList(DbAdapter *db, QWidget *parent)
     : QWidget(parent)
     , table_widget (new QTableWidget)
+    , combo_groups (new QComboBox)
+    , line_edit_filter (new QLineEdit)
 {
     this->db = db;
     
-    QVBoxLayout *layout = new QVBoxLayout;
-    setLayout(layout);
-    layout->addWidget(this->table_widget);
+    this->layout = new QVBoxLayout;
+    setLayout(this->layout);
+    this->layout->addWidget(this->combo_groups);
+    this->layout->addWidget(this->table_widget);
     
     QPushButton *button_add_new_person = new QPushButton("add new person");
     layout->addWidget(button_add_new_person);
     
+    connect(combo_groups, &QComboBox::currentTextChanged, this, &PeopleList::onGroupsFilterChanged);
+    connect(button_add_new_person, &QPushButton::clicked, this, &PeopleList::onNewPersonButtonClicked);
+    
+    showGroupsFilterCombo();
     showPeople();
     
     //this->db->insertNewPerson("name", "group", "email", "add", "phone");
 }
 
+void PeopleList::showGroupsFilterCombo()
+{
+    QList<QMap<QString,QVariant>> groups = this->db->selectGroups();
+    QList<QString> gr;
+    gr.append("[ALL]");
+    for (int i=1; i < groups.length(); ++i)
+    {
+        gr.append(groups.at(i)["group"].toString());
+    }
+    
+    this->combo_groups->addItems(gr);
+}
+
 void PeopleList::showPeople()
 {
-    QList<QMap<QString,QVariant>> people = this->db->selectAllPersons();
+    QList<QMap<QString,QVariant>> people;
+    if (this->combo_groups->currentText() != "[ALL]")
+    {
+        people = this->db->selectAllPersonsFiltered(this->combo_groups->currentText());
+    }
+    else
+    {
+        people = this->db->selectAllPersons();
+    }
     
     this->table_widget->setRowCount(people.length());
     if (people.length() > 0)
     {
-        this->table_widget->setColumnCount(people.at(1).keys().length());
+        this->table_widget->setColumnCount(people.at(0).keys().length());
     }
     
     for (int i=0; i < people.length(); ++i)
@@ -61,4 +89,30 @@ void PeopleList::showPeople()
     this->table_widget->setHorizontalHeaderLabels(labels);
     this->table_widget->resizeColumnsToContents();
     this->table_widget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+}
+
+void PeopleList::clear()
+{
+    this->combo_groups->clear();
+    this->table_widget->clear();
+}
+
+void PeopleList::onGroupsFilterChanged()
+{
+    /*
+    this->combo_groups->blockSignals(true);
+    clear();
+    showGroupsFilterCombo();
+    this->combo_groups->blockSignals(false);
+    */
+    
+    this->table_widget->clear();
+    showPeople();
+}
+
+void PeopleList::onNewPersonButtonClicked()
+{
+    
+    
+    
 }

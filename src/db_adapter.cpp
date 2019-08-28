@@ -66,6 +66,7 @@ void DbAdapter::initializeTables()
 {
     QSqlQuery query_table_people("CREATE TABLE IF NOT EXISTS \"people\" (\
         \"rowid\"	INTEGER PRIMARY KEY AUTOINCREMENT,\
+        \"donor_id\"    INTEGER,\
         \"name\"	TEXT,\
         \"group\"	TEXT,\
         \"email\"	TEXT,\
@@ -76,7 +77,11 @@ void DbAdapter::initializeTables()
         \"agreement\"	TEXT,\
         \"date_collected\"  INTEGER,\
         \"date_last_changed\" INTEGER,\
-        \"notes\"	TEXT\
+        \"notes\"	TEXT,\
+        \"donations_monthly\"   INTEGER,\
+        \"donations_monthly_promised\"  INTEGER,\
+        \"spouse_rowid\"    INTEGER,\
+        \"deactivated\"     INTEGER\
     )", this->db);
     
     QSqlQuery query_view_groups("CREATE VIEW IF NOT EXISTS groups AS\
@@ -88,6 +93,10 @@ void DbAdapter::initializeTables()
         \"mail_number\"     INTEGER,\
         \"date\"            INTEGER\
     )", this->db);
+    
+    QSqlQuery query_donations("CREATE VIEW IF NOT EXISTS donations_monthly AS\
+        SELECT SUM(donations_monthly) AS monthly_sum, SUM(donations_monthly_promised) AS monthly_sum_promised FROM people\
+    ", this->db);
     
     //qDebug() << this->db.lastError();
     //qDebug() << query_sent_mail.lastQuery();
@@ -117,6 +126,22 @@ QMap<QString,QString> DbAdapter::selectPerson(qlonglong id)
 QList<QMap<QString,QVariant>> DbAdapter::selectAllPersons()
 {
     QSqlQuery query("SELECT \"name\", \"group\", \"email\", \"agreed_mail\", \"agreed_prayer\", \"agreement\" FROM people", this->db);
+    
+    return dbIteratorToMapList(query);
+}
+QList<QMap<QString,QVariant>> DbAdapter::selectAllPersonsFiltered(QString filter)
+{
+    QSqlQuery query(this->db);
+    query.prepare("SELECT \"name\", \"group\", \"email\", \"agreed_mail\", \"agreed_prayer\", \"agreement\" FROM people WHERE \"group\"=:group");
+    query.bindValue(":group", filter);
+    query.exec();
+    
+    return dbIteratorToMapList(query);
+}
+
+QList<QMap<QString,QVariant>> DbAdapter::selectGroups()
+{
+    QSqlQuery query("SELECT \"group\" FROM \"groups\"", this->db);
     
     return dbIteratorToMapList(query);
 }
