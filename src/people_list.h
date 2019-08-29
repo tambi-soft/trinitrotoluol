@@ -32,11 +32,13 @@ private:
     
 signals:
     void editPersonSignal(qlonglong rowid, QString name);
+    void showDonationsForPersonSignal(qlonglong rowid);
     
 public slots:
     void onGroupsFilterChanged();
     void onNewPersonButtonClicked();
     void onEditPersonButtonClicked(qlonglong rowid, QString name);
+    void onShowDonationsButtonClicked(qlonglong rowid);
 };
 
 #endif // PEOPLE_LIST_H

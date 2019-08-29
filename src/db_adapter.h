@@ -19,7 +19,7 @@ class DbAdapter : public QObject
 public:
     explicit DbAdapter(Config *config, QObject *parent = nullptr);
     void insertNewPerson(QString name, QString group, QString email, QString address, QString phone);
-    QMap<QString, QString> selectPerson(qlonglong id);
+    QMap<QString, QVariant> selectPerson(qlonglong id);
     QList<QMap<QString, QVariant> > selectAllPersons();
     QList<QMap<QString, QVariant> > selectAllPersonsFiltered(QString filter);
     QList<QMap<QString, QVariant> > selectGroups();
@@ -28,7 +28,7 @@ private:
     QSqlDatabase db;
     
     QList<QMap<QString,QVariant>> dbIteratorToMapList(QSqlQuery query);
-    QMap<QString,QString> dbIteratorToMap(QSqlQuery query);
+    QMap<QString, QVariant> dbIteratorToMap(QSqlQuery query);
     
     void initializeTables();
     

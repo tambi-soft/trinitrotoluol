@@ -14,6 +14,9 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
     
     connect(this->tab_widget, &QTabWidget::tabCloseRequested, this, &QTNTMainWindow::closeTab);
     
+    this->menu_bar = new MenuBar();
+    setMenuBar(this->menu_bar);
+    
     setCentralWidget(this->tab_widget);
     tab_widget->setTabsClosable(true);
     tab_widget->setMovable(true);

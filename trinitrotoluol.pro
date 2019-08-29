@@ -52,13 +52,17 @@ HEADERS += \
     src/main_window.h \
     src/config.h \
     src/db_adapter.h \
+    src/menubar.h \
     src/people_list.h \
-    src/person_edit.h
+    src/person_edit.h \
+    src/tnt_adapter.h
     
 
 SOURCES += \
+    src/menubar.cpp \
     src/people_list.cpp \
     src/person_edit.cpp \
+    src/tnt_adapter.cpp \
     src/trinitrotoluol.cpp \
     src/main_window.cpp \
     src/config.cpp \

@@ -11,6 +11,7 @@
 #include "people_list.h"
 #include "db_adapter.h"
 #include "person_edit.h"
+#include "menubar.h"
 
 class QTNTMainWindow : public QMainWindow
 {
@@ -21,6 +22,7 @@ public:
     
 private:
     Config *config;
+    MenuBar *menu_bar;
     QTabWidget *tab_widget;
     PeopleList *people_list;
     DbAdapter *db;

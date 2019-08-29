@@ -49,14 +49,21 @@ QList<QMap<QString,QVariant>> DbAdapter::dbIteratorToMapList(QSqlQuery query)
     return result;
 }
 
-QMap<QString,QString> DbAdapter::dbIteratorToMap(QSqlQuery query)
+QMap<QString,QVariant> DbAdapter::dbIteratorToMap(QSqlQuery query)
 {
-    QMap<QString,QString> result;
+    QMap<QString,QVariant> result;
     
     QSqlRecord rec = query.record();
     while (query.next())
     {
-        result[ query.value(0).toString() ] = query.value(1).toString();
+        //result[ query.value(0).toString() ] = query.value(1).toString();
+        for (int i=0; i <= rec.count(); ++i)
+        {
+            QString name = rec.fieldName(i);
+            QVariant value = query.value(i);
+            
+            result[name] = value;
+        }
     }
     
     return result;
@@ -66,7 +73,7 @@ void DbAdapter::initializeTables()
 {
     QSqlQuery query_table_people("CREATE TABLE IF NOT EXISTS \"people\" (\
         \"rowid\"	INTEGER PRIMARY KEY AUTOINCREMENT,\
-        \"donor_id\"    INTEGER,\
+        \"tnt_id\"    INTEGER,\
         \"name\"	TEXT,\
         \"group\"	TEXT,\
         \"email\"	TEXT,\
@@ -114,11 +121,15 @@ void DbAdapter::insertNewPerson(QString name, QString group, QString email, QStr
     query.exec();
 }
 
-QMap<QString,QString> DbAdapter::selectPerson(qlonglong id)
+QMap<QString,QVariant> DbAdapter::selectPerson(qlonglong id)
 {
     QSqlQuery query(this->db);
-    query.prepare("SELECT \"name\", \"group\", \"email\", \"address\", \"phone\" FROME people WHERE id=:id");
+    query.prepare("SELECT b.\"name\" AS \"spouse_name\", a.tnt_id, a.name, a.\"group\", a.\"email\", a.\"address\", a.\"phone\", a.\"agreed_mail\", a.\"agreed_prayer\", a.\"agreement\", a.\"notes\", a.\"donations_monthly\", a.\"donations_monthly_promised\"\
+        FROM people a\
+        LEFT JOIN people b ON a.spouse_rowid=b.rowid\
+        WHERE a.rowid=:id");
     query.bindValue(":id", id);
+    query.exec();
     
     return dbIteratorToMap(query);
 }

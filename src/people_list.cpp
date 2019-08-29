@@ -72,23 +72,29 @@ void PeopleList::showPeople()
             prayer->setBackgroundColor(Qt::black);
         }
         
-        QPushButton *button_edit = new QPushButton("edit");
-        button_edit->setMaximumWidth(40);
         qlonglong rowid = person["rowid"].toLongLong();
         QString name = person["name"].toString();
+        
+        QPushButton *button_edit = new QPushButton("edit");
+        button_edit->setMaximumWidth(40);
         connect(button_edit, &QPushButton::clicked, this, [this, rowid, name]{ PeopleList::onEditPersonButtonClicked(rowid, name); });
         
+        QPushButton *button_donations = new QPushButton("donations");
+        button_donations->setMaximumWidth(90);
+        connect(button_donations, &QPushButton::clicked, this, []{  });
+        
         this->table_widget->setCellWidget(i, 0, button_edit);
-        this->table_widget->setItem(i, 1, new QTableWidgetItem(person["name"].toString()));
-        this->table_widget->setItem(i, 2, new QTableWidgetItem(person["group"].toString()));
-        this->table_widget->setItem(i, 3, new QTableWidgetItem(person["email"].toString()));
-        this->table_widget->setItem(i, 4, mail);
-        this->table_widget->setItem(i, 5, prayer);
-        this->table_widget->setItem(i, 6, new QTableWidgetItem(person["agreement"].toString()));
+        this->table_widget->setCellWidget(i, 1, button_donations);
+        this->table_widget->setItem(i, 2, new QTableWidgetItem(person["name"].toString()));
+        this->table_widget->setItem(i, 3, new QTableWidgetItem(person["group"].toString()));
+        this->table_widget->setItem(i, 4, new QTableWidgetItem(person["email"].toString()));
+        this->table_widget->setItem(i, 5, mail);
+        this->table_widget->setItem(i, 6, prayer);
+        this->table_widget->setItem(i, 7, new QTableWidgetItem(person["agreement"].toString()));
     }
     
     QStringList labels;
-    labels << "" << "name" << "group" << "email" << "m" << "p" << "agreement";
+    labels << "" << "" << "name" << "group" << "email" << "m" << "p" << "agreement";
     this->table_widget->setHorizontalHeaderLabels(labels);
     this->table_widget->resizeColumnsToContents();
     this->table_widget->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -121,4 +127,9 @@ void PeopleList::onNewPersonButtonClicked()
 void PeopleList::onEditPersonButtonClicked(qlonglong rowid, QString name)
 {
     emit editPersonSignal(rowid, name);
+}
+
+void PeopleList::onShowDonationsButtonClicked(qlonglong rowid)
+{
+    emit showDonationsForPersonSignal(rowid);
 }
