@@ -34,7 +34,7 @@ void PersonEdit::populateGUI()
     QLineEdit *edit_donations_monthly = new QLineEdit();
     QLineEdit *edit_donations_monthly_promised = new QLineEdit();
     
-    QLineEdit *edit_spouse = new QLineEdit();
+    QLabel *edit_spouse = new QLabel();
     
     edit_tnt_id->setText(person["tnt_id"].toString());
     edit_name->setText(person["name"].toString());
