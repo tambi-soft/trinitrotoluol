@@ -4,13 +4,32 @@ PeopleList::PeopleList(DbAdapter *db, QWidget *parent)
     : QWidget(parent)
     , table_widget (new QTableWidget)
     , combo_groups (new QComboBox)
-    , line_edit_filter (new QLineEdit)
+    , line_name_filter (new QLineEdit)
+    , line_mail_filter (new QLineEdit)
 {
     this->db = db;
     
     this->layout = new QVBoxLayout;
     setLayout(this->layout);
-    this->layout->addWidget(this->combo_groups);
+    
+    this->line_name_filter->setClearButtonEnabled(true);
+    this->line_name_filter->setPlaceholderText("type a name here to search");
+    connect(this->line_name_filter, &QLineEdit::textChanged, this, &PeopleList::onNameFilterChanged);
+    
+    this->line_mail_filter->setClearButtonEnabled(true);
+    this->line_mail_filter->setPlaceholderText("type a mail address here to search");
+    connect(this->line_mail_filter, &QLineEdit::textChanged, this, &PeopleList::onNameFilterChanged);
+    
+    // build together line_name_filter, line_mail_filter and combo_groups
+    QHBoxLayout *hbox_filters = new QHBoxLayout();
+    hbox_filters->setMargin(0);
+    hbox_filters->addWidget(this->line_name_filter);
+    hbox_filters->addWidget(this->line_mail_filter);
+    hbox_filters->addWidget(this->combo_groups);
+    QWidget *widget_filters = new QWidget();
+    widget_filters->setLayout(hbox_filters);
+    
+    this->layout->addWidget(widget_filters);
     this->layout->addWidget(this->table_widget);
     
     QPushButton *button_add_new_person = new QPushButton("add new person");
@@ -40,6 +59,7 @@ void PeopleList::showGroupsFilterCombo()
 
 void PeopleList::showPeople()
 {
+    /*
     QList<QMap<QString,QVariant>> people;
     if (this->combo_groups->currentText() != "[ALL]")
     {
@@ -49,6 +69,26 @@ void PeopleList::showPeople()
     {
         people = this->db->selectAllPersons();
     }
+    */
+    // if no filter set, just use the wildcard '%' for the sql query
+    QString str_filter_group = this->combo_groups->currentText();
+    if (str_filter_group == "[ALL]")
+    {
+        str_filter_group = "%";
+    }
+    QString str_filter_name = this->line_name_filter->text();
+    if (str_filter_name == "")
+    {
+        str_filter_name = "%";
+    }
+    QString str_filter_mail = this->line_mail_filter->text();
+    if (str_filter_mail == "")
+    {
+        str_filter_mail = "%";
+    }
+    QList<QMap<QString,QVariant>> people = this->db->selectAllPersonsFiltered(str_filter_group,
+                                                                              "%"+str_filter_name+"%",
+                                                                              "%"+str_filter_mail+"%");
     
     this->table_widget->setRowCount(people.length());
     if (people.length() > 0)
@@ -104,6 +144,12 @@ void PeopleList::clear()
 {
     this->combo_groups->clear();
     this->table_widget->clear();
+}
+
+void PeopleList::onNameFilterChanged()
+{
+    this->table_widget->clear();
+    showPeople();
 }
 
 void PeopleList::onGroupsFilterChanged()
