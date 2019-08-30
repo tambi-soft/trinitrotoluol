@@ -11,6 +11,7 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
     this->db = new DbAdapter(this->config);
     this->people_list = new PeopleList(this->db, this);
     connect(this->people_list, &PeopleList::editPersonSignal, this, &QTNTMainWindow::addPersonEditTab);
+    connect(this->people_list, &PeopleList::addNewPersonSignal, this, &QTNTMainWindow::addNewPersonTab);
     
     connect(this->tab_widget, &QTabWidget::tabCloseRequested, this, &QTNTMainWindow::closeTab);
     
@@ -79,6 +80,13 @@ void QTNTMainWindow::deactivatePeopleListCloseButton()
 {
     QTabBar *tb = this->tab_widget->tabBar();
     tb->tabButton(0, QTabBar::RightSide)->hide();
+}
+
+void QTNTMainWindow::addNewPersonTab()
+{
+    PersonEdit *person = new PersonEdit(this->db);
+    this->tab_widget->addTab(person, "New Person");
+    activateNewTab();
 }
 
 void QTNTMainWindow::addPersonEditTab(qlonglong rowid, QString name)

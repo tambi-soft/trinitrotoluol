@@ -33,6 +33,7 @@ private:
     QLineEdit *line_mail_filter;
     
 signals:
+    void addNewPersonSignal();
     void editPersonSignal(qlonglong rowid, QString name);
     void showDonationsForPersonSignal(qlonglong rowid);
     

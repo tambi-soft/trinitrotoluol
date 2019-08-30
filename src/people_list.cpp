@@ -167,7 +167,7 @@ void PeopleList::onGroupsFilterChanged()
 
 void PeopleList::onNewPersonButtonClicked()
 {
-    
+    emit addNewPersonSignal();
 }
 
 void PeopleList::onEditPersonButtonClicked(qlonglong rowid, QString name)
