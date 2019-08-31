@@ -8,6 +8,7 @@
 #include <QTextEdit>
 #include <QCheckBox>
 #include <QLabel>
+#include <QPushButton>
 
 #include "db_adapter.h"
 
@@ -19,28 +20,30 @@ public:
     explicit PersonEdit(DbAdapter *db, QWidget *parent = nullptr);
     
     void drawGUI();
-    void populateGUI();
+    void loadData();
+    void save();
     void clear();
+    
 private:
     QGridLayout *layout;
     qlonglong rowid;
     DbAdapter *db;
     
-    QLineEdit *edit_tnt_id;
-    QLineEdit *edit_name;
-    QLineEdit *edit_email;
-    QLineEdit *edit_address;
-    QLineEdit *edit_phone;
+    QLineEdit *edit_tnt_id = new QLineEdit;
+    QLineEdit *edit_name = new QLineEdit;
+    QLineEdit *edit_email = new QLineEdit;
+    QLineEdit *edit_address = new QLineEdit;
+    QLineEdit *edit_phone = new QLineEdit;
     
-    QCheckBox *check_agreed_mail;
-    QCheckBox *check_agreed_prayer;
+    QCheckBox *check_agreed_mail = new QCheckBox;
+    QCheckBox *check_agreed_prayer = new QCheckBox;
     
-    QLineEdit *edit_agreement;
-    QLineEdit *edit_donations_monthly;
-    QLineEdit *edit_donations_monthly_promised;
+    QLineEdit *edit_agreement = new QLineEdit;
+    QLineEdit *edit_donations_monthly = new QLineEdit;
+    QLineEdit *edit_donations_monthly_promised = new QLineEdit;
     
-    QLabel *edit_spouse = new QLabel();
-    
+    QLabel *edit_spouse = new QLabel;
+    QTextEdit *edit_notes = new QTextEdit;
 };
 
 #endif // PERSON_EDIT_H

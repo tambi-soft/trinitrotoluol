@@ -10,7 +10,7 @@ PersonEdit::PersonEdit(DbAdapter *db, qlonglong rowid, QWidget *parent)
     this->db = db;
     
     drawGUI();
-    populateGUI();
+    loadData();
 }
 
 PersonEdit::PersonEdit(DbAdapter *db, QWidget *parent)
@@ -25,23 +25,6 @@ PersonEdit::PersonEdit(DbAdapter *db, QWidget *parent)
 
 void PersonEdit::drawGUI()
 {
-    this->edit_tnt_id = new QLineEdit();
-    this->edit_name = new QLineEdit();
-    this->edit_email = new QLineEdit();
-    this->edit_address = new QLineEdit();
-    this->edit_phone = new QLineEdit();
-    
-    this->check_agreed_mail = new QCheckBox();
-    this->check_agreed_prayer = new QCheckBox();
-    
-    this->edit_agreement = new QLineEdit();
-    this->edit_donations_monthly = new QLineEdit();
-    this->edit_donations_monthly_promised = new QLineEdit();
-    
-    this->edit_spouse = new QLabel();
-    
-    
-    
     this->layout->addWidget(edit_tnt_id, 0, 1);
     this->layout->addWidget(edit_name, 1, 1);
     this->layout->addWidget(edit_email, 2, 1);
@@ -55,6 +38,7 @@ void PersonEdit::drawGUI()
     this->layout->addWidget(edit_donations_monthly, 8, 1);
     this->layout->addWidget(edit_donations_monthly_promised, 9, 1);
     this->layout->addWidget(edit_spouse, 10, 1);
+    this->layout->addWidget(edit_notes, 11, 1);
     
     this->layout->addWidget(new QLabel("TNT-Number"), 0, 0);
     this->layout->addWidget(new QLabel("Name"), 1, 0);
@@ -67,11 +51,17 @@ void PersonEdit::drawGUI()
     this->layout->addWidget(new QLabel("donations monthly"), 8, 0);
     this->layout->addWidget(new QLabel("donations promised"), 9, 0);
     this->layout->addWidget(new QLabel("Spouse"), 10, 0);
+    this->layout->addWidget(new QLabel("Notes"), 11, 0);
     
-    this->layout->setRowStretch(11, 100);
+    QPushButton *button_cancel = new QPushButton("cancel");
+    this->layout->addWidget(button_cancel, 12, 0);
+    QPushButton *button_save = new QPushButton("save");
+    this->layout->addWidget(button_save, 12, 1);
+    
+    this->layout->setRowStretch(13, 100);
 }
 
-void PersonEdit::populateGUI()
+void PersonEdit::loadData()
 {
     QMap<QString,QVariant> person = this->db->selectPerson(this->rowid);
     
@@ -95,6 +85,24 @@ void PersonEdit::populateGUI()
     this->edit_donations_monthly_promised->setText(person["donations_monthly_promised"].toString());
     
     this->edit_spouse->setText(person["spouse_name"].toString());
+}
+
+void PersonEdit::save()
+{
+    /*
+    this->db->insertNewPerson(this->edit_tnt_id->text(),
+                              this->edit_name->text(),
+                              this->edit_group,
+                              this->edit_email->text(),
+                              this->edit_address->text(),
+                              this->edit_phone->text(),
+                              this->check_agreed_mail->isChecked(),
+                              this->check_agreed_prayer->isChecked(),
+                              this->edit_agreement->text(),
+                              this->edit_notes->toPlainText(),
+                              this->edit_donations_monthly->text(),
+                              this->edit_donations_monthly_promised->text());
+                              */
 }
 
 void PersonEdit::clear()
