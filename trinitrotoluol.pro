@@ -55,6 +55,7 @@ HEADERS += \
     src/menubar.h \
     src/people_list.h \
     src/person_edit.h \
+    src/sqlite_sync.h \
     src/stats.h \
     src/tnt_adapter.h
     
@@ -63,6 +64,7 @@ SOURCES += \
     src/menubar.cpp \
     src/people_list.cpp \
     src/person_edit.cpp \
+    src/sqlite_sync.cpp \
     src/stats.cpp \
     src/tnt_adapter.cpp \
     src/trinitrotoluol.cpp \
