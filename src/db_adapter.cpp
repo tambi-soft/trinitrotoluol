@@ -73,9 +73,9 @@ void DbAdapter::initializeTables()
 {
     QSqlQuery query_table_people("CREATE TABLE IF NOT EXISTS \"people\" (\
         \"rowid\"	INTEGER PRIMARY KEY AUTOINCREMENT,\
+        \"group_rowid\"	INTEGER,\
         \"tnt_id\"    INTEGER,\
         \"name\"	TEXT,\
-        \"group\"	TEXT,\
         \"email\"	TEXT,\
         \"address\"	TEXT,\
         \"phone\"	TEXT,\
@@ -106,6 +106,10 @@ void DbAdapter::initializeTables()
         SELECT SUM(donations_monthly) AS monthly_sum, SUM(donations_monthly_promised) AS monthly_sum_promised FROM people\
     ", this->db);
     
+    QSqlQuery query_people_stats("CREATE VIEW IF NOT EXISTS people_stats AS\
+        SELECT COUNT(name) AS sum_all, SUM(agreed_mail) AS sum_agreed_mail, SUM(agreed_prayer) AS sum_agreed_prayer FROM people\
+    ", this->db);
+    
     //qDebug() << this->db.lastError();
     //qDebug() << query_sent_mail.lastQuery();
 }
@@ -132,7 +136,7 @@ void DbAdapter::insertNewPerson(QString tnt_id, QString name, QString group, QSt
 QMap<QString,QVariant> DbAdapter::selectPerson(qlonglong id)
 {
     QSqlQuery query(this->db);
-    query.prepare("SELECT b.\"name\" AS \"spouse_name\", a.tnt_id, a.name, a.\"group\", a.\"email\", a.\"address\", a.\"phone\", a.\"agreed_mail\", a.\"agreed_prayer\", a.\"agreement\", a.\"notes\", a.\"donations_monthly\", a.\"donations_monthly_promised\"\
+    query.prepare("SELECT b.\"name\" AS \"spouse_name\", a.tnt_id, a.name, a.group_rowid, a.\"email\", a.\"address\", a.\"phone\", a.\"agreed_mail\", a.\"agreed_prayer\", a.\"agreement\", a.\"notes\", a.\"donations_monthly\", a.\"donations_monthly_promised\"\
         FROM people a\
         LEFT JOIN people b ON a.spouse_rowid=b.rowid\
         WHERE a.rowid=:id");
@@ -166,4 +170,18 @@ QList<QMap<QString,QVariant>> DbAdapter::selectGroups()
     QSqlQuery query("SELECT \"group\" FROM \"groups\"", this->db);
     
     return dbIteratorToMapList(query);
+}
+
+QMap<QString,QVariant> DbAdapter::selectMoneyStats()
+{
+    QSqlQuery query("SELECT monthly_sum, monthly_sum_promised FROM donations_monthly", this->db);
+    
+    return dbIteratorToMap(query);
+}
+
+QMap<QString,QVariant> DbAdapter::selectPeopleStats()
+{
+    QSqlQuery query("SELECT sum_all, sum_agreed_mail, sum_agreed_prayer FROM people_stats", this->db);
+    
+    return  dbIteratorToMap(query);
 }

@@ -106,6 +106,8 @@ void PersonEdit::loadData()
     this->edit_donations_monthly_promised->setText(person["donations_monthly_promised"].toString());
     
     this->edit_spouse->setText(person["spouse_name"].toString());
+    
+    this->edit_notes->setText(person["notes"].toString());
 }
 
 void PersonEdit::save()

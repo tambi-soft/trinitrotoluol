@@ -11,6 +11,7 @@
 #include "people_list.h"
 #include "db_adapter.h"
 #include "person_edit.h"
+#include "stats.h"
 #include "menubar.h"
 
 class QTNTMainWindow : public QMainWindow
@@ -37,5 +38,6 @@ private slots:
     
     void addNewPersonTab();
     void addPersonEditTab(qlonglong rowid, QString name);
+    void addStatsTab();
     
 };

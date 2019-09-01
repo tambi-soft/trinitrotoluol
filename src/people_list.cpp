@@ -138,6 +138,8 @@ void PeopleList::showPeople()
     this->table_widget->setHorizontalHeaderLabels(labels);
     this->table_widget->resizeColumnsToContents();
     this->table_widget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    
+    this->table_widget->verticalHeader()->setVisible(false);
 }
 
 void PeopleList::clear()

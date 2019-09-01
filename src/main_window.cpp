@@ -27,6 +27,8 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
     
     tab_widget->addTab(this->people_list, "people");
     deactivatePeopleListCloseButton();
+    
+    addStatsTab();
 }
 
 void QTNTMainWindow::onTabMoved(int from, int to)
@@ -104,4 +106,14 @@ void QTNTMainWindow::addPersonEditTab(qlonglong rowid, QString name)
         activateNewTab();
         this->open_tabs[tab_name] = this->tab_widget->currentIndex();
     }
+}
+
+void QTNTMainWindow::addStatsTab()
+{
+    Stats *stats = new Stats(this->db);
+    this->tab_widget->addTab(stats, "stats");
+    //activateNewTab();
+    
+    QTabBar *tb = this->tab_widget->tabBar();
+    tb->tabButton(1, QTabBar::RightSide)->hide();
 }

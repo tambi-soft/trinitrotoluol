@@ -27,7 +27,7 @@ public:
     
 private:
     QGridLayout *layout;
-    qlonglong rowid;
+    qlonglong rowid = -1;
     DbAdapter *db;
     
     QLineEdit *edit_tnt_id = new QLineEdit;

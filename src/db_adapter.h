@@ -20,9 +20,11 @@ public:
     explicit DbAdapter(Config *config, QObject *parent = nullptr);
     void insertNewPerson(QString tnt_id, QString name, QString group, QString email, QString address, QString phone, QString agreed_mail, QString agreed_prayer, QString agreement, QString notes, QString donations_monthly, QString donations_monthly_promised);
     QMap<QString, QVariant> selectPerson(qlonglong id);
-    QList<QMap<QString, QVariant> > selectAllPersons();
-    QList<QMap<QString, QVariant> > selectAllPersonsFiltered(QString group, QString name, QString mail);
-    QList<QMap<QString, QVariant> > selectGroups();
+    QList<QMap<QString, QVariant>> selectAllPersons();
+    QList<QMap<QString, QVariant>> selectAllPersonsFiltered(QString group, QString name, QString mail);
+    QList<QMap<QString, QVariant>> selectGroups();
+    QMap<QString, QVariant> selectMoneyStats();
+    QMap<QString, QVariant> selectPeopleStats();
     
 private:
     QSqlDatabase db;
