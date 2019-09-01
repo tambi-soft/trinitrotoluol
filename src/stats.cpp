@@ -36,7 +36,6 @@ void Stats::addMoneyStats()
     int monthly_sum_promised = money["monthly_sum_promised"].toInt();
     
     QGridLayout *grid_money = new QGridLayout;
-    grid_money->setMargin(0);
     group_money->setLayout(grid_money);
     this->layout->addWidget(group_money);
     
