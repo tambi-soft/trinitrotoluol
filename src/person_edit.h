@@ -7,6 +7,7 @@
 #include <QLineEdit>
 #include <QTextEdit>
 #include <QCheckBox>
+#include <QComboBox>
 #include <QLabel>
 #include <QPushButton>
 
@@ -34,6 +35,8 @@ private:
     QLineEdit *edit_email = new QLineEdit;
     QLineEdit *edit_address = new QLineEdit;
     QLineEdit *edit_phone = new QLineEdit;
+    
+    QComboBox *combo_group = new QComboBox;
     
     QCheckBox *check_agreed_mail = new QCheckBox;
     QCheckBox *check_agreed_prayer = new QCheckBox;

@@ -31,34 +31,55 @@ void PersonEdit::drawGUI()
     this->layout->addWidget(edit_address, 3, 1);
     this->layout->addWidget(edit_phone, 4, 1);
     
-    this->layout->addWidget(check_agreed_mail, 5, 1);
-    this->layout->addWidget(check_agreed_prayer, 6, 1);
+    QWidget *widget_groups = new QWidget;
+    QHBoxLayout *layout_groups = new QHBoxLayout;
+    layout_groups->setMargin(0);
+    QPushButton *button_edit_groups = new QPushButton("Edit Groups");
+    layout_groups->addWidget(combo_group);
+    layout_groups->addWidget(button_edit_groups);
+    widget_groups->setLayout(layout_groups);
+    //this->layout->addWidget(combo_group, 5, 1);
+    this->layout->addWidget(widget_groups, 5, 1);
     
-    this->layout->addWidget(edit_agreement, 7, 1);
-    this->layout->addWidget(edit_donations_monthly, 8, 1);
-    this->layout->addWidget(edit_donations_monthly_promised, 9, 1);
-    this->layout->addWidget(edit_spouse, 10, 1);
-    this->layout->addWidget(edit_notes, 11, 1);
+    this->layout->addWidget(check_agreed_mail, 6, 1);
+    this->layout->addWidget(check_agreed_prayer, 7, 1);
+    
+    this->layout->addWidget(edit_agreement, 8, 1);
+    this->layout->addWidget(edit_donations_monthly, 9, 1);
+    this->layout->addWidget(edit_donations_monthly_promised, 10, 1);
+    
+    QWidget *widget_spouse = new QWidget;
+    QHBoxLayout *layout_spouse = new QHBoxLayout;
+    layout_spouse->setMargin(0);
+    QPushButton *button_select_spouse = new QPushButton("Select Spouse");
+    layout_spouse->addWidget(edit_spouse);
+    layout_spouse->addWidget(button_select_spouse);
+    widget_spouse->setLayout(layout_spouse);
+    this->layout->addWidget(widget_spouse, 11, 1);
+    //this->layout->addWidget(edit_spouse, 11, 1);
+    
+    this->layout->addWidget(edit_notes, 12, 1);
     
     this->layout->addWidget(new QLabel("TNT-Number"), 0, 0);
     this->layout->addWidget(new QLabel("Name"), 1, 0);
     this->layout->addWidget(new QLabel("Email"), 2, 0);
     this->layout->addWidget(new QLabel("Address"), 3, 0);
     this->layout->addWidget(new QLabel("Phone"), 4, 0);
-    this->layout->addWidget(new QLabel("agreed mail"), 5, 0);
-    this->layout->addWidget(new QLabel("agreed prayer"), 6, 0);
-    this->layout->addWidget(new QLabel("agreement"), 7, 0);
-    this->layout->addWidget(new QLabel("donations monthly"), 8, 0);
-    this->layout->addWidget(new QLabel("donations promised"), 9, 0);
-    this->layout->addWidget(new QLabel("Spouse"), 10, 0);
-    this->layout->addWidget(new QLabel("Notes"), 11, 0);
+    this->layout->addWidget(new QLabel("Group"), 5, 0);
+    this->layout->addWidget(new QLabel("agreed mail"), 6, 0);
+    this->layout->addWidget(new QLabel("agreed prayer"), 7, 0);
+    this->layout->addWidget(new QLabel("agreement"), 8, 0);
+    this->layout->addWidget(new QLabel("donations monthly"), 9, 0);
+    this->layout->addWidget(new QLabel("donations promised"), 10, 0);
+    this->layout->addWidget(new QLabel("Spouse"), 11, 0);
+    this->layout->addWidget(new QLabel("Notes"), 12, 0);
     
     QPushButton *button_cancel = new QPushButton("cancel");
-    this->layout->addWidget(button_cancel, 12, 0);
+    this->layout->addWidget(button_cancel, 13, 0);
     QPushButton *button_save = new QPushButton("save");
-    this->layout->addWidget(button_save, 12, 1);
+    this->layout->addWidget(button_save, 13, 1);
     
-    this->layout->setRowStretch(13, 100);
+    //this->layout->setRowStretch(14, 100);
 }
 
 void PersonEdit::loadData()
