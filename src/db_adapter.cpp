@@ -156,7 +156,12 @@ QList<QMap<QString,QVariant>> DbAdapter::selectAllPersonsFiltered(QString group,
 {
     QSqlQuery query(this->db);
     // the ORs should really be XORs, but SQLite do not support XOR now, and it would be far to annoying to fiddle an XOR together by myself
-    query.prepare("SELECT rowid, \"name\", \"group\", \"email\", \"agreed_mail\", \"agreed_prayer\", \"agreement\" FROM people WHERE \"group\" LIKE :group AND (\"name\" LIKE :name OR \"name\" IS NULL) AND (email LIKE :mail OR email IS NULL)");
+    query.prepare("SELECT people.rowid, people.name, groups.name AS \"group\", email, agreed_mail, agreed_prayer, agreement\
+                  FROM people\
+                  JOIN groups ON people.group_rowid=groups.rowid\
+                  WHERE groups.name LIKE :group\
+                  AND (people.name LIKE :name OR people.name IS NULL)\
+                  AND (email LIKE :mail OR email IS NULL)");
     query.bindValue(":group", group);
     query.bindValue(":name", name);
     query.bindValue(":mail", mail);
@@ -167,7 +172,7 @@ QList<QMap<QString,QVariant>> DbAdapter::selectAllPersonsFiltered(QString group,
 
 QList<QMap<QString,QVariant>> DbAdapter::selectGroups()
 {
-    QSqlQuery query("SELECT \"group\" FROM \"groups\"", this->db);
+    QSqlQuery query("SELECT name FROM groups", this->db);
     
     return dbIteratorToMapList(query);
 }

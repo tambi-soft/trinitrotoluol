@@ -47,11 +47,12 @@ PeopleList::PeopleList(DbAdapter *db, QWidget *parent)
 void PeopleList::showGroupsFilterCombo()
 {
     QList<QMap<QString,QVariant>> groups = this->db->selectGroups();
+    qDebug() << groups;
     QList<QString> gr;
     gr.append("[ALL]");
     for (int i=1; i < groups.length(); ++i)
     {
-        gr.append(groups.at(i)["group"].toString());
+        gr.append(groups.at(i)["name"].toString());
     }
     
     this->combo_groups->addItems(gr);
