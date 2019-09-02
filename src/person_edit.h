@@ -53,6 +53,9 @@ private slots:
     void onSelectSpouseButton();
     void onCancelButton();
     void onSaveButton();
+    
+signals:
+    void closeCurrentTabSignal();
 };
 
 #endif // PERSON_EDIT_H

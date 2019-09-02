@@ -35,6 +35,7 @@ private slots:
     void onTabMoved(int from, int to);
     void activateNewTab();
     void closeTab(int tab_id);
+    void closeCurrentTab();
     
     void addNewPersonTab();
     void addPersonEditTab(qlonglong rowid, QString name);

@@ -149,7 +149,7 @@ void PersonEdit::onSelectSpouseButton()
 
 void PersonEdit::onCancelButton()
 {
-    
+    emit closeCurrentTabSignal();
 }
 
 void PersonEdit::onSaveButton()

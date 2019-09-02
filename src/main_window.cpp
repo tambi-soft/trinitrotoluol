@@ -78,6 +78,12 @@ void QTNTMainWindow::closeTab(int tab_id)
     }
 }
 
+void QTNTMainWindow::closeCurrentTab()
+{
+    int id = this->tab_widget->currentIndex();
+    closeTab(id);
+}
+
 void QTNTMainWindow::deactivatePeopleListCloseButton()
 {
     QTabBar *tb = this->tab_widget->tabBar();
@@ -87,6 +93,8 @@ void QTNTMainWindow::deactivatePeopleListCloseButton()
 void QTNTMainWindow::addNewPersonTab()
 {
     PersonEdit *person = new PersonEdit(this->db);
+    connect(person, &PersonEdit::closeCurrentTabSignal, this, &QTNTMainWindow::closeCurrentTab);
+    
     this->tab_widget->addTab(person, "New Person");
     activateNewTab();
 }
@@ -102,6 +110,8 @@ void QTNTMainWindow::addPersonEditTab(qlonglong rowid, QString name)
     else
     {
         PersonEdit *person = new PersonEdit(this->db, rowid);
+        connect(person, &PersonEdit::closeCurrentTabSignal, this, &QTNTMainWindow::closeCurrentTab);
+        
         this->tab_widget->addTab(person, tab_name);
         activateNewTab();
         this->open_tabs[tab_name] = this->tab_widget->currentIndex();
