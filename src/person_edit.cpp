@@ -35,6 +35,7 @@ void PersonEdit::drawGUI()
     QHBoxLayout *layout_groups = new QHBoxLayout;
     layout_groups->setMargin(0);
     QPushButton *button_edit_groups = new QPushButton("Edit Groups");
+    connect(button_edit_groups, &QPushButton::clicked, this, &PersonEdit::onAddNewGroupButton);
     layout_groups->addWidget(combo_group);
     layout_groups->addWidget(button_edit_groups);
     widget_groups->setLayout(layout_groups);
@@ -52,6 +53,7 @@ void PersonEdit::drawGUI()
     QHBoxLayout *layout_spouse = new QHBoxLayout;
     layout_spouse->setMargin(0);
     QPushButton *button_select_spouse = new QPushButton("Select Spouse");
+    connect(button_select_spouse, &QPushButton::clicked, this, &PersonEdit::onSelectSpouseButton);
     layout_spouse->addWidget(edit_spouse);
     layout_spouse->addWidget(button_select_spouse);
     widget_spouse->setLayout(layout_spouse);
@@ -79,6 +81,8 @@ void PersonEdit::drawGUI()
     QPushButton *button_save = new QPushButton("save");
     this->layout->addWidget(button_save, 13, 1);
     
+    connect(button_cancel, &QPushButton::clicked, this, &PersonEdit::onCancelButton);
+    connect(button_save, &QPushButton::clicked, this, &PersonEdit::onSaveButton);
     //this->layout->setRowStretch(14, 100);
 }
 
@@ -129,6 +133,26 @@ void PersonEdit::save()
 }
 
 void PersonEdit::clear()
+{
+    
+}
+
+void PersonEdit::onAddNewGroupButton()
+{
+    
+}
+
+void PersonEdit::onSelectSpouseButton()
+{
+    
+}
+
+void PersonEdit::onCancelButton()
+{
+    
+}
+
+void PersonEdit::onSaveButton()
 {
     
 }

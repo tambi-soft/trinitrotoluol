@@ -47,6 +47,12 @@ private:
     
     QLabel *edit_spouse = new QLabel;
     QTextEdit *edit_notes = new QTextEdit;
+    
+private slots:
+    void onAddNewGroupButton();
+    void onSelectSpouseButton();
+    void onCancelButton();
+    void onSaveButton();
 };
 
 #endif // PERSON_EDIT_H
