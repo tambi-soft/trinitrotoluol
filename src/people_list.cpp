@@ -50,7 +50,7 @@ void PeopleList::showGroupsFilterCombo()
     qDebug() << groups;
     QList<QString> gr;
     gr.append("[ALL]");
-    for (int i=1; i < groups.length(); ++i)
+    for (int i=0; i < groups.length(); ++i)
     {
         gr.append(groups.at(i)["name"].toString());
     }
@@ -60,17 +60,6 @@ void PeopleList::showGroupsFilterCombo()
 
 void PeopleList::showPeople()
 {
-    /*
-    QList<QMap<QString,QVariant>> people;
-    if (this->combo_groups->currentText() != "[ALL]")
-    {
-        people = this->db->selectAllPersonsFiltered(this->combo_groups->currentText());
-    }
-    else
-    {
-        people = this->db->selectAllPersons();
-    }
-    */
     // if no filter set, just use the wildcard '%' for the sql query
     QString str_filter_group = this->combo_groups->currentText();
     if (str_filter_group == "[ALL]")
