@@ -22,13 +22,19 @@ public:
     
     void drawGUI();
     void loadData();
-    void save();
+    void loadGroupsComboData();
+    /* save new person */
+    void savePerson();
+    /* update existing person */
+    void updatePerson();
     void clear();
     
 private:
     QGridLayout *layout;
     qlonglong rowid = -1;
     DbAdapter *db;
+    QList<QMap<QString,QVariant>> group_data;
+    QMap<QString,int> group_data_map;
     
     QLineEdit *edit_tnt_id = new QLineEdit;
     QLineEdit *edit_name = new QLineEdit;

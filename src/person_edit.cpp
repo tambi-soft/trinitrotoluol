@@ -84,6 +84,8 @@ void PersonEdit::drawGUI()
     connect(button_cancel, &QPushButton::clicked, this, &PersonEdit::onCancelButton);
     connect(button_save, &QPushButton::clicked, this, &PersonEdit::onSaveButton);
     //this->layout->setRowStretch(14, 100);
+    
+    loadGroupsComboData();
 }
 
 void PersonEdit::loadData()
@@ -95,6 +97,8 @@ void PersonEdit::loadData()
     this->edit_email->setText(person["email"].toString());
     this->edit_address->setText(person["address"].toString());
     this->edit_phone->setText(person["phone"].toString());
+    
+    this->combo_group->setCurrentText(person["group_name"].toString());
     
     if (person["agreed_mail"].toInt() == 1)
     {
@@ -114,12 +118,31 @@ void PersonEdit::loadData()
     this->edit_notes->setText(person["notes"].toString());
 }
 
-void PersonEdit::save()
+void PersonEdit::loadGroupsComboData()
 {
-    /*
+    this->group_data = this->db->selectGroups();
+    
+    QList<QString> gr;
+    for (int i=0; i < group_data.length(); ++i)
+    {
+        gr.append(group_data.at(i)["name"].toString());
+        
+        int rowid = group_data.at(i)["rowid"].toInt();
+        QString group = group_data.at(i)["name"].toString();
+        this->group_data_map[group] = rowid;
+    }
+    
+    this->combo_group->addItems(gr);
+}
+
+void PersonEdit::savePerson()
+{
+    QString group_str = this->combo_group->currentText();
+    int group = this->group_data_map[group_str];
+    
     this->db->insertNewPerson(this->edit_tnt_id->text(),
                               this->edit_name->text(),
-                              this->edit_group,
+                              group,
                               this->edit_email->text(),
                               this->edit_address->text(),
                               this->edit_phone->text(),
@@ -128,8 +151,13 @@ void PersonEdit::save()
                               this->edit_agreement->text(),
                               this->edit_notes->toPlainText(),
                               this->edit_donations_monthly->text(),
-                              this->edit_donations_monthly_promised->text());
-                              */
+                              this->edit_donations_monthly_promised->text()
+                          );
+}
+
+void PersonEdit::updatePerson()
+{
+    
 }
 
 void PersonEdit::clear()
@@ -154,5 +182,12 @@ void PersonEdit::onCancelButton()
 
 void PersonEdit::onSaveButton()
 {
-    
+    if (this->rowid == -1)
+    {
+        savePerson();
+    }
+    else
+    {
+        updatePerson();
+    }
 }

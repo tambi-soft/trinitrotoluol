@@ -114,7 +114,7 @@ void DbAdapter::initializeTables()
     //qDebug() << query_sent_mail.lastQuery();
 }
 
-void DbAdapter::insertNewPerson(QString tnt_id, QString name, QString group, QString email, QString address, QString phone, QString agreed_mail, QString agreed_prayer, QString agreement, QString notes, QString donations_monthly, QString donations_monthly_promised)
+void DbAdapter::insertNewPerson(QString tnt_id, QString name, int group, QString email, QString address, QString phone, int agreed_mail, int agreed_prayer, QString agreement, QString notes, QString donations_monthly, QString donations_monthly_promised)
 {
     QSqlQuery query(this->db);
     query.prepare("INSERT INTO people (tnt_id, \"name\", \"group\", \"email\", \"address\", \"phone\", \"agreed_mail\", \"agreed_prayer\", \"agreement\", \"notes\", \"donations_monthly\", \"donations_monthly_promised\") VALUES (:name, :group, :email, :address, :phone, :agreed_mail, :agreed_prayer, :agreement, :notes, :donations_monthly, :donations_monthly_promised)");
@@ -136,9 +136,10 @@ void DbAdapter::insertNewPerson(QString tnt_id, QString name, QString group, QSt
 QMap<QString,QVariant> DbAdapter::selectPerson(qlonglong id)
 {
     QSqlQuery query(this->db);
-    query.prepare("SELECT b.\"name\" AS \"spouse_name\", a.tnt_id, a.name, a.group_rowid, a.\"email\", a.\"address\", a.\"phone\", a.\"agreed_mail\", a.\"agreed_prayer\", a.\"agreement\", a.\"notes\", a.\"donations_monthly\", a.\"donations_monthly_promised\"\
+    query.prepare("SELECT b.name AS spouse_name, a.tnt_id, a.name, a.group_rowid, g.name AS group_name, a.\"email\", a.\"address\", a.\"phone\", a.\"agreed_mail\", a.\"agreed_prayer\", a.\"agreement\", a.\"notes\", a.\"donations_monthly\", a.\"donations_monthly_promised\"\
         FROM people a\
         LEFT JOIN people b ON a.spouse_rowid=b.rowid\
+        JOIN groups g ON a.group_rowid=g.rowid\
         WHERE a.rowid=:id");
     query.bindValue(":id", id);
     query.exec();
@@ -172,7 +173,7 @@ QList<QMap<QString,QVariant>> DbAdapter::selectAllPersonsFiltered(QString group,
 
 QList<QMap<QString,QVariant>> DbAdapter::selectGroups()
 {
-    QSqlQuery query("SELECT name FROM groups", this->db);
+    QSqlQuery query("SELECT rowid, name FROM groups", this->db);
     
     return dbIteratorToMapList(query);
 }
