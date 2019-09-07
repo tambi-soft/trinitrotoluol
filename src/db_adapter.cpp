@@ -114,10 +114,13 @@ void DbAdapter::initializeTables()
     //qDebug() << query_sent_mail.lastQuery();
 }
 
-void DbAdapter::insertNewPerson(QString tnt_id, QString name, int group, QString email, QString address, QString phone, int agreed_mail, int agreed_prayer, QString agreement, QString notes, QString donations_monthly, QString donations_monthly_promised)
+void DbAdapter::insertNewPerson(QString tnt_id, QString name, int group, QString email, QString address, QString phone, int agreed_mail, int agreed_prayer, QString agreement, QString notes, int donations_monthly, int donations_monthly_promised)
 {
     QSqlQuery query(this->db);
-    query.prepare("INSERT INTO people (tnt_id, \"name\", \"group\", \"email\", \"address\", \"phone\", \"agreed_mail\", \"agreed_prayer\", \"agreement\", \"notes\", \"donations_monthly\", \"donations_monthly_promised\") VALUES (:name, :group, :email, :address, :phone, :agreed_mail, :agreed_prayer, :agreement, :notes, :donations_monthly, :donations_monthly_promised)");
+    query.prepare("INSERT INTO people"
+                  "(tnt_id, name, group_rowid, email, address, phone, agreed_mail, agreed_prayer, agreement, notes, donations_monthly, donations_monthly_promised)\
+                  VALUES\
+                  (:tnt_id, :name, :group, :email, :address, :phone, :agreed_mail, :agreed_prayer, :agreement, :notes, :donations_monthly, :donations_monthly_promised)");
     query.bindValue(":tnt_id", tnt_id);
     query.bindValue(":name", name);
     query.bindValue(":group", group);
@@ -131,6 +134,9 @@ void DbAdapter::insertNewPerson(QString tnt_id, QString name, int group, QString
     query.bindValue(":donations_monthly", donations_monthly);
     query.bindValue(":donations_monthly_promised", donations_monthly_promised);
     query.exec();
+    
+    qDebug() << this->db.lastError();
+    qDebug() << query.lastQuery();
 }
 
 QMap<QString,QVariant> DbAdapter::selectPerson(qlonglong id)

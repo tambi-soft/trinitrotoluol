@@ -150,8 +150,8 @@ void PersonEdit::savePerson()
                               this->check_agreed_prayer->isChecked(),
                               this->edit_agreement->text(),
                               this->edit_notes->toPlainText(),
-                              this->edit_donations_monthly->text(),
-                              this->edit_donations_monthly_promised->text()
+                              this->edit_donations_monthly->text().toInt(),
+                              this->edit_donations_monthly_promised->text().toInt()
                           );
 }
 

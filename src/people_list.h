@@ -44,6 +44,7 @@ public slots:
     void onNewPersonButtonClicked();
     void onEditPersonButtonClicked(qlonglong rowid, QString name);
     void onShowDonationsButtonClicked(qlonglong rowid);
+    void onDeletePersonButtonClicked(qlonglong rowid);
 };
 
 #endif // PEOPLE_LIST_H
