@@ -83,7 +83,7 @@ void PeopleList::showPeople()
     this->table_widget->setRowCount(people.length());
     if (people.length() > 0)
     {
-        this->table_widget->setColumnCount(people.at(0).keys().length());
+        this->table_widget->setColumnCount(people.at(0).keys().length()+1);
     }
     
     for (int i=0; i < people.length(); ++i)
@@ -130,7 +130,7 @@ void PeopleList::showPeople()
     }
     
     QStringList labels;
-    labels << "" << "" << "name" << "group" << "email" << "m" << "p" << "agreement";
+    labels << "" << "" << "" << "name" << "group" << "email" << "m" << "p" << "agreement";
     this->table_widget->setHorizontalHeaderLabels(labels);
     this->table_widget->resizeColumnsToContents();
     this->table_widget->setEditTriggers(QAbstractItemView::NoEditTriggers);

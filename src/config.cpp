@@ -53,5 +53,7 @@ void Config::initializeWithDefaultValues(QDir *config_dir)
 
 QString Config::getDbPath()
 {
-    return this->settings->value("tnt/db_path").toString();
+    QString result = this->settings->value("tnt/db_path").toString();
+    //qDebug() << result;
+    return result;
 }
