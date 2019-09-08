@@ -135,29 +135,40 @@ void PersonEdit::loadGroupsComboData()
     this->combo_group->addItems(gr);
 }
 
-void PersonEdit::savePerson()
+QMap<QString,QVariant> PersonEdit::collectSaveData()
 {
     QString group_str = this->combo_group->currentText();
     int group = this->group_data_map[group_str];
     
-    this->db->insertNewPerson(this->edit_tnt_id->text(),
-                              this->edit_name->text(),
-                              group,
-                              this->edit_email->text(),
-                              this->edit_address->text(),
-                              this->edit_phone->text(),
-                              this->check_agreed_mail->isChecked(),
-                              this->check_agreed_prayer->isChecked(),
-                              this->edit_agreement->text(),
-                              this->edit_notes->toPlainText(),
-                              this->edit_donations_monthly->text().toInt(),
-                              this->edit_donations_monthly_promised->text().toInt()
-                          );
+    QMap<QString,QVariant> data;
+    data["tnt_id"] = this->edit_tnt_id->text();
+    data["name"] = this->edit_name->text();
+    data["group"] = group;
+    data["email"] = this->edit_email->text();
+    data["address"] = this->edit_address->text();
+    data["phone"] = this->edit_phone->text();
+    data["agreed_mail"] = this->check_agreed_mail->isChecked();
+    data["agreed_prayer"] = this->check_agreed_prayer->isChecked();
+    data["agreement"] = this->edit_agreement->text();
+    data["notes"] = this->edit_notes->toPlainText();
+    data["donations_monthly"] = this->edit_donations_monthly->text().toInt();
+    data["donations_monthly_promised"] = this->edit_donations_monthly_promised->text().toInt();
+    
+    return data;
+}
+
+void PersonEdit::savePerson()
+{
+    QMap<QString,QVariant> data = collectSaveData();
+    
+    this->db->insertNewPerson(data);
 }
 
 void PersonEdit::updatePerson()
 {
+    QMap<QString,QVariant> data = collectSaveData();
     
+    this->db->updatePerson(this->rowid, data);
 }
 
 void PersonEdit::clear()

@@ -16,9 +16,9 @@ void Stats::addPeopleStats()
     QGridLayout* grid_people = new QGridLayout;
     group_people->setLayout(grid_people);
     
-    grid_people->addWidget(new QLabel("<b>SUM People</b>"), 0, 0);
-    grid_people->addWidget(new QLabel("<b>SUM Agreed Mail</b>"), 0, 1);
-    grid_people->addWidget(new QLabel("<b>SUM Agreed Prayer</b>"), 0, 2);
+    grid_people->addWidget(new QLabel("<b>People</b>"), 0, 0);
+    grid_people->addWidget(new QLabel("<b>Agreed Mail</b>"), 0, 1);
+    grid_people->addWidget(new QLabel("<b>Agreed Prayer</b>"), 0, 2);
     
     grid_people->addWidget(new QLabel(data["sum_all"].toString()), 1, 0);
     grid_people->addWidget(new QLabel(data["sum_agreed_mail"].toString()), 1, 1);

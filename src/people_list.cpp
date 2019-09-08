@@ -189,3 +189,9 @@ void PeopleList::onDeletePersonButtonClicked(qlonglong rowid, QString name)
         showPeople();
     }
 }
+
+void PeopleList::showEvent(QShowEvent */*event*/)
+{
+    this->table_widget->clear();
+    showPeople();
+}
