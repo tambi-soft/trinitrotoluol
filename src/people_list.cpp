@@ -108,7 +108,7 @@ void PeopleList::showPeople()
         QPushButton *button_delete = new QPushButton();
         button_delete->setIcon(QIcon::fromTheme("edit-delete"));
         button_delete->setMaximumWidth(40);
-        connect(button_delete, &QPushButton::clicked, this, &PeopleList::onDeletePersonButtonClicked);
+        connect(button_delete, &QPushButton::clicked, this, [this, rowid, name]{ PeopleList::onDeletePersonButtonClicked(rowid, name); });
         
         QPushButton *button_edit = new QPushButton("edit");
         button_edit->setMaximumWidth(40);
@@ -178,7 +178,14 @@ void PeopleList::onShowDonationsButtonClicked(qlonglong rowid)
     emit showDonationsForPersonSignal(rowid);
 }
 
-void PeopleList::onDeletePersonButtonClicked(qlonglong rowid)
+void PeopleList::onDeletePersonButtonClicked(qlonglong rowid, QString name)
 {
-    
+    int reply = QMessageBox::question(this, "Delete "+name, "Really delete "+name+"?", QMessageBox::Yes, QMessageBox::No);
+    if (reply == QMessageBox::Yes)
+    {
+        this->db->deletePerson(rowid);
+        
+        this->table_widget->clear();
+        showPeople();
+    }
 }

@@ -19,6 +19,7 @@ class DbAdapter : public QObject
 public:
     explicit DbAdapter(Config *config, QObject *parent = nullptr);
     void insertNewPerson(QString tnt_id, QString name, int group, QString email, QString address, QString phone, int agreed_mail, int agreed_prayer, QString agreement, QString notes, int donations_monthly, int donations_monthly_promised);
+    void deletePerson(qlonglong rowid);
     QMap<QString, QVariant> selectPerson(qlonglong id);
     QList<QMap<QString, QVariant>> selectAllPersons();
     QList<QMap<QString, QVariant>> selectAllPersonsFiltered(QString group, QString name, QString mail);
@@ -37,6 +38,7 @@ private:
 signals:
     
 public slots:
+    
 };
 
 #endif // DB_ADAPTER_H

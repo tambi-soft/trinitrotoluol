@@ -114,6 +114,14 @@ void DbAdapter::initializeTables()
     //qDebug() << query_sent_mail.lastQuery();
 }
 
+void DbAdapter::deletePerson(qlonglong rowid)
+{
+    QSqlQuery query(this->db);
+    query.prepare("DELETE FROM people WHERE rowid=:rowid");
+    query.bindValue(":rowid", rowid);
+    query.exec();
+}
+
 void DbAdapter::insertNewPerson(QString tnt_id, QString name, int group, QString email, QString address, QString phone, int agreed_mail, int agreed_prayer, QString agreement, QString notes, int donations_monthly, int donations_monthly_promised)
 {
     QSqlQuery query(this->db);

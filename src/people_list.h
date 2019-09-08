@@ -13,6 +13,7 @@
 #include <QIcon>
 #include <QComboBox>
 #include <QLineEdit>
+#include <QMessageBox>
 
 #include "db_adapter.h"
 
@@ -44,7 +45,7 @@ public slots:
     void onNewPersonButtonClicked();
     void onEditPersonButtonClicked(qlonglong rowid, QString name);
     void onShowDonationsButtonClicked(qlonglong rowid);
-    void onDeletePersonButtonClicked(qlonglong rowid);
+    void onDeletePersonButtonClicked(qlonglong rowid, QString name);
 };
 
 #endif // PEOPLE_LIST_H
