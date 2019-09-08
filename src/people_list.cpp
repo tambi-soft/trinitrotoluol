@@ -110,11 +110,13 @@ void PeopleList::showPeople()
         button_delete->setMaximumWidth(40);
         connect(button_delete, &QPushButton::clicked, this, [this, rowid, name]{ PeopleList::onDeletePersonButtonClicked(rowid, name); });
         
-        QPushButton *button_edit = new QPushButton("edit");
+        QPushButton *button_edit = new QPushButton();
+        button_edit->setIcon(QIcon::fromTheme("document-properties"));
         button_edit->setMaximumWidth(40);
         connect(button_edit, &QPushButton::clicked, this, [this, rowid, name]{ PeopleList::onEditPersonButtonClicked(rowid, name); });
         
-        QPushButton *button_donations = new QPushButton("donations");
+        QPushButton *button_donations = new QPushButton();
+        button_donations->setIcon(QIcon(":money_receive"));
         button_donations->setMaximumWidth(90);
         connect(button_donations, &QPushButton::clicked, this, []{  });
         
