@@ -27,7 +27,7 @@ private:
     QTabWidget *tab_widget;
     PeopleList *people_list;
     DbAdapter *db;
-    void deactivatePeopleListCloseButton();
+    void deactivateCloseButtons();
     QMap<QString, int> open_tabs; // {tab_name} -> tab widget id
     
     
@@ -40,5 +40,5 @@ private slots:
     void addNewPersonTab();
     void addPersonEditTab(qlonglong rowid, QString name);
     void addStatsTab();
-    
+    void addPeopleTab();
 };

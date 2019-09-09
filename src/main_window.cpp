@@ -9,9 +9,7 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
     
     this->config = new Config();
     this->db = new DbAdapter(this->config);
-    this->people_list = new PeopleList(this->db, this);
-    connect(this->people_list, &PeopleList::editPersonSignal, this, &QTNTMainWindow::addPersonEditTab);
-    connect(this->people_list, &PeopleList::addNewPersonSignal, this, &QTNTMainWindow::addNewPersonTab);
+    
     
     connect(this->tab_widget, &QTabWidget::tabCloseRequested, this, &QTNTMainWindow::closeTab);
     
@@ -25,10 +23,10 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
     QTabBar *tab_bar = this->tab_widget->tabBar();
     connect(tab_bar, &QTabBar::tabMoved, this, &QTNTMainWindow::onTabMoved);
     
-    tab_widget->addTab(this->people_list, "people");
-    deactivatePeopleListCloseButton();
-    
     addStatsTab();
+    addPeopleTab();
+    
+    deactivateCloseButtons();
 }
 
 void QTNTMainWindow::onTabMoved(int from, int to)
@@ -84,10 +82,11 @@ void QTNTMainWindow::closeCurrentTab()
     closeTab(id);
 }
 
-void QTNTMainWindow::deactivatePeopleListCloseButton()
+void QTNTMainWindow::deactivateCloseButtons()
 {
     QTabBar *tb = this->tab_widget->tabBar();
     tb->tabButton(0, QTabBar::RightSide)->hide();
+    tb->tabButton(1, QTabBar::RightSide)->hide();
 }
 
 void QTNTMainWindow::addNewPersonTab()
@@ -122,8 +121,15 @@ void QTNTMainWindow::addStatsTab()
 {
     Stats *stats = new Stats(this->db);
     this->tab_widget->addTab(stats, "stats");
-    //activateNewTab();
+}
+
+void QTNTMainWindow::addPeopleTab()
+{
+    this->people_list = new PeopleList(this->db, this);
+    connect(this->people_list, &PeopleList::editPersonSignal, this, &QTNTMainWindow::addPersonEditTab);
+    connect(this->people_list, &PeopleList::addNewPersonSignal, this, &QTNTMainWindow::addNewPersonTab);
     
-    QTabBar *tb = this->tab_widget->tabBar();
-    tb->tabButton(1, QTabBar::RightSide)->hide();
+    tab_widget->addTab(this->people_list, "people");
+    
+    activateNewTab();
 }

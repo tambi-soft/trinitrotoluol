@@ -102,6 +102,12 @@ void PeopleList::showPeople()
             flag_waiting->setBackgroundColor(Qt::black);
         }
         
+        QTableWidgetItem *flag_donations = new QTableWidgetItem();
+        if (person["donations_monthly"] > 0 || person["donations_monthly_promised"] > 0)
+        {
+            flag_donations->setBackgroundColor(Qt::black);
+        }
+        
         QTableWidgetItem *mail = new QTableWidgetItem();
         QTableWidgetItem *prayer = new QTableWidgetItem();
         if (person["agreed_mail"] == 1)
@@ -137,16 +143,17 @@ void PeopleList::showPeople()
         this->table_widget->setCellWidget(i, 2, button_donations);
         this->table_widget->setItem(i, 3, flag_todo);
         this->table_widget->setItem(i, 4, flag_waiting);
-        this->table_widget->setItem(i, 5, new QTableWidgetItem(person["name"].toString()));
-        this->table_widget->setItem(i, 6, new QTableWidgetItem(person["group"].toString()));
-        this->table_widget->setItem(i, 7, new QTableWidgetItem(person["email"].toString()));
-        this->table_widget->setItem(i, 8, mail);
-        this->table_widget->setItem(i, 9, prayer);
-        this->table_widget->setItem(i, 10, new QTableWidgetItem(person["agreement"].toString()));
+        this->table_widget->setItem(i, 5, flag_donations);
+        this->table_widget->setItem(i, 6, new QTableWidgetItem(person["name"].toString()));
+        this->table_widget->setItem(i, 7, new QTableWidgetItem(person["group"].toString()));
+        this->table_widget->setItem(i, 8, new QTableWidgetItem(person["email"].toString()));
+        this->table_widget->setItem(i, 9, mail);
+        this->table_widget->setItem(i, 10, prayer);
+        this->table_widget->setItem(i, 11, new QTableWidgetItem(person["agreement"].toString()));
     }
     
     QStringList labels;
-    labels << "" << "" << "" << "t" << "w" << "name" << "group" << "email" << "m" << "p" << "agreement";
+    labels << "" << "" << "" << "t" << "w" << "d" << "name" << "group" << "email" << "m" << "p" << "agreement";
     this->table_widget->setHorizontalHeaderLabels(labels);
     this->table_widget->resizeColumnsToContents();
     this->table_widget->setEditTriggers(QAbstractItemView::NoEditTriggers);
