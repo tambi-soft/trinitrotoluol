@@ -13,11 +13,11 @@ PeopleList::PeopleList(DbAdapter *db, QWidget *parent)
     setLayout(this->layout);
     
     this->line_name_filter->setClearButtonEnabled(true);
-    this->line_name_filter->setPlaceholderText("type a name here to search");
+    this->line_name_filter->setPlaceholderText("type a NAME here to search");
     connect(this->line_name_filter, &QLineEdit::textChanged, this, &PeopleList::onNameFilterChanged);
     
     this->line_mail_filter->setClearButtonEnabled(true);
-    this->line_mail_filter->setPlaceholderText("type a mail address here to search");
+    this->line_mail_filter->setPlaceholderText("type a MAIL address here to search");
     connect(this->line_mail_filter, &QLineEdit::textChanged, this, &PeopleList::onNameFilterChanged);
     
     // build together line_name_filter, line_mail_filter and combo_groups
@@ -83,12 +83,24 @@ void PeopleList::showPeople()
     this->table_widget->setRowCount(people.length());
     if (people.length() > 0)
     {
-        this->table_widget->setColumnCount(people.at(0).keys().length()+1);
+        this->table_widget->setColumnCount(people.at(0).keys().length()+3);
     }
     
     for (int i=0; i < people.length(); ++i)
     {
         QMap<QString,QVariant> person = people.at(i);
+        
+        QTableWidgetItem *flag_todo = new QTableWidgetItem();
+        QTableWidgetItem *flag_waiting = new QTableWidgetItem();
+        if (person["flag_todo"] == 1)
+        {
+            flag_todo->setBackgroundColor(Qt::black);
+        }
+        
+        if (person["flag_waiting"] == 1)
+        {
+            flag_waiting->setBackgroundColor(Qt::black);
+        }
         
         QTableWidgetItem *mail = new QTableWidgetItem();
         QTableWidgetItem *prayer = new QTableWidgetItem();
@@ -123,16 +135,18 @@ void PeopleList::showPeople()
         this->table_widget->setCellWidget(i, 0, button_delete);
         this->table_widget->setCellWidget(i, 1, button_edit);
         this->table_widget->setCellWidget(i, 2, button_donations);
-        this->table_widget->setItem(i, 3, new QTableWidgetItem(person["name"].toString()));
-        this->table_widget->setItem(i, 4, new QTableWidgetItem(person["group"].toString()));
-        this->table_widget->setItem(i, 5, new QTableWidgetItem(person["email"].toString()));
-        this->table_widget->setItem(i, 6, mail);
-        this->table_widget->setItem(i, 7, prayer);
-        this->table_widget->setItem(i, 8, new QTableWidgetItem(person["agreement"].toString()));
+        this->table_widget->setItem(i, 3, flag_todo);
+        this->table_widget->setItem(i, 4, flag_waiting);
+        this->table_widget->setItem(i, 5, new QTableWidgetItem(person["name"].toString()));
+        this->table_widget->setItem(i, 6, new QTableWidgetItem(person["group"].toString()));
+        this->table_widget->setItem(i, 7, new QTableWidgetItem(person["email"].toString()));
+        this->table_widget->setItem(i, 8, mail);
+        this->table_widget->setItem(i, 9, prayer);
+        this->table_widget->setItem(i, 10, new QTableWidgetItem(person["agreement"].toString()));
     }
     
     QStringList labels;
-    labels << "" << "" << "" << "name" << "group" << "email" << "m" << "p" << "agreement";
+    labels << "" << "" << "" << "t" << "w" << "name" << "group" << "email" << "m" << "p" << "agreement";
     this->table_widget->setHorizontalHeaderLabels(labels);
     this->table_widget->resizeColumnsToContents();
     this->table_widget->setEditTriggers(QAbstractItemView::NoEditTriggers);

@@ -38,6 +38,9 @@ private:
     QList<QMap<QString,QVariant>> group_data;
     QMap<QString,int> group_data_map;
     
+    QCheckBox *check_todo = new QCheckBox;
+    QCheckBox *check_waiting = new QCheckBox;
+    
     QLineEdit *edit_tnt_id = new QLineEdit;
     QLineEdit *edit_name = new QLineEdit;
     QLineEdit *edit_email = new QLineEdit;

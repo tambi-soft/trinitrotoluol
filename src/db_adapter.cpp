@@ -88,7 +88,9 @@ void DbAdapter::initializeTables()
         \"donations_monthly\"   INTEGER,\
         \"donations_monthly_promised\"  INTEGER,\
         \"spouse_rowid\"    INTEGER,\
-        \"deactivated\"     INTEGER\
+        \"deactivated\"     INTEGER,\
+        \"flag_todo\"       INTEGER,\
+        \"flag_waiting\"    INTEGER\
     )", this->db);
     
     //QSqlQuery query_view_groups("CREATE VIEW IF NOT EXISTS groups AS\
@@ -136,6 +138,8 @@ QSqlQuery DbAdapter::bindPersonParams(QSqlQuery query, QMap<QString,QVariant> da
     query.bindValue(":notes", data["notes"].toString());
     query.bindValue(":donations_monthly", data["donations_monthly"].toInt());
     query.bindValue(":donations_monthly_promised", data["donations_monthly_promised"].toInt());
+    query.bindValue(":flag_todo", data["flag_todo"]);
+    query.bindValue(":flag_waiting", data["flag_waiting"]);
     
     return query;
 }
@@ -144,9 +148,9 @@ void DbAdapter::insertNewPerson(QMap<QString,QVariant> data)
 {
     QSqlQuery query(this->db);
     query.prepare("INSERT INTO people"
-                  "(tnt_id, name, group_rowid, email, address, phone, agreed_mail, agreed_prayer, agreement, notes, donations_monthly, donations_monthly_promised)"
+                  "(tnt_id, name, group_rowid, email, address, phone, agreed_mail, agreed_prayer, agreement, notes, donations_monthly, donations_monthly_promised, flag_todo, flag_waiting)"
                   "VALUES"
-                  "(:tnt_id, :name, :group, :email, :address, :phone, :agreed_mail, :agreed_prayer, :agreement, :notes, :donations_monthly, :donations_monthly_promised)");
+                  "(:tnt_id, :name, :group, :email, :address, :phone, :agreed_mail, :agreed_prayer, :agreement, :notes, :donations_monthly, :donations_monthly_promised, :flag_todo, :flag_waiting)");
     
     query = bindPersonParams(query, data);
     
@@ -157,7 +161,7 @@ void DbAdapter::updatePerson(qlonglong rowid, QMap<QString,QVariant> data)
 {
     QSqlQuery query(this->db);
     query.prepare("UPDATE people SET "
-                  "tnt_id=:tnt_id, name=:name, group_rowid=:group, email=:email, address=:address, phone=:phone, agreed_mail=:agreed_mail, agreed_prayer=:agreed_prayer, agreement=:agreement, notes=:notes, donations_monthly=:donations_monthly, donations_monthly_promised=:donations_monthly_promised"
+                  "tnt_id=:tnt_id, name=:name, group_rowid=:group, email=:email, address=:address, phone=:phone, agreed_mail=:agreed_mail, agreed_prayer=:agreed_prayer, agreement=:agreement, notes=:notes, donations_monthly=:donations_monthly, donations_monthly_promised=:donations_monthly_promised, flag_todo=:flag_todo, flag_waiting=:flag_waiting"
                   " WHERE rowid=:rowid");
     
     query = bindPersonParams(query, data);
@@ -169,7 +173,7 @@ void DbAdapter::updatePerson(qlonglong rowid, QMap<QString,QVariant> data)
 QMap<QString,QVariant> DbAdapter::selectPerson(qlonglong id)
 {
     QSqlQuery query(this->db);
-    query.prepare("SELECT b.name AS spouse_name, a.tnt_id, a.name, a.group_rowid, g.name AS group_name, a.\"email\", a.\"address\", a.\"phone\", a.\"agreed_mail\", a.\"agreed_prayer\", a.\"agreement\", a.\"notes\", a.\"donations_monthly\", a.\"donations_monthly_promised\"\
+    query.prepare("SELECT b.name AS spouse_name, a.tnt_id, a.name, a.group_rowid, g.name AS group_name, a.\"email\", a.\"address\", a.\"phone\", a.\"agreed_mail\", a.\"agreed_prayer\", a.\"agreement\", a.\"notes\", a.\"donations_monthly\", a.\"donations_monthly_promised\", a.flag_todo, a.flag_waiting\
         FROM people a\
         LEFT JOIN people b ON a.spouse_rowid=b.rowid\
         JOIN groups g ON a.group_rowid=g.rowid\
@@ -182,7 +186,7 @@ QMap<QString,QVariant> DbAdapter::selectPerson(qlonglong id)
 
 QList<QMap<QString,QVariant>> DbAdapter::selectAllPersons()
 {
-    QSqlQuery query("SELECT rowid, \"name\", \"group\", \"email\", \"agreed_mail\", \"agreed_prayer\", \"agreement\" FROM people", this->db);
+    QSqlQuery query("SELECT rowid, \"name\", \"group\", email, agreed_mail, agreed_prayer, agreement, flag_todo, flag_waiting FROM people", this->db);
     
     return dbIteratorToMapList(query);
 }
@@ -190,7 +194,7 @@ QList<QMap<QString,QVariant>> DbAdapter::selectAllPersonsFiltered(QString group,
 {
     QSqlQuery query(this->db);
     // the ORs should really be XORs, but SQLite do not support XOR now, and it would be far to annoying to fiddle an XOR together by myself
-    query.prepare("SELECT people.rowid, people.name, groups.name AS \"group\", email, agreed_mail, agreed_prayer, agreement\
+    query.prepare("SELECT people.rowid, people.name, groups.name AS \"group\", email, agreed_mail, agreed_prayer, agreement, flag_todo, flag_waiting\
                   FROM people\
                   JOIN groups ON people.group_rowid=groups.rowid\
                   WHERE groups.name LIKE :group\
