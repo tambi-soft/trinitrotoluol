@@ -83,7 +83,7 @@ void PeopleList::showPeople()
     this->table_widget->setRowCount(people.length());
     if (people.length() > 0)
     {
-        this->table_widget->setColumnCount(people.at(0).keys().length()+3);
+        this->table_widget->setColumnCount(people.at(0).keys().length()+1);
     }
     
     for (int i=0; i < people.length(); ++i)
@@ -208,6 +208,14 @@ void PeopleList::onDeletePersonButtonClicked(qlonglong rowid, QString name)
 
 void PeopleList::showEvent(QShowEvent */*event*/)
 {
+    // store the current scroll position
+    QScrollBar *vert = this->table_widget->verticalScrollBar();
+    int vert_val = vert->value();
+    
+    // clear and rebuild table_widget eventually with new/updated data
     this->table_widget->clear();
     showPeople();
+    
+    // restore previous scroll position
+    vert->setValue(vert_val);
 }

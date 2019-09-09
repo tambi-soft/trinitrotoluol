@@ -14,6 +14,7 @@
 #include <QComboBox>
 #include <QLineEdit>
 #include <QMessageBox>
+#include <QScrollBar>
 
 #include "db_adapter.h"
 
