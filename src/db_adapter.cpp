@@ -108,9 +108,13 @@ void DbAdapter::initializeTables()
         SELECT SUM(donations_monthly) AS monthly_sum, SUM(donations_monthly_promised) AS monthly_sum_promised FROM people\
     ", this->db);
     
-    QSqlQuery query_people_stats("CREATE VIEW IF NOT EXISTS people_stats AS\
-        SELECT COUNT(name) AS sum_all, SUM(agreed_mail) AS sum_agreed_mail, SUM(agreed_prayer) AS sum_agreed_prayer FROM people\
-    ", this->db);
+    QSqlQuery query_people_stats("CREATE VIEW IF NOT EXISTS people_stats AS "
+        "SELECT COUNT(name) AS sum_all,"
+        " SUM(agreed_mail) AS sum_agreed_mail,"
+        "SUM(agreed_prayer) AS sum_agreed_prayer,"
+        "SUM(CASE WHEN donations_monthly > 0 THEN 1 ELSE 0 END) AS donation_partners,"
+        "SUM(CASE WHEN donations_monthly_promised > 0 THEN 1 ELSE 0 END) AS donation_partners_promised "
+        "FROM people", this->db);
     
     //qDebug() << this->db.lastError();
     //qDebug() << query_sent_mail.lastQuery();
@@ -224,7 +228,7 @@ QMap<QString,QVariant> DbAdapter::selectMoneyStats()
 
 QMap<QString,QVariant> DbAdapter::selectPeopleStats()
 {
-    QSqlQuery query("SELECT sum_all, sum_agreed_mail, sum_agreed_prayer FROM people_stats", this->db);
+    QSqlQuery query("SELECT sum_all, sum_agreed_mail, sum_agreed_prayer, donation_partners, donation_partners_promised FROM people_stats", this->db);
     
     return  dbIteratorToMap(query);
 }

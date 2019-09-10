@@ -24,6 +24,20 @@ void Stats::addPeopleStats()
     grid_people->addWidget(new QLabel(data["sum_agreed_mail"].toString()), 1, 1);
     grid_people->addWidget(new QLabel(data["sum_agreed_prayer"].toString()), 1, 2);
     
+    // spacer
+    grid_people->addWidget(new QLabel(""), 2, 0);
+    
+    grid_people->addWidget(new QLabel("<b>Donating</b>"), 3, 0);
+    grid_people->addWidget(new QLabel("<b>Promised</b>"), 3, 1);
+    grid_people->addWidget(new QLabel("<b>Sum</b>"), 3, 2);
+    
+    int dp = data["donation_partners"].toInt();
+    int dpp = data["donation_partners_promised"].toInt();
+    qDebug() << data;
+    grid_people->addWidget(new QLabel(QString::number(dp)), 4, 0);
+    grid_people->addWidget(new QLabel(QString::number(dpp)), 4, 1); 
+    grid_people->addWidget(new QLabel(QString::number(dp + dpp)), 4, 2);
+    
     this->layout->addWidget(group_people);
 }
 
