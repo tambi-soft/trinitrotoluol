@@ -152,9 +152,9 @@ void DbAdapter::insertNewPerson(QMap<QString,QVariant> data)
 {
     QSqlQuery query(this->db);
     query.prepare("INSERT INTO people"
-                  "(tnt_id, name, group_rowid, email, address, phone, agreed_mail, agreed_prayer, agreement, notes, donations_monthly, donations_monthly_promised, flag_todo, flag_waiting)"
+                  "(tnt_id, name, group_rowid, email, address, phone, agreed_mail, agreed_prayer, agreement, notes, donations_monthly, donations_monthly_promised, flag_todo, flag_waiting, date_collected)"
                   "VALUES"
-                  "(:tnt_id, :name, :group, :email, :address, :phone, :agreed_mail, :agreed_prayer, :agreement, :notes, :donations_monthly, :donations_monthly_promised, :flag_todo, :flag_waiting)");
+                  "(:tnt_id, :name, :group, :email, :address, :phone, :agreed_mail, :agreed_prayer, :agreement, :notes, :donations_monthly, :donations_monthly_promised, :flag_todo, :flag_waiting, CURRENT_TIMESTAMP)");
     
     query = bindPersonParams(query, data);
     

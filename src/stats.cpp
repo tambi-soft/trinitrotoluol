@@ -33,7 +33,6 @@ void Stats::addPeopleStats()
     
     int dp = data["donation_partners"].toInt();
     int dpp = data["donation_partners_promised"].toInt();
-    qDebug() << data;
     grid_people->addWidget(new QLabel(QString::number(dp)), 4, 0);
     grid_people->addWidget(new QLabel(QString::number(dpp)), 4, 1); 
     grid_people->addWidget(new QLabel(QString::number(dp + dpp)), 4, 2);
