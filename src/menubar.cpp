@@ -21,12 +21,16 @@ void MenuBar::addFileMenu()
 
 void MenuBar::addMailMenu()
 {
+    QAction *newMailAction = new QAction("Prepare New Mail");
+    
+    
     QAction *sendMailAction = new QAction(QIcon::fromTheme("mail-send"), "Send &Mail");
     sendMailAction->setShortcut(QKeySequence::fromString("Ctrl+M"));
     sendMailAction->setStatusTip("Send a new Mailing");
     
     
     QMenu *menu = addMenu("&Mail");
+    menu->addAction(newMailAction);
     menu->addAction(sendMailAction);
 }
 

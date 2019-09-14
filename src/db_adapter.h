@@ -22,7 +22,7 @@ public:
     void insertNewPerson(QMap<QString, QVariant> data);
     void updatePerson(qlonglong rowid, QMap<QString,QVariant> data);
     void deletePerson(qlonglong rowid);
-    QMap<QString, QVariant> selectPerson(qlonglong id);
+    QMap<QString, QVariant> selectPerson(qlonglong rowid);
     QList<QMap<QString, QVariant>> selectAllPersons();
     QList<QMap<QString, QVariant>> selectAllPersonsFiltered(QString group, QString name, QString mail);
     QList<QMap<QString, QVariant>> selectGroups();

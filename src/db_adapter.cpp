@@ -98,11 +98,17 @@ void DbAdapter::initializeTables()
     QSqlQuery query_groups("CREATE TABLE IF NOT EXISTS \"groups\" (rowid INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)", this->db);
     
     QSqlQuery query_sent_mail("CREATE TABLE IF NOT EXISTS \"mail_sent\" (\
-        \"people_rowid\"    INTEGER,\
-        \"mail_id\"         INTEGER,\
-        \"mail_number\"     INTEGER,\
+        \"rowid_people\"    INTEGER,\
+        \"rowid_mail\"         INTEGER,\
         \"date\"            INTEGER\
     )", this->db);
+            
+    QSqlQuery query_mail("CREATE TABLE IF NOT EXISTS \"mail\" ("
+                         "rowid INTEGER PRIMARY KEY AUTOINCREMENT,"
+                         "number INTEGER,"
+                         "subject TEXT,"
+                         "cover TEXT,"
+                         "content TEXT)", this->db);
     
     QSqlQuery query_donations("CREATE VIEW IF NOT EXISTS donations_monthly AS\
         SELECT SUM(donations_monthly) AS monthly_sum, SUM(donations_monthly_promised) AS monthly_sum_promised FROM people\
@@ -174,15 +180,15 @@ void DbAdapter::updatePerson(qlonglong rowid, QMap<QString,QVariant> data)
     query.exec();
 }
 
-QMap<QString,QVariant> DbAdapter::selectPerson(qlonglong id)
+QMap<QString,QVariant> DbAdapter::selectPerson(qlonglong rowid)
 {
     QSqlQuery query(this->db);
     query.prepare("SELECT b.name AS spouse_name, a.tnt_id, a.name, a.group_rowid, g.name AS group_name, a.\"email\", a.\"address\", a.\"phone\", a.\"agreed_mail\", a.\"agreed_prayer\", a.\"agreement\", a.\"notes\", a.\"donations_monthly\", a.\"donations_monthly_promised\", a.flag_todo, a.flag_waiting\
         FROM people a\
         LEFT JOIN people b ON a.spouse_rowid=b.rowid\
         JOIN groups g ON a.group_rowid=g.rowid\
-        WHERE a.rowid=:id");
-    query.bindValue(":id", id);
+        WHERE a.rowid=:rowid");
+    query.bindValue(":rowid", rowid);
     query.exec();
     
     return dbIteratorToMap(query);
