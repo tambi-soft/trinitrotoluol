@@ -165,6 +165,11 @@ void DbAdapter::insertNewPerson(QMap<QString,QVariant> data)
     query = bindPersonParams(query, data);
     
     query.exec();
+    
+    //qDebug() << this->db.lastError();
+    //qDebug() << query.lastQuery();
+    
+    this->db.commit();
 }
 
 void DbAdapter::updatePerson(qlonglong rowid, QMap<QString,QVariant> data)
