@@ -2,8 +2,8 @@
 
 PersonEdit::PersonEdit(DbAdapter *db, qlonglong rowid, QWidget *parent)
     : QWidget(parent)
-    , layout (new QGridLayout)
 {
+    this->layout = new QGridLayout;
     setLayout(this->layout);
     
     this->rowid = rowid;
@@ -15,8 +15,8 @@ PersonEdit::PersonEdit(DbAdapter *db, qlonglong rowid, QWidget *parent)
 
 PersonEdit::PersonEdit(DbAdapter *db, QWidget *parent)
     : QWidget(parent)
-    , layout (new QGridLayout)
 {
+    this->layout = new QGridLayout;
     setLayout(this->layout);
     
     this->db = db;
@@ -177,7 +177,8 @@ void PersonEdit::savePerson()
 {
     QMap<QString,QVariant> data = collectSaveData();
     
-    this->db->insertNewPerson(data);
+    this->rowid = this->db->insertNewPerson(data);
+    qDebug() << this->rowid;
 }
 
 void PersonEdit::updatePerson()
@@ -212,6 +213,10 @@ void PersonEdit::onSaveButton()
     if (this->rowid == -1)
     {
         savePerson();
+        
+        // convert this view from an "adding a new person" to "editing an existing one"
+        delete this->layout;
+        PersonEdit(this->db, this->rowid);
     }
     else
     {

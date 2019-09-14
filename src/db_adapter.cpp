@@ -154,7 +154,7 @@ QSqlQuery DbAdapter::bindPersonParams(QSqlQuery query, QMap<QString,QVariant> da
     return query;
 }
 
-void DbAdapter::insertNewPerson(QMap<QString,QVariant> data)
+qlonglong DbAdapter::insertNewPerson(QMap<QString,QVariant> data)
 {
     QSqlQuery query(this->db);
     query.prepare("INSERT INTO people"
@@ -170,6 +170,8 @@ void DbAdapter::insertNewPerson(QMap<QString,QVariant> data)
     //qDebug() << query.lastQuery();
     
     this->db.commit();
+    
+    return query.lastInsertId().toLongLong();
 }
 
 void DbAdapter::updatePerson(qlonglong rowid, QMap<QString,QVariant> data)
