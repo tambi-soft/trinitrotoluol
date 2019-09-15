@@ -7,6 +7,7 @@ PeopleList::PeopleList(DbAdapter *db, QWidget *parent)
     , check_todo (new QCheckBox)
     , check_waiting (new QCheckBox)
     , check_donating (new QCheckBox)
+    , check_mail (new QCheckBox)
     , line_name_filter (new QLineEdit)
     , line_mail_filter (new QLineEdit)
 {
@@ -21,9 +22,12 @@ PeopleList::PeopleList(DbAdapter *db, QWidget *parent)
     this->check_waiting->setCheckState(Qt::PartiallyChecked);
     this->check_donating->setTristate(true);
     this->check_donating->setCheckState(Qt::PartiallyChecked);
+    this->check_mail->setTristate(true);
+    this->check_mail->setCheckState(Qt::PartiallyChecked);
     connect(this->check_todo, &QCheckBox::stateChanged, this, &PeopleList::onFilterChanged);
     connect(this->check_waiting, &QCheckBox::stateChanged, this, &PeopleList::onFilterChanged);
     connect(this->check_donating, &QCheckBox::stateChanged, this, &PeopleList::onFilterChanged);
+    connect(this->check_mail, &QCheckBox::stateChanged, this, &PeopleList::onFilterChanged);
     
     this->line_name_filter->setClearButtonEnabled(true);
     this->line_name_filter->setPlaceholderText("type a NAME here to search");
@@ -42,6 +46,8 @@ PeopleList::PeopleList(DbAdapter *db, QWidget *parent)
     hbox_filters->addWidget(this->check_waiting);
     hbox_filters->addWidget(new QLabel("Donating:"));
     hbox_filters->addWidget(this->check_donating);
+    hbox_filters->addWidget(new QLabel("Mail:"));
+    hbox_filters->addWidget(this->check_mail);
     hbox_filters->addWidget(this->line_name_filter);
     hbox_filters->addWidget(this->line_mail_filter);
     hbox_filters->addWidget(this->combo_groups);
@@ -58,7 +64,7 @@ PeopleList::PeopleList(DbAdapter *db, QWidget *parent)
     connect(button_add_new_person, &QPushButton::clicked, this, &PeopleList::onNewPersonButtonClicked);
     
     showGroupsFilterCombo();
-    showPeople();
+    //showPeople();
     
     //this->db->insertNewPerson("name", "group", "email", "add", "phone");
 }
@@ -74,7 +80,9 @@ void PeopleList::showGroupsFilterCombo()
         gr.append(groups.at(i)["name"].toString());
     }
     
+    this->combo_groups->blockSignals(true);
     this->combo_groups->addItems(gr);
+    this->combo_groups->blockSignals(false);
 }
 
 void PeopleList::showPeople()
@@ -89,6 +97,7 @@ void PeopleList::showPeople()
     {
         filter_todo = 0;
     }
+    
     int filter_waiting = -1;
     if (this->check_waiting->checkState() == Qt::Checked)
     {
@@ -98,6 +107,7 @@ void PeopleList::showPeople()
     {
         filter_waiting = 0;
     }
+    
     int filter_donating = -1;
     if (this->check_donating->checkState() == Qt::Checked)
     {
@@ -106,6 +116,16 @@ void PeopleList::showPeople()
     else if (this->check_donating->checkState() == Qt::Unchecked)
     {
         filter_donating = 0;
+    }
+    
+    int filter_mail = -1;
+    if (this->check_mail->checkState() == Qt::Checked)
+    {
+        filter_mail = 1;
+    }
+    else if (this->check_mail->checkState() == Qt::Unchecked)
+    {
+        filter_mail = 0;
     }
     
     QString str_filter_group = this->combo_groups->currentText();
@@ -126,6 +146,7 @@ void PeopleList::showPeople()
     QList<QMap<QString,QVariant>> people = this->db->selectAllPersonsFiltered(filter_todo,
                                                                               filter_waiting,
                                                                               filter_donating,
+                                                                              filter_mail,
                                                                               str_filter_group,
                                                                               "%"+str_filter_name+"%",
                                                                               "%"+str_filter_mail+"%");
@@ -219,18 +240,21 @@ void PeopleList::clear()
 
 void PeopleList::onFilterChanged()
 {
+    qDebug() << "onFilterChanged";
     this->table_widget->clear();
     showPeople();
 }
 
 void PeopleList::onNameFilterChanged()
 {
+    qDebug() << "onNameFilterChanged";
     this->table_widget->clear();
     showPeople();
 }
 
 void PeopleList::onGroupsFilterChanged()
 {
+    qDebug() << "onGroupFilterChanged";
     /*
     this->combo_groups->blockSignals(true);
     clear();
