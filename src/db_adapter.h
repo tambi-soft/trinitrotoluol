@@ -23,8 +23,8 @@ public:
     void updatePerson(qlonglong rowid, QMap<QString,QVariant> data);
     void deletePerson(qlonglong rowid);
     QMap<QString, QVariant> selectPerson(qlonglong rowid);
-    QList<QMap<QString, QVariant>> selectAllPersons();
-    QList<QMap<QString, QVariant>> selectAllPersonsFiltered(QString group, QString name, QString mail);
+    //QList<QMap<QString, QVariant>> selectAllPersons();
+    QList<QMap<QString, QVariant>> selectAllPersonsFiltered(bool todo, bool waiting, QString group, QString name, QString mail);
     QList<QMap<QString, QVariant>> selectGroups();
     QMap<QString, QVariant> selectMoneyStats();
     QMap<QString, QVariant> selectPeopleStats();

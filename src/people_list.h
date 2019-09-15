@@ -14,6 +14,8 @@
 #include <QComboBox>
 #include <QLineEdit>
 #include <QMessageBox>
+#include <QCheckBox>
+#include <QLabel>
 #include <QScrollBar>
 
 #include "db_adapter.h"
@@ -32,6 +34,8 @@ private:
     QTableWidget *table_widget = new QTableWidget();
     DbAdapter *db;
     QComboBox *combo_groups;
+    QCheckBox *check_todo;
+    QCheckBox *check_waiting;
     QLineEdit *line_name_filter;
     QLineEdit *line_mail_filter;
     
