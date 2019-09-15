@@ -212,7 +212,7 @@ QList<QMap<QString,QVariant>> DbAdapter::selectAllPersons()
 QList<QMap<QString,QVariant>> DbAdapter::selectAllPersonsFiltered(int todo, int waiting, int donating, QString group, QString name, QString mail)
 {
     QSqlQuery query(this->db);
-    // the ORs should really be XORs, but SQLite do not support XOR now, and it would be far to annoying to fiddle a XOR together by myself
+    // the ORs in the last two lines should really be XORs, but SQLite do not support XOR for now, and it would be far to annoying to fiddle a XOR together by myself
     query.prepare("SELECT people.rowid, people.name, groups.name AS \"group\", email, agreed_mail, agreed_prayer, agreement, flag_todo, flag_waiting, donations_monthly, donations_monthly_promised "
                   "FROM people "
                   "JOIN groups ON people.group_rowid=groups.rowid "

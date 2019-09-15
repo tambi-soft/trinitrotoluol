@@ -24,6 +24,7 @@ public:
     void deletePerson(qlonglong rowid);
     QMap<QString, QVariant> selectPerson(qlonglong rowid);
     //QList<QMap<QString, QVariant>> selectAllPersons();
+    // "todo", "waiting" and "donating" are tristate: -1: show both, 0: show 0, 1: show = 1 (or with donating: > 0)
     QList<QMap<QString, QVariant>> selectAllPersonsFiltered(int todo, int waiting, int donating, QString group, QString name, QString mail);
     QList<QMap<QString, QVariant>> selectGroups();
     QMap<QString, QVariant> selectMoneyStats();
