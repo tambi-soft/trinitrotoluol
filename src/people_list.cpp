@@ -240,14 +240,12 @@ void PeopleList::clear()
 
 void PeopleList::onFilterChanged()
 {
-    qDebug() << "onFilterChanged";
     this->table_widget->clear();
     showPeople();
 }
 
 void PeopleList::onNameFilterChanged()
 {
-    qDebug() << "onNameFilterChanged";
     this->table_widget->clear();
     showPeople();
 }

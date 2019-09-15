@@ -252,8 +252,6 @@ QList<QMap<QString,QVariant>> DbAdapter::selectAllPersonsFiltered(int todo, int 
     query.bindValue(":mail", mail);
     query.exec();
     
-    qDebug() << donating;
-    
     return dbIteratorToMapList(query);
 }
 
