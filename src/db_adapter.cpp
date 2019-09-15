@@ -93,8 +93,6 @@ void DbAdapter::initializeTables()
         \"flag_waiting\"    INTEGER DEFAULT 0\
     )", this->db);
     
-    //QSqlQuery query_view_groups("CREATE VIEW IF NOT EXISTS groups AS\
-        SELECT \"group\" FROM people GROUP BY \"group\";", this->db);
     QSqlQuery query_groups("CREATE TABLE IF NOT EXISTS \"groups\" (rowid INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)", this->db);
     
     QSqlQuery query_sent_mail("CREATE TABLE IF NOT EXISTS \"mail_sent\" (\
