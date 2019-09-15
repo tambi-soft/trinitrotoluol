@@ -173,12 +173,11 @@ QMap<QString,QVariant> PersonEdit::collectSaveData()
     return data;
 }
 
-void PersonEdit::savePerson()
+qlonglong PersonEdit::savePerson()
 {
     QMap<QString,QVariant> data = collectSaveData();
     
-    this->rowid = this->db->insertNewPerson(data);
-    qDebug() << this->rowid;
+    return this->db->insertNewPerson(data);
 }
 
 void PersonEdit::updatePerson()
@@ -207,12 +206,11 @@ void PersonEdit::onSaveButton()
 {
     if (this->rowid == -1)
     {
-        savePerson();
+        qlonglong rowid = savePerson();
         
         // convert this view from an "adding a new person" to an "editing an existing one"
         delete this->layout;
-        // the rowid we have just gotten from the db on saving
-        PersonEdit(this->db, this->rowid);
+        PersonEdit(this->db, rowid);
     }
     else
     {

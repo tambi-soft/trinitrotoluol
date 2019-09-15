@@ -17,7 +17,9 @@ class PersonEdit : public QWidget
 {
     Q_OBJECT
 public:
+    // edit an existing person
     explicit PersonEdit(DbAdapter *db, qlonglong rowid, QWidget *parent = nullptr);
+    // create a new person
     explicit PersonEdit(DbAdapter *db, QWidget *parent = nullptr);
     
     void drawGUI();
@@ -26,7 +28,7 @@ public:
     /* pack all data in a qmap for beeing send to the db */
     QMap<QString,QVariant> collectSaveData();
     /* save new person */
-    void savePerson();
+    qlonglong savePerson();
     /* update existing person */
     void updatePerson();
     
