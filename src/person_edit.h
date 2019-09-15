@@ -29,7 +29,6 @@ public:
     void savePerson();
     /* update existing person */
     void updatePerson();
-    void clear();
     
 private:
     QGridLayout *layout;

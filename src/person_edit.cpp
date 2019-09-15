@@ -188,11 +188,6 @@ void PersonEdit::updatePerson()
     this->db->updatePerson(this->rowid, data);
 }
 
-void PersonEdit::clear()
-{
-    
-}
-
 void PersonEdit::onAddNewGroupButton()
 {
     
@@ -214,8 +209,9 @@ void PersonEdit::onSaveButton()
     {
         savePerson();
         
-        // convert this view from an "adding a new person" to "editing an existing one"
+        // convert this view from an "adding a new person" to an "editing an existing one"
         delete this->layout;
+        // the rowid we have just gotten from the db on saving
         PersonEdit(this->db, this->rowid);
     }
     else
