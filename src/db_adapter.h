@@ -24,7 +24,7 @@ public:
     void deletePerson(qlonglong rowid);
     QMap<QString, QVariant> selectPerson(qlonglong rowid);
     //QList<QMap<QString, QVariant>> selectAllPersons();
-    QList<QMap<QString, QVariant>> selectAllPersonsFiltered(bool todo, bool waiting, QString group, QString name, QString mail);
+    QList<QMap<QString, QVariant>> selectAllPersonsFiltered(int todo, int waiting, int donating, QString group, QString name, QString mail);
     QList<QMap<QString, QVariant>> selectGroups();
     QMap<QString, QVariant> selectMoneyStats();
     QMap<QString, QVariant> selectPeopleStats();

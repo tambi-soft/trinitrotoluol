@@ -6,6 +6,7 @@ PeopleList::PeopleList(DbAdapter *db, QWidget *parent)
     , combo_groups (new QComboBox)
     , check_todo (new QCheckBox)
     , check_waiting (new QCheckBox)
+    , check_donating (new QCheckBox)
     , line_name_filter (new QLineEdit)
     , line_mail_filter (new QLineEdit)
 {
@@ -13,6 +14,16 @@ PeopleList::PeopleList(DbAdapter *db, QWidget *parent)
     
     this->layout = new QVBoxLayout;
     setLayout(this->layout);
+    
+    this->check_todo->setTristate(true);
+    this->check_todo->setCheckState(Qt::PartiallyChecked);
+    this->check_waiting->setTristate(true);
+    this->check_waiting->setCheckState(Qt::PartiallyChecked);
+    this->check_donating->setTristate(true);
+    this->check_donating->setCheckState(Qt::PartiallyChecked);
+    connect(this->check_todo, &QCheckBox::stateChanged, this, &PeopleList::onFilterChanged);
+    connect(this->check_waiting, &QCheckBox::stateChanged, this, &PeopleList::onFilterChanged);
+    connect(this->check_donating, &QCheckBox::stateChanged, this, &PeopleList::onFilterChanged);
     
     this->line_name_filter->setClearButtonEnabled(true);
     this->line_name_filter->setPlaceholderText("type a NAME here to search");
@@ -29,6 +40,8 @@ PeopleList::PeopleList(DbAdapter *db, QWidget *parent)
     hbox_filters->addWidget(this->check_todo);
     hbox_filters->addWidget(new QLabel("Waiting:"));
     hbox_filters->addWidget(this->check_waiting);
+    hbox_filters->addWidget(new QLabel("Donating:"));
+    hbox_filters->addWidget(this->check_donating);
     hbox_filters->addWidget(this->line_name_filter);
     hbox_filters->addWidget(this->line_mail_filter);
     hbox_filters->addWidget(this->combo_groups);
@@ -66,17 +79,35 @@ void PeopleList::showGroupsFilterCombo()
 
 void PeopleList::showPeople()
 {
-    // if no filter set, just use the wildcard '%' for the sql query
-    QString str_filter_todo = "0";
-    if (! this->check_todo->isChecked())
+    // -1 is the value for partially checked
+    int filter_todo = -1;
+    if (this->check_todo->checkState() == Qt::Checked)
     {
-        str_filter_todo = "%";
+        filter_todo = 1;
     }
-    QString str_filter_waiting = "0";
-    if (! this->check_waiting->isChecked())
+    else if (this->check_todo->checkState() == Qt::Unchecked)
     {
-        str_filter_waiting = "%";
+        filter_todo = 0;
     }
+    int filter_waiting = -1;
+    if (this->check_waiting->checkState() == Qt::Checked)
+    {
+        filter_waiting = 1;
+    }
+    else if (this->check_waiting->checkState() == Qt::Unchecked)
+    {
+        filter_waiting = 0;
+    }
+    int filter_donating = -1;
+    if (this->check_donating->checkState() == Qt::Checked)
+    {
+        filter_donating = 1;
+    }
+    else if (this->check_donating->checkState() == Qt::Unchecked)
+    {
+        filter_donating = 0;
+    }
+    
     QString str_filter_group = this->combo_groups->currentText();
     if (str_filter_group == "[ALL]")
     {
@@ -92,9 +123,10 @@ void PeopleList::showPeople()
     {
         str_filter_mail = "%";
     }
-    QList<QMap<QString,QVariant>> people = this->db->selectAllPersonsFiltered(str_filter_group,
-                                                                              str_filter_todo,
-                                                                              str_filter_waiting,
+    QList<QMap<QString,QVariant>> people = this->db->selectAllPersonsFiltered(filter_todo,
+                                                                              filter_waiting,
+                                                                              filter_donating,
+                                                                              str_filter_group,
                                                                               "%"+str_filter_name+"%",
                                                                               "%"+str_filter_mail+"%");
     
@@ -176,13 +208,19 @@ void PeopleList::showPeople()
     this->table_widget->resizeColumnsToContents();
     this->table_widget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     
-    this->table_widget->verticalHeader()->setVisible(false);
+    //this->table_widget->verticalHeader()->setVisible(false);
 }
 
 void PeopleList::clear()
 {
     this->combo_groups->clear();
     this->table_widget->clear();
+}
+
+void PeopleList::onFilterChanged()
+{
+    this->table_widget->clear();
+    showPeople();
 }
 
 void PeopleList::onNameFilterChanged()

@@ -33,9 +33,12 @@ private:
     QVBoxLayout *layout;
     QTableWidget *table_widget = new QTableWidget();
     DbAdapter *db;
+    
     QComboBox *combo_groups;
     QCheckBox *check_todo;
     QCheckBox *check_waiting;
+    QCheckBox *check_donating;
+    
     QLineEdit *line_name_filter;
     QLineEdit *line_mail_filter;
     
@@ -45,6 +48,7 @@ signals:
     void showDonationsForPersonSignal(qlonglong rowid);
     
 public slots:
+    void onFilterChanged();
     void onNameFilterChanged();
     void onGroupsFilterChanged();
     void onNewPersonButtonClicked();
