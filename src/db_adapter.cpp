@@ -79,8 +79,8 @@ void DbAdapter::initializeTables()
         \"email\"	TEXT,\
         \"address\"	TEXT,\
         \"phone\"	TEXT,\
-        \"agreed_mail\"	INTEGER,\
-        \"agreed_prayer\"	INTEGER,\
+        \"agreed_mail\"	INTEGER DEFAULT 0,\
+        \"agreed_prayer\"	INTEGER DEFAULT 0,\
         \"agreement\"	TEXT,\
         \"date_collected\"  INTEGER,\
         \"date_last_changed\" INTEGER,\
@@ -88,7 +88,7 @@ void DbAdapter::initializeTables()
         \"donations_monthly\" INTEGER DEFAULT 0,\
         \"donations_monthly_promised\"  INTEGER DEFAULT 0,\
         \"spouse_rowid\"    INTEGER,\
-        \"deactivated\"     INTEGER,\
+        \"deactivated\"     INTEGER DEFAULT 0,\
         \"flag_todo\"       INTEGER DEFAULT 0,\
         \"flag_waiting\"    INTEGER DEFAULT 0\
     )", this->db);
