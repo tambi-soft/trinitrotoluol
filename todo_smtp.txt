@@ -1,0 +1,4 @@
+https://curl.haxx.se/libcurl/
+https://curl.haxx.se/libcurl/c/smtp-ssl.html
+
+https://doc.qt.io/qt-5/third-party-libraries.html

@@ -106,7 +106,9 @@ void DbAdapter::initializeTables()
                          "number INTEGER,"
                          "subject TEXT,"
                          "cover TEXT,"
-                         "content TEXT)", this->db);
+                         "content_path TEXT,"
+                         "attachment_path TEXT,"
+                         "date TEXT)", this->db);
     
     QSqlQuery query_donations("CREATE VIEW IF NOT EXISTS donations_monthly AS\
         SELECT SUM(donations_monthly) AS monthly_sum, SUM(donations_monthly_promised) AS monthly_sum_promised FROM people\
@@ -273,3 +275,23 @@ QMap<QString,QVariant> DbAdapter::selectPeopleStats()
     
     return  dbIteratorToMap(query);
 }
+
+QSqlQuery DbAdapter::bindMailParams(QSqlQuery query, QMap<QString, QVariant> data)
+{
+    query.bindValue(":number", data["number"]);
+    query.bindValue(":subject", data["subject"]);
+    query.bindValue(":cover", data["cover"]);
+    query.bindValue(":content_path", data["content_path"]);
+    query.bindValue(":attachment_path", data["attachment_path"]);
+    
+    return query;
+}
+
+void DbAdapter::insertNewMail(QMap<QString, QVariant> data)
+{
+    QSqlQuery query(this->db);
+    query.prepare("INSERT INTO mail (number, subject, cover, content_path, attachment_path, date) VALUES (:number, :subject, :cover, :content_path, :attachment_path, CURRENT_TIMESTAMP)");
+    query = bindMailParams(query, data);
+    query.exec();
+}
+

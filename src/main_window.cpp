@@ -15,6 +15,7 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
     
     this->menu_bar = new MenuBar();
     setMenuBar(this->menu_bar);
+    connect(this->menu_bar, &MenuBar::signalNewMail, this, &QTNTMainWindow::addNewMailTab);
     
     setCentralWidget(this->tab_widget);
     tab_widget->setTabsClosable(true);
@@ -25,6 +26,7 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
     
     addStatsTab();
     addPeopleTab();
+    addNewMailTab();
     
     deactivateCloseButtons();
 }
@@ -132,4 +134,22 @@ void QTNTMainWindow::addPeopleTab()
     tab_widget->addTab(this->people_list, "people");
     
     activateNewTab();
+}
+
+void QTNTMainWindow::addNewMailTab()
+{
+    QString tab_name = "New Mail";
+    if (this->open_tabs.contains(tab_name))
+    {
+        int index = this->open_tabs[tab_name];
+        this->tab_widget->setCurrentIndex(index);
+    }
+    else
+    {
+        MailNew* mail = new MailNew(this->db);
+        
+        this->tab_widget->addTab(mail, tab_name);
+        activateNewTab();
+        this->open_tabs[tab_name] = this->tab_widget->currentIndex();
+    }
 }

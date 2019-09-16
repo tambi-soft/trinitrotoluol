@@ -49,6 +49,7 @@ QT += widgets \
 
 # Input
 HEADERS += \
+    src/mail_new.h \
     src/main_window.h \
     src/config.h \
     src/db_adapter.h \
@@ -61,6 +62,7 @@ HEADERS += \
     
 
 SOURCES += \
+    src/mail_new.cpp \
     src/menubar.cpp \
     src/people_list.cpp \
     src/person_edit.cpp \

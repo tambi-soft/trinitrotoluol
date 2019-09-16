@@ -21,8 +21,8 @@ void MenuBar::addFileMenu()
 
 void MenuBar::addMailMenu()
 {
-    QAction *newMailAction = new QAction("Prepare New Mail");
-    
+    QAction *newMailAction = new QAction(QIcon::fromTheme("document-new"), "Prepare New Mail");
+    connect(newMailAction, &QAction::triggered, this, &MenuBar::newMail);
     
     QAction *sendMailAction = new QAction(QIcon::fromTheme("mail-send"), "Send &Mail");
     sendMailAction->setShortcut(QKeySequence::fromString("Ctrl+M"));
@@ -52,4 +52,9 @@ void MenuBar::addHelpMenu()
 void MenuBar::quitApplication()
 {
     QApplication::quit();
+}
+
+void MenuBar::newMail()
+{
+    emit signalNewMail();
 }

@@ -28,8 +28,10 @@ private:
     void quitApplication();
     
 signals:
+    void signalNewMail();
     
 public slots:
+    void newMail();
 };
 
 #endif // MENUBAR_H

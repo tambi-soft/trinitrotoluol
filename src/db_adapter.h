@@ -29,6 +29,8 @@ public:
     QList<QMap<QString, QVariant>> selectGroups();
     QMap<QString, QVariant> selectMoneyStats();
     QMap<QString, QVariant> selectPeopleStats();
+    QSqlQuery bindMailParams(QSqlQuery query, QMap<QString,QVariant> data);
+    void insertNewMail(QMap<QString,QVariant> data);
     
 private:
     QSqlDatabase db;
