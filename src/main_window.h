@@ -14,6 +14,7 @@
 #include "stats.h"
 #include "menubar.h"
 #include "mail_new.h"
+#include "mail_list.h"
 
 class QTNTMainWindow : public QMainWindow
 {
@@ -30,6 +31,8 @@ private:
     DbAdapter *db;
     void deactivateCloseButtons();
     QMap<QString, int> open_tabs; // {tab_name} -> tab widget id
+    // make shure only one of this type of tab is open at once
+    void createSingleTab(QString tab_name, QWidget *widget);
     
     
 private slots:
@@ -44,4 +47,5 @@ private slots:
     void addPeopleTab();
     
     void addNewMailTab();
+    void addMailListTab();
 };

@@ -16,6 +16,7 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
     this->menu_bar = new MenuBar();
     setMenuBar(this->menu_bar);
     connect(this->menu_bar, &MenuBar::signalNewMail, this, &QTNTMainWindow::addNewMailTab);
+    connect(this->menu_bar, &MenuBar::signalMailList, this, &QTNTMainWindow::addMailListTab);
     
     setCentralWidget(this->tab_widget);
     tab_widget->setTabsClosable(true);
@@ -26,7 +27,6 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
     
     addStatsTab();
     addPeopleTab();
-    addNewMailTab();
     
     deactivateCloseButtons();
 }
@@ -102,21 +102,10 @@ void QTNTMainWindow::addNewPersonTab()
 
 void QTNTMainWindow::addPersonEditTab(qlonglong rowid, QString name)
 {
-    QString tab_name = "Edit: "+name;
-    if (this->open_tabs.contains(tab_name))
-    {
-        int index = this->open_tabs[tab_name];
-        this->tab_widget->setCurrentIndex(index);
-    }
-    else
-    {
-        PersonEdit *person = new PersonEdit(this->db, rowid);
-        connect(person, &PersonEdit::closeCurrentTabSignal, this, &QTNTMainWindow::closeCurrentTab);
+    PersonEdit *person = new PersonEdit(this->db, rowid);
+    connect(person, &PersonEdit::closeCurrentTabSignal, this, &QTNTMainWindow::closeCurrentTab);
         
-        this->tab_widget->addTab(person, tab_name);
-        activateNewTab();
-        this->open_tabs[tab_name] = this->tab_widget->currentIndex();
-    }
+    createSingleTab("Edit: "+name, person);
 }
 
 void QTNTMainWindow::addStatsTab()
@@ -138,7 +127,22 @@ void QTNTMainWindow::addPeopleTab()
 
 void QTNTMainWindow::addNewMailTab()
 {
-    QString tab_name = "New Mail";
+    MailNew *mail = new MailNew(this->db);
+    connect(mail, &MailNew::closeCurrentTabSignal, this, &QTNTMainWindow::closeCurrentTab);
+    
+    createSingleTab("New Mail", mail);
+}
+
+void QTNTMainWindow::addMailListTab()
+{
+    MailList *list = new MailList(this->db);
+    connect(list, &MailList::closeCurrentTabSignal, this, &QTNTMainWindow::closeCurrentTab);
+    
+    createSingleTab("Mail List", list);
+}
+
+void QTNTMainWindow::createSingleTab(QString tab_name, QWidget *widget)
+{
     if (this->open_tabs.contains(tab_name))
     {
         int index = this->open_tabs[tab_name];
@@ -146,10 +150,7 @@ void QTNTMainWindow::addNewMailTab()
     }
     else
     {
-        MailNew* mail = new MailNew(this->db);
-        connect(mail, &MailNew::closeCurrentTabSignal, this, &QTNTMainWindow::closeCurrentTab);
-        
-        this->tab_widget->addTab(mail, tab_name);
+        this->tab_widget->addTab(widget, tab_name);
         activateNewTab();
         this->open_tabs[tab_name] = this->tab_widget->currentIndex();
     }

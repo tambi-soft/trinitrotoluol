@@ -29,9 +29,11 @@ private:
     
 signals:
     void signalNewMail();
+    void signalMailList();
     
 public slots:
     void newMail();
+    void mailList();
 };
 
 #endif // MENUBAR_H

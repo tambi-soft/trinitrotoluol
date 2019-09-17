@@ -24,6 +24,9 @@ void MenuBar::addMailMenu()
     QAction *newMailAction = new QAction(QIcon::fromTheme("document-new"), "Prepare New Mail");
     connect(newMailAction, &QAction::triggered, this, &MenuBar::newMail);
     
+    QAction *mailListAction = new QAction("Mail List");
+    connect(mailListAction, &QAction::triggered, this, &MenuBar::mailList);
+    
     QAction *sendMailAction = new QAction(QIcon::fromTheme("mail-send"), "Send &Mail");
     sendMailAction->setShortcut(QKeySequence::fromString("Ctrl+M"));
     sendMailAction->setStatusTip("Send a new Mailing");
@@ -31,6 +34,7 @@ void MenuBar::addMailMenu()
     
     QMenu *menu = addMenu("&Mail");
     menu->addAction(newMailAction);
+    menu->addAction(mailListAction);
     menu->addAction(sendMailAction);
 }
 
@@ -57,4 +61,9 @@ void MenuBar::quitApplication()
 void MenuBar::newMail()
 {
     emit signalNewMail();
+}
+
+void MenuBar::mailList()
+{
+    emit signalMailList();
 }
