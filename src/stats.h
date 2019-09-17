@@ -32,6 +32,7 @@ private:
     QVBoxLayout *layout;
     void addPeopleStats();
     void addMoneyStats();
+    void addRemainingStats();
     void clearLayout(QLayout *layout);
     
 signals:

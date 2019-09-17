@@ -61,6 +61,36 @@ void Stats::addMoneyStats()
     grid_money->addWidget(new QLabel(QString::number(monthly_sum + monthly_sum_promised)), 1, 2);
 }
 
+void Stats::addRemainingStats()
+{
+    QGroupBox* group = new QGroupBox("Remaining");
+    
+    QMap<QString,QVariant> money = this->db->selectMoneyStats();
+    int monthly_sum = money["monthly_sum"].toInt();
+    int monthly_sum_promised = money["monthly_sum_promised"].toInt();
+    
+    QMap<QString,QVariant> data = this->db->selectPeopleStats();
+    int dp = data["donation_partners"].toInt();
+    int dpp = data["donation_partners_promised"].toInt();
+    
+    QGridLayout *grid = new QGridLayout;
+    group->setLayout(grid);
+    this->layout->addWidget(group);
+    
+    grid->addWidget(new QLabel("<b>Needed Money</b>"), 0, 0);
+    grid->addWidget(new QLabel("<b>Remaining Need</b>"), 0, 1);
+    grid->addWidget(new QLabel("<b>Needed Donors</b"), 0, 2);
+    
+    int needed_money = 2500;
+    
+    grid->addWidget(new QLabel(QString::number(needed_money)), 1, 0);
+    grid->addWidget(new QLabel(QString::number( needed_money - monthly_sum - monthly_sum_promised )), 1, 1);
+    if (monthly_sum + monthly_sum_promised > 0)
+    {
+        grid->addWidget(new QLabel(QString::number( ((dp + dpp) * needed_money) / (monthly_sum + monthly_sum_promised) )), 1, 2);
+    }
+}
+
 void Stats::clearLayout(QLayout* layout)
 {
     while (QLayoutItem* item = layout->takeAt(0))
@@ -83,6 +113,7 @@ void Stats::showEvent(QShowEvent */*event*/)
     
     addPeopleStats();
     addMoneyStats();
+    addRemainingStats();
     
     this->layout->addStretch(100);
 }
