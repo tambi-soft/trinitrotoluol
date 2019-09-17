@@ -47,9 +47,15 @@ void MailNew::initializeGUI()
     
     this->grid->addWidget(new QLabel("Content:"), 3, 0);
     this->grid->addWidget(line_content, 3, 1);
+    QPushButton *button_add_content = new QPushButton("select Content Path");
+    connect(button_add_content, &QPushButton::clicked, this, &MailNew::onContentPathButton);
+    this->grid->addWidget(button_add_content, 3, 2);
     
     this->grid->addWidget(new QLabel("Attachment:"), 4, 0);
     this->grid->addWidget(line_attachment, 4, 1);
+    QPushButton *button_add_attachment = new QPushButton("select Attachment Path");
+    connect(button_add_attachment, &QPushButton::clicked, this, &MailNew::onAttachmentPathButton);
+    this->grid->addWidget(button_add_attachment, 4, 2);
     
     this->grid->addWidget(new QLabel("Date:"), 5, 0);
     this->grid->addWidget(line_date, 5, 1);
@@ -71,4 +77,26 @@ void MailNew::onSaveButton()
     data["attachment_path"] = this->line_attachment->text();
     
     this->db->insertNewMail(data);
+}
+
+void MailNew::onContentPathButton()
+{
+    QString last_mail_path = this->db->selectSettings("last_mail_path");
+    last_mail_path = QFileDialog::getOpenFileName(this, tr("Select Directory"),
+            last_mail_path);
+    
+    this->line_content->setText(last_mail_path);
+    
+    this->db->insertSettings("last_mail_path", last_mail_path);
+}
+
+void MailNew::onAttachmentPathButton()
+{
+    QString last_mail_path = this->db->selectSettings("last_mail_path");
+    last_mail_path = QFileDialog::getOpenFileName(this, tr("Select Directory"),
+            last_mail_path);
+    
+    this->line_attachment->setText(last_mail_path);
+    
+    this->db->insertSettings("last_mail_path", last_mail_path);
 }

@@ -122,6 +122,8 @@ void DbAdapter::initializeTables()
         "SUM(CASE WHEN donations_monthly_promised > 0 THEN 1 ELSE 0 END) AS donation_partners_promised "
         "FROM people", this->db);
     
+    QSqlQuery query_settings("CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT)", this->db);
+    
     //qDebug() << this->db.lastError();
     //qDebug() << query_sent_mail.lastQuery();
 }
@@ -295,3 +297,22 @@ void DbAdapter::insertNewMail(QMap<QString, QVariant> data)
     query.exec();
 }
 
+void DbAdapter::insertSettings(QString key, QString value)
+{
+    QSqlQuery query(this->db);
+    query.prepare("INSERT OR REPLACE INTO settings (key, value) VALUES (:key, :value)");
+    query.bindValue(":key", key);
+    query.bindValue(":value", value);
+    query.exec();
+}
+
+QString DbAdapter::selectSettings(QString key)
+{
+    QSqlQuery query(this->db);
+    query.prepare("SELECT value FROM settings WHERE key=:key");
+    query.bindValue(":key", key);
+    query.exec();
+    query.first();
+    
+    return query.value("value").toString();
+}

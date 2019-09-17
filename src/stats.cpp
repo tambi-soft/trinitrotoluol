@@ -81,14 +81,41 @@ void Stats::addRemainingStats()
     grid->addWidget(new QLabel("<b>Remaining Need</b>"), 0, 1);
     grid->addWidget(new QLabel("<b>Needed Donors</b"), 0, 2);
     
-    int needed_money = 2500;
+    QWidget *money_target_widget = new QWidget;
+    QHBoxLayout *money_target_layout = new QHBoxLayout;
+    money_target_layout->setMargin(0);
     
-    grid->addWidget(new QLabel(QString::number(needed_money)), 1, 0);
-    grid->addWidget(new QLabel(QString::number( needed_money - monthly_sum - monthly_sum_promised )), 1, 1);
+    QString needed_money = this->db->selectSettings("money_target");
+    QLineEdit *line_money_needed = new QLineEdit();
+    line_money_needed->setPlaceholderText("type here your money-target");
+    line_money_needed->setText(needed_money);
+    line_money_needed->setMaximumWidth(100);
+    connect(line_money_needed, &QLineEdit::returnPressed, this, [this, line_money_needed]{ onMoneyTargetChanged(line_money_needed->text()); });
+    
+    QPushButton *button_money_target_save = new QPushButton();
+    button_money_target_save->setIcon(QIcon::fromTheme("document-save"));
+    button_money_target_save->setToolTip("save and apply");
+    button_money_target_save->setMaximumWidth(50);
+    connect(button_money_target_save, &QPushButton::clicked, this, [this, line_money_needed]{ onMoneyTargetChanged(line_money_needed->text()); });
+    
+    money_target_layout->addWidget(line_money_needed);
+    money_target_layout->addWidget(button_money_target_save);
+    money_target_layout->addStretch();
+    
+    money_target_widget->setLayout(money_target_layout);
+    
+    grid->addWidget(money_target_widget, 1, 0, Qt::AlignLeft);
+    grid->addWidget(new QLabel(QString::number( needed_money.toInt() - monthly_sum - monthly_sum_promised )), 1, 1);
     if (monthly_sum + monthly_sum_promised > 0)
     {
-        grid->addWidget(new QLabel(QString::number( ((dp + dpp) * needed_money) / (monthly_sum + monthly_sum_promised) )), 1, 2);
+        grid->addWidget(new QLabel(QString::number( ((dp + dpp) * needed_money.toInt()) / (monthly_sum + monthly_sum_promised) )), 1, 2);
     }
+}
+
+void Stats::onMoneyTargetChanged(QString target)
+{
+    this->db->insertSettings("money_target", target);
+    showEvent(new QShowEvent);
 }
 
 void Stats::clearLayout(QLayout* layout)

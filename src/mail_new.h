@@ -9,6 +9,8 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QMap>
+#include <QFileDialog>
+#include <QUrl>
 
 #include "db_adapter.h"
 
@@ -25,6 +27,7 @@ private:
     qlonglong rowid = -1;
     DbAdapter *db;
     QGridLayout* grid;
+    
     QLineEdit* line_number;
     QLineEdit* line_subject;
     QTextEdit* line_cover;
@@ -38,6 +41,8 @@ signals:
     
 public slots:
     void onSaveButton();
+    void onContentPathButton();
+    void onAttachmentPathButton();
 };
 
 #endif // MAILNEW_H

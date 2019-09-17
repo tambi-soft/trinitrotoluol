@@ -32,6 +32,9 @@ public:
     QSqlQuery bindMailParams(QSqlQuery query, QMap<QString,QVariant> data);
     void insertNewMail(QMap<QString,QVariant> data);
     
+    void insertSettings(QString key, QString value);
+    QString selectSettings(QString key);
+    
 private:
     QSqlDatabase db;
     

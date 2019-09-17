@@ -11,6 +11,7 @@
 #include <QGroupBox>
 
 #include <QLabel>
+#include <QLineEdit>
 #include <QPushButton>
 #include <QTableWidget>
 #include <QTableWidgetItem>
@@ -18,6 +19,7 @@
 #include <QMap>
 #include <QList>
 #include <QShowEvent>
+#include <QIcon>
 
 #include "db_adapter.h"
 
@@ -39,6 +41,7 @@ signals:
     
 public slots:
     void showEvent(QShowEvent */*event*/);
+    void onMoneyTargetChanged(QString target);
 };
 
 #endif // STATS_H
