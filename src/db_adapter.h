@@ -29,8 +29,12 @@ public:
     QList<QMap<QString, QVariant>> selectGroups();
     QMap<QString, QVariant> selectMoneyStats();
     QMap<QString, QVariant> selectPeopleStats();
+    
     QSqlQuery bindMailParams(QSqlQuery query, QMap<QString,QVariant> data);
     void insertNewMail(QMap<QString,QVariant> data);
+    void deleteMail(qlonglong rowid);
+    QMap<QString,QVariant> selectMail(qlonglong rowid);
+    QList<QMap<QString,QVariant>> selectAllMails();
     
     void insertSettings(QString key, QString value);
     QString selectSettings(QString key);

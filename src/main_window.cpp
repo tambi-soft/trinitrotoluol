@@ -137,6 +137,7 @@ void QTNTMainWindow::addMailListTab()
 {
     MailList *list = new MailList(this->db);
     connect(list, &MailList::closeCurrentTabSignal, this, &QTNTMainWindow::closeCurrentTab);
+    connect(list, &MailList::signalNewMail, this, &QTNTMainWindow::addNewMailTab);
     
     createSingleTab("Mail List", list);
 }

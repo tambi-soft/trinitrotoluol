@@ -296,8 +296,32 @@ void DbAdapter::insertNewMail(QMap<QString, QVariant> data)
     query = bindMailParams(query, data);
     query.exec();
     
-    qDebug() << this->db.lastError();
-    qDebug() << query.lastQuery();
+    //qDebug() << this->db.lastError();
+    //qDebug() << query.lastQuery();
+}
+
+void DbAdapter::deleteMail(qlonglong rowid)
+{
+    QSqlQuery query(this->db);
+    query.prepare("DELETE FROM mail WHERE rowid=:rowid");
+    query.bindValue(":rowid", rowid);
+    query.exec();
+}
+
+QMap<QString,QVariant> DbAdapter::selectMail(qlonglong rowid)
+{
+    QSqlQuery query(this->db);
+    query.prepare("SELECT number, subject, cover, content_path, attachment_path, date FROM mail WHERE rowid=:rowid");
+    query.bindValue(":rowid", rowid);
+    
+    return dbIteratorToMap(query);
+}
+
+QList<QMap<QString,QVariant>> DbAdapter::selectAllMails()
+{
+    QSqlQuery query("SELECT rowid, number, subject, cover, content_path, attachment_path, date FROM mail", this->db);
+    
+    return dbIteratorToMapList(query);
 }
 
 void DbAdapter::insertSettings(QString key, QString value)
