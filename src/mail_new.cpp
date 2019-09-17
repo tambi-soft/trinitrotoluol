@@ -62,9 +62,16 @@ void MailNew::initializeGUI()
     
     QPushButton* button_cancel = new QPushButton("Cancel");
     this->grid->addWidget(button_cancel, 6, 0);
+    connect(button_cancel, &QPushButton::clicked, this, &MailNew::onCancelButton);
     
     QPushButton* button_save = new QPushButton("Save");
     this->grid->addWidget(button_save, 6, 1);
+    connect(button_save, &QPushButton::clicked, this, &MailNew::onSaveButton);
+}
+
+void MailNew::onCancelButton()
+{
+    emit closeCurrentTabSignal();
 }
 
 void MailNew::onSaveButton()

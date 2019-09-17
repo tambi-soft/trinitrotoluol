@@ -100,7 +100,6 @@ void Stats::addRemainingStats()
     
     money_target_layout->addWidget(line_money_needed);
     money_target_layout->addWidget(button_money_target_save);
-    money_target_layout->addStretch();
     
     money_target_widget->setLayout(money_target_layout);
     

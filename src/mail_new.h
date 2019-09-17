@@ -38,8 +38,10 @@ private:
     void initializeGUI();
     
 signals:
+    void closeCurrentTabSignal();
     
 public slots:
+    void onCancelButton();
     void onSaveButton();
     void onContentPathButton();
     void onAttachmentPathButton();

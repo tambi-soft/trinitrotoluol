@@ -147,6 +147,7 @@ void QTNTMainWindow::addNewMailTab()
     else
     {
         MailNew* mail = new MailNew(this->db);
+        connect(mail, &MailNew::closeCurrentTabSignal, this, &QTNTMainWindow::closeCurrentTab);
         
         this->tab_widget->addTab(mail, tab_name);
         activateNewTab();

@@ -101,13 +101,13 @@ void DbAdapter::initializeTables()
         \"date\"            INTEGER\
     )", this->db);
             
-    QSqlQuery query_mail("CREATE TABLE IF NOT EXISTS \"mail\" ("
-                         "rowid INTEGER PRIMARY KEY AUTOINCREMENT,"
-                         "number INTEGER,"
-                         "subject TEXT,"
-                         "cover TEXT,"
-                         "content_path TEXT,"
-                         "attachment_path TEXT,"
+    QSqlQuery query_mail("CREATE TABLE IF NOT EXISTS mail ("
+                         "rowid INTEGER PRIMARY KEY AUTOINCREMENT, "
+                         "number INTEGER, "
+                         "subject TEXT, "
+                         "cover TEXT, "
+                         "content_path TEXT, "
+                         "attachment_path TEXT, "
                          "date TEXT)", this->db);
     
     QSqlQuery query_donations("CREATE VIEW IF NOT EXISTS donations_monthly AS\
@@ -280,11 +280,11 @@ QMap<QString,QVariant> DbAdapter::selectPeopleStats()
 
 QSqlQuery DbAdapter::bindMailParams(QSqlQuery query, QMap<QString, QVariant> data)
 {
-    query.bindValue(":number", data["number"]);
-    query.bindValue(":subject", data["subject"]);
-    query.bindValue(":cover", data["cover"]);
-    query.bindValue(":content_path", data["content_path"]);
-    query.bindValue(":attachment_path", data["attachment_path"]);
+    query.bindValue(":number", data["number"].toInt());
+    query.bindValue(":subject", data["subject"].toString());
+    query.bindValue(":cover", data["cover"].toString());
+    query.bindValue(":content_path", data["content_path"].toString());
+    query.bindValue(":attachment_path", data["attachment_path"].toString());
     
     return query;
 }
@@ -295,6 +295,9 @@ void DbAdapter::insertNewMail(QMap<QString, QVariant> data)
     query.prepare("INSERT INTO mail (number, subject, cover, content_path, attachment_path, date) VALUES (:number, :subject, :cover, :content_path, :attachment_path, CURRENT_TIMESTAMP)");
     query = bindMailParams(query, data);
     query.exec();
+    
+    qDebug() << this->db.lastError();
+    qDebug() << query.lastQuery();
 }
 
 void DbAdapter::insertSettings(QString key, QString value)
