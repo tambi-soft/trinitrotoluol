@@ -291,16 +291,26 @@ void PeopleList::onDeletePersonButtonClicked(qlonglong rowid, QString name)
     }
 }
 
+void PeopleList::dataChanged()
+{
+    qDebug() << "people list data changed";
+    this->data_changed = true;
+}
+
 void PeopleList::showEvent(QShowEvent */*event*/)
 {
-    // store the current scroll position
-    QScrollBar *vert = this->table_widget->verticalScrollBar();
-    int vert_val = vert->value();
-    
-    // clear and rebuild table_widget eventually with new/updated data
-    this->table_widget->clear();
-    showPeople();
-    
-    // restore previous scroll position
-    vert->setValue(vert_val);
+    if (this->data_changed)
+    {
+        // store the current scroll position
+        QScrollBar *vert = this->table_widget->verticalScrollBar();
+        int vert_val = vert->value();
+        
+        // clear and rebuild table_widget eventually with new/updated data
+        this->table_widget->clear();
+        showPeople();
+        
+        // restore previous scroll position
+        vert->setValue(vert_val);
+    }
+    this->data_changed = false;
 }

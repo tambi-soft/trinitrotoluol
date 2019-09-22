@@ -216,4 +216,6 @@ void PersonEdit::onSaveButton()
     {
         updatePerson();
     }
+    
+    emit dataChanged();
 }

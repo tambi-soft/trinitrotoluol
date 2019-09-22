@@ -5,7 +5,8 @@
 TEMPLATE = app
 TARGET = trinitrotoluol
 
-#linux-g++ | linux-g++-64 | linux-g++-32 {
+linux-g++ | linux-g++-64 | linux-g++-32 {
+    LIBS += -lcurl
 #    # on linux we have to use gstreamer for audio recording directly
 #    # because QAudioRecorder is broken here for over a year now
 #    INCLUDEPATH += "/usr/include/gstreamer-1.0/"
@@ -18,7 +19,7 @@ TARGET = trinitrotoluol
 #
 #    HEADERS += src/gst_audio_recorder.h
 #    SOURCES += src/gst_audio_recorder.cpp
-#}
+}
 win32 {
     RC_ICONS += ./assets/logo.ico
     

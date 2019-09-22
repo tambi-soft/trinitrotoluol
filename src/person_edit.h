@@ -68,6 +68,7 @@ private slots:
     
 signals:
     void closeCurrentTabSignal();
+    void dataChanged();
 };
 
 #endif // PERSON_EDIT_H

@@ -45,6 +45,7 @@ private slots:
     void addPersonEditTab(qlonglong rowid, QString name);
     void addStatsTab();
     void addPeopleTab();
+    void onPeopleDataChanged();
     
     void addNewMailTab();
     void addMailListTab();

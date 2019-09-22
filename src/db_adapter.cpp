@@ -71,27 +71,27 @@ QMap<QString,QVariant> DbAdapter::dbIteratorToMap(QSqlQuery query)
 
 void DbAdapter::initializeTables()
 {
-    QSqlQuery query_table_people("CREATE TABLE IF NOT EXISTS \"people\" (\
-        \"rowid\"	INTEGER PRIMARY KEY AUTOINCREMENT,\
-        \"group_rowid\"	INTEGER,\
-        \"tnt_id\"    INTEGER,\
-        \"name\"	TEXT,\
-        \"email\"	TEXT,\
-        \"address\"	TEXT,\
-        \"phone\"	TEXT,\
-        \"agreed_mail\"	INTEGER DEFAULT 0,\
-        \"agreed_prayer\"	INTEGER DEFAULT 0,\
-        \"agreement\"	TEXT,\
-        \"date_collected\"  INTEGER,\
-        \"date_last_changed\" INTEGER,\
-        \"notes\"	TEXT,\
-        \"donations_monthly\" INTEGER DEFAULT 0,\
-        \"donations_monthly_promised\"  INTEGER DEFAULT 0,\
-        \"spouse_rowid\"    INTEGER,\
-        \"deactivated\"     INTEGER DEFAULT 0,\
-        \"flag_todo\"       INTEGER DEFAULT 0,\
-        \"flag_waiting\"    INTEGER DEFAULT 0\
-    )", this->db);
+    QSqlQuery query_table_people("CREATE TABLE IF NOT EXISTS people ( "
+        "rowid	INTEGER PRIMARY KEY AUTOINCREMENT, "
+        "group_rowid	INTEGER, "
+        "tnt_id    INTEGER, "
+        "name	TEXT, "
+        "email	TEXT, "
+        "address	TEXT, "
+        "phone	TEXT, "
+        "agreed_mail	INTEGER DEFAULT 0, "
+        "agreed_prayer	INTEGER DEFAULT 0, "
+        "agreement	TEXT, "
+        "date_collected  INTEGER, "
+        "date_last_changed INTEGER, "
+        "notes	TEXT, "
+        "donations_monthly INTEGER DEFAULT 0, "
+        "donations_monthly_promised  INTEGER DEFAULT 0, "
+        "spouse_rowid    INTEGER, "
+        "flag_deactivated     INTEGER DEFAULT 0, "
+        "flag_todo       INTEGER DEFAULT 0, "
+        "flag_waiting    INTEGER DEFAULT 0, "
+        "flag_supporter  INTEGER DEFAULT 0)", this->db);
     
     QSqlQuery query_groups("CREATE TABLE IF NOT EXISTS \"groups\" (rowid INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)", this->db);
     
@@ -120,7 +120,8 @@ void DbAdapter::initializeTables()
         "SUM(agreed_prayer) AS sum_agreed_prayer,"
         "SUM(CASE WHEN donations_monthly > 0 THEN 1 ELSE 0 END) AS donation_partners,"
         "SUM(CASE WHEN donations_monthly_promised > 0 THEN 1 ELSE 0 END) AS donation_partners_promised "
-        "FROM people", this->db);
+        "FROM people "
+        "WHERE flag_deactivated < 1", this->db);
     
     QSqlQuery query_settings("CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT)", this->db);
     
@@ -244,7 +245,8 @@ QList<QMap<QString,QVariant>> DbAdapter::selectAllPersonsFiltered(int todo, int 
                   "END "
                   "AND groups.name LIKE :group "
                   "AND (people.name LIKE :name OR people.name IS NULL) "
-                  "AND (email LIKE :mail OR email IS NULL)");
+                  "AND (email LIKE :mail OR email IS NULL) "
+                  "AND flag_deactivated < 1");
     query.bindValue(":todo", todo);
     query.bindValue(":waiting", waiting);
     query.bindValue(":donating", donating);

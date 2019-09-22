@@ -59,6 +59,15 @@ void Stats::addMoneyStats()
     grid_money->addWidget(new QLabel(QString::number(monthly_sum)), 1, 0);
     grid_money->addWidget(new QLabel(QString::number(monthly_sum_promised)), 1, 1);
     grid_money->addWidget(new QLabel(QString::number(monthly_sum + monthly_sum_promised)), 1, 2);
+    
+    // spacer
+    grid_money->addWidget(new QLabel(""), 2, 0);
+    
+    grid_money->addWidget(new QLabel("<b>Minimum</b>"), 3, 0);
+    grid_money->addWidget(new QLabel("<b>Maximum</b>"), 3, 1);
+    grid_money->addWidget(new QLabel("<b>Average</b>"), 3, 2);
+    
+    
 }
 
 void Stats::addRemainingStats()

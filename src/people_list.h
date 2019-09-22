@@ -28,6 +28,8 @@ public:
     void showGroupsFilterCombo();
     void showPeople();
     void clear();
+    // signal to this widget that it should rebuild the view because of the database has changed
+    void dataChanged();
     
 private:
     QVBoxLayout *layout;
@@ -42,6 +44,9 @@ private:
     
     QLineEdit *line_name_filter;
     QLineEdit *line_mail_filter;
+    
+    // see function "dataChanged()". init with "true" for forcing to run at first time
+    bool data_changed = true;
     
 signals:
     void addNewPersonSignal();

@@ -10,7 +10,6 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
     this->config = new Config();
     this->db = new DbAdapter(this->config);
     
-    
     connect(this->tab_widget, &QTabWidget::tabCloseRequested, this, &QTNTMainWindow::closeTab);
     
     this->menu_bar = new MenuBar();
@@ -95,6 +94,7 @@ void QTNTMainWindow::addNewPersonTab()
 {
     PersonEdit *person = new PersonEdit(this->db);
     connect(person, &PersonEdit::closeCurrentTabSignal, this, &QTNTMainWindow::closeCurrentTab);
+    connect(person, &PersonEdit::dataChanged, this, &QTNTMainWindow::onPeopleDataChanged);
     
     this->tab_widget->addTab(person, "New Person");
     activateNewTab();
@@ -104,7 +104,8 @@ void QTNTMainWindow::addPersonEditTab(qlonglong rowid, QString name)
 {
     PersonEdit *person = new PersonEdit(this->db, rowid);
     connect(person, &PersonEdit::closeCurrentTabSignal, this, &QTNTMainWindow::closeCurrentTab);
-        
+    connect(person, &PersonEdit::dataChanged, this, &QTNTMainWindow::onPeopleDataChanged);
+    
     createSingleTab("Edit: "+name, person);
 }
 
@@ -123,6 +124,10 @@ void QTNTMainWindow::addPeopleTab()
     tab_widget->addTab(this->people_list, "people");
     
     activateNewTab();
+}
+void QTNTMainWindow::onPeopleDataChanged()
+{
+    this->people_list->dataChanged();
 }
 
 void QTNTMainWindow::addNewMailTab()
