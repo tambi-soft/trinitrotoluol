@@ -110,9 +110,14 @@ void DbAdapter::initializeTables()
                          "attachment_path TEXT, "
                          "date TEXT)", this->db);
     
-    QSqlQuery query_donations("CREATE VIEW IF NOT EXISTS donations_monthly AS\
-        SELECT SUM(donations_monthly) AS monthly_sum, SUM(donations_monthly_promised) AS monthly_sum_promised FROM people\
-    ", this->db);
+    QSqlQuery query_donations("CREATE VIEW IF NOT EXISTS donations_monthly AS "
+        "SELECT SUM(donations_monthly) AS monthly_sum, "
+        "SUM(donations_monthly_promised) AS monthly_sum_promised, "
+        "MAX(MAX(donations_monthly), MAX(donations_monthly_promised)) AS donations_max, "
+        "MIN(MIN(NULLIF(donations_monthly,0)),  MIN(NULLIF(donations_monthly_promised,0))) AS donations_min, "
+        "(SUM(donations_monthly) + SUM(donations_monthly_promised)) "
+         " / (COUNT(NULLIF(donations_monthly,0)) + COUNT(NULLIF(donations_monthly_promised,0))) AS donations_average "
+        "FROM people", this->db);
     
     QSqlQuery query_people_stats("CREATE VIEW IF NOT EXISTS people_stats AS "
         "SELECT COUNT(name) AS sum_all,"
@@ -268,7 +273,7 @@ QList<QMap<QString,QVariant>> DbAdapter::selectGroups()
 
 QMap<QString,QVariant> DbAdapter::selectMoneyStats()
 {
-    QSqlQuery query("SELECT monthly_sum, monthly_sum_promised FROM donations_monthly", this->db);
+    QSqlQuery query("SELECT monthly_sum, monthly_sum_promised, donations_min, donations_max, donations_average FROM donations_monthly", this->db);
     
     return dbIteratorToMap(query);
 }

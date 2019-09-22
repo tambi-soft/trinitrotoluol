@@ -66,6 +66,15 @@ void Stats::addMoneyStats()
     grid_money->addWidget(new QLabel("<b>Minimum</b>"), 3, 0);
     grid_money->addWidget(new QLabel("<b>Maximum</b>"), 3, 1);
     grid_money->addWidget(new QLabel("<b>Average</b>"), 3, 2);
+    qDebug() << money;
+    int donations_min = money["donations_min"].toInt();
+    grid_money->addWidget(new QLabel(QString::number(donations_min)), 4, 0);
+    
+    int donations_max = money["donations_max"].toInt();
+    grid_money->addWidget(new QLabel(QString::number(donations_max)), 4, 1);
+    
+    int donations_average = money["donations_average"].toInt();
+    grid_money->addWidget(new QLabel(QString::number(donations_average)), 4, 2);
     
     
 }
@@ -112,8 +121,10 @@ void Stats::addRemainingStats()
     
     money_target_widget->setLayout(money_target_layout);
     
+    QLabel *donors_needed = new QLabel(QString::number( needed_money.toInt() - monthly_sum - monthly_sum_promised ));
+    donors_needed->setToolTip("= (needed_money * people_sum) / monthly_sum");
     grid->addWidget(money_target_widget, 1, 0, Qt::AlignLeft);
-    grid->addWidget(new QLabel(QString::number( needed_money.toInt() - monthly_sum - monthly_sum_promised )), 1, 1);
+    grid->addWidget(donors_needed, 1, 1);
     if (monthly_sum + monthly_sum_promised > 0)
     {
         grid->addWidget(new QLabel(QString::number( ((dp + dpp) * needed_money.toInt()) / (monthly_sum + monthly_sum_promised) )), 1, 2);
