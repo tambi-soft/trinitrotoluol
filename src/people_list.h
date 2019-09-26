@@ -40,6 +40,7 @@ private:
     QCheckBox *check_todo;
     QCheckBox *check_waiting;
     QCheckBox *check_donating;
+    QCheckBox *check_deactivated;
     QCheckBox *check_mail;
     
     QLineEdit *line_name_filter;

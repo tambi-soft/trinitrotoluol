@@ -7,6 +7,7 @@ PeopleList::PeopleList(DbAdapter *db, QWidget *parent)
     , check_todo (new QCheckBox)
     , check_waiting (new QCheckBox)
     , check_donating (new QCheckBox)
+    , check_deactivated (new QCheckBox)
     , check_mail (new QCheckBox)
     , line_name_filter (new QLineEdit)
     , line_mail_filter (new QLineEdit)
@@ -22,11 +23,14 @@ PeopleList::PeopleList(DbAdapter *db, QWidget *parent)
     this->check_waiting->setCheckState(Qt::PartiallyChecked);
     this->check_donating->setTristate(true);
     this->check_donating->setCheckState(Qt::PartiallyChecked);
+    this->check_deactivated->setTristate(true);
+    this->check_deactivated->setCheckState(Qt::Unchecked);
     this->check_mail->setTristate(true);
     this->check_mail->setCheckState(Qt::PartiallyChecked);
     connect(this->check_todo, &QCheckBox::stateChanged, this, &PeopleList::onFilterChanged);
     connect(this->check_waiting, &QCheckBox::stateChanged, this, &PeopleList::onFilterChanged);
     connect(this->check_donating, &QCheckBox::stateChanged, this, &PeopleList::onFilterChanged);
+    connect(this->check_deactivated, &QCheckBox::stateChanged, this, &PeopleList::onFilterChanged);
     connect(this->check_mail, &QCheckBox::stateChanged, this, &PeopleList::onFilterChanged);
     
     this->line_name_filter->setClearButtonEnabled(true);
@@ -46,10 +50,15 @@ PeopleList::PeopleList(DbAdapter *db, QWidget *parent)
     hbox_filters->addWidget(this->check_waiting);
     hbox_filters->addWidget(new QLabel("Donating:"));
     hbox_filters->addWidget(this->check_donating);
-    hbox_filters->addWidget(new QLabel("Mail:"));
-    hbox_filters->addWidget(this->check_mail);
+    hbox_filters->addWidget(new QLabel("Deactivated:"));
+    hbox_filters->addWidget(this->check_deactivated);
+    
     hbox_filters->addWidget(this->line_name_filter);
     hbox_filters->addWidget(this->line_mail_filter);
+    
+    hbox_filters->addWidget(new QLabel("Mail:"));
+    hbox_filters->addWidget(this->check_mail);
+    
     hbox_filters->addWidget(this->combo_groups);
     QWidget *widget_filters = new QWidget();
     widget_filters->setLayout(hbox_filters);
@@ -118,6 +127,16 @@ void PeopleList::showPeople()
         filter_donating = 0;
     }
     
+    int filter_deactivated = -1;
+    if (this->check_deactivated->checkState() == Qt::Checked)
+    {
+        filter_deactivated = 1;
+    }
+    else if (this->check_deactivated->checkState() == Qt::Unchecked)
+    {
+        filter_deactivated = 0;
+    }
+    
     int filter_mail = -1;
     if (this->check_mail->checkState() == Qt::Checked)
     {
@@ -144,12 +163,13 @@ void PeopleList::showPeople()
         str_filter_mail = "%";
     }
     QList<QMap<QString,QVariant>> people = this->db->selectAllPersonsFiltered(filter_todo,
-                                                                              filter_waiting,
-                                                                              filter_donating,
-                                                                              filter_mail,
-                                                                              str_filter_group,
-                                                                              "%"+str_filter_name+"%",
-                                                                              "%"+str_filter_mail+"%");
+         filter_waiting,
+         filter_donating,
+         filter_deactivated,
+         filter_mail,
+         str_filter_group,
+         "%"+str_filter_name+"%",
+         "%"+str_filter_mail+"%");
     
     this->table_widget->setRowCount(people.length());
     if (people.length() > 0)
