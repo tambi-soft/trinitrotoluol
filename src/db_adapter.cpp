@@ -95,20 +95,38 @@ void DbAdapter::initializeTables()
     
     QSqlQuery query_groups("CREATE TABLE IF NOT EXISTS \"groups\" (rowid INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)", this->db);
     
+    QSqlQuery query_people_visited("CREATE TABLE IF NOT EXISTS people_visited ( "
+        "rowid_people INTEGER, "
+        "rowid_journey INTEGER, "
+        "date INTEGER, "
+        "notes TEXT)", this->db);
+    
+    QSqlQuery query_journeys("CREATE TABLE IF NOT EXISTS journeys ( "
+        "rowid INTEGER PRIMARY KEY AUTOINCREMENT, "
+        "name TEXT, "
+        "date_from INTEGER, "
+        "date_to INTEGER, "
+        "notes TEXT)", this->db);
+    
+    QSqlQuery query_tickets("CREATE TABLE IF NOT EXISTS journey_tickets ( "
+        "rowid_journey INTEGER, "
+        "cost INTEGER, "
+        "settled INTEGER)", this->db);
+    
     QSqlQuery query_sent_mail("CREATE TABLE IF NOT EXISTS \"mail_sent\" (\
         \"rowid_people\"    INTEGER,\
         \"rowid_mail\"         INTEGER,\
         \"date\"            INTEGER\
     )", this->db);
             
-    QSqlQuery query_mail("CREATE TABLE IF NOT EXISTS mail ("
-                         "rowid INTEGER PRIMARY KEY AUTOINCREMENT, "
-                         "number INTEGER, "
-                         "subject TEXT, "
-                         "cover TEXT, "
-                         "content_path TEXT, "
-                         "attachment_path TEXT, "
-                         "date TEXT)", this->db);
+    QSqlQuery query_mail("CREATE TABLE IF NOT EXISTS mail ( "
+        "rowid INTEGER PRIMARY KEY AUTOINCREMENT, "
+        "number INTEGER, "
+        "subject TEXT, "
+        "cover TEXT, "
+        "content_path TEXT, "
+        "attachment_path TEXT, "
+        "date TEXT)", this->db);
     
     QSqlQuery query_donations("CREATE VIEW IF NOT EXISTS donations_monthly AS "
         "SELECT SUM(donations_monthly) AS monthly_sum, "

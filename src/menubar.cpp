@@ -4,6 +4,7 @@ MenuBar::MenuBar(QMenuBar *parent) : QMenuBar(parent)
 {
     addFileMenu();
     addMailMenu();
+    addJourneysMenu();
     addTNTMenu();
     addHelpMenu();
 }
@@ -36,6 +37,15 @@ void MenuBar::addMailMenu()
     menu->addAction(newMailAction);
     menu->addAction(mailListAction);
     menu->addAction(sendMailAction);
+}
+
+void MenuBar::addJourneysMenu()
+{
+    QAction *newJourneyAction = new QAction("New Journey");
+    
+    
+    QMenu *menu = addMenu("&Journey");
+    menu->addAction(newJourneyAction);
 }
 
 void MenuBar::addTNTMenu()

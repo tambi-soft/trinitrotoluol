@@ -22,6 +22,7 @@ public:
 private:
     void addFileMenu();
     void addMailMenu();
+    void addJourneysMenu();
     void addTNTMenu();
     void addHelpMenu();
     
