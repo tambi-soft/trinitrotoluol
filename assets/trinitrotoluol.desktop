@@ -5,11 +5,11 @@ Type=Application
 
 Version=1.0
 
-Name=kulanday
+Name=trinitrotoluol
 
-Comment=a software for collecting words and phrases for learning languages
-Path=/usr/bin/kulanday
-Exec=kulanday
-Icon=/usr/share/icons/hicolor/128x128/apps/kulanday_logo.ico
+Comment=a software for managing your supporters and your mailings
+Path=/usr/bin/trinitrotoluol
+Exec=trinitrotoluol
+Icon=/usr/share/icons/hicolor/128x128/apps/trinitrotoluol_logo.ico
 Terminal=false
-Categories=Education
+Categories=Office
