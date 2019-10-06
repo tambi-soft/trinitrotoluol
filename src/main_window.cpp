@@ -114,7 +114,8 @@ void QTNTMainWindow::addSettingsTab()
 {
     SettingsWidget *settings = new SettingsWidget(this->config, this->db);
     
-    createSingleTab("Settings", settings);
+    QIcon *icon = new QIcon(QIcon::fromTheme("applications-system"));
+    createSingleTab("Settings", settings, icon);
 }
 
 void QTNTMainWindow::addStatsTab()
@@ -143,7 +144,8 @@ void QTNTMainWindow::addNewMailTab()
     MailNew *mail = new MailNew(this->db);
     connect(mail, &MailNew::closeCurrentTabSignal, this, &QTNTMainWindow::closeCurrentTab);
     
-    createSingleTab("New Mail", mail);
+    QIcon *icon = new QIcon(QIcon::fromTheme("document-new"));
+    createSingleTab("New Mail", mail, icon);
 }
 
 void QTNTMainWindow::addMailListTab()
@@ -155,7 +157,7 @@ void QTNTMainWindow::addMailListTab()
     createSingleTab("Mail List", list);
 }
 
-void QTNTMainWindow::createSingleTab(QString tab_name, QWidget *widget)
+void QTNTMainWindow::createSingleTab(QString tab_name, QWidget *widget, QIcon *icon)
 {
     if (this->open_tabs.contains(tab_name))
     {
@@ -164,7 +166,14 @@ void QTNTMainWindow::createSingleTab(QString tab_name, QWidget *widget)
     }
     else
     {
-        this->tab_widget->addTab(widget, tab_name);
+        if (icon == nullptr)
+        {
+            this->tab_widget->addTab(widget, tab_name);
+        }
+        else
+        {
+            this->tab_widget->addTab(widget, *icon, tab_name);
+        }
         activateNewTab();
         this->open_tabs[tab_name] = this->tab_widget->currentIndex();
     }

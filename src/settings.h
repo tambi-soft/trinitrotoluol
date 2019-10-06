@@ -43,6 +43,7 @@ private:
     QComboBox *combo_authentication_method;
     QLineEdit *edit_email_username;
     QLineEdit *edit_email_password;
+    quint64 KEY = 95839583;
 };
 
 #endif // SETTINGS_H

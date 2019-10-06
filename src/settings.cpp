@@ -93,7 +93,6 @@ void SettingsWidget::addEmailSettingsArea()
     connect(this->combo_connection_security, &QComboBox::currentTextChanged, this, &SettingsWidget::saveEmailParams);
     connect(this->combo_authentication_method, &QComboBox::currentTextChanged, this, &SettingsWidget::saveEmailParams);
     
-    
     group->setLayout(layout);
     this->layout->addWidget(group);
 }
@@ -126,7 +125,7 @@ void SettingsWidget::saveEmailParams()
     //SimpleCrypt crypto(Q_UINT64_C(0xbe890cb92bce0900)); //some random number
     //QString encryptToString(const QString& plaintext);
     
-    SimpleCrypt processSimpleCrypt(95839583);
+    SimpleCrypt processSimpleCrypt(KEY);
     QString email_pw_enc = processSimpleCrypt.encryptToString(email_password);
     
     this->db->insertSettings("email_server", email_server);
@@ -152,7 +151,7 @@ void SettingsWidget::loadEmailParams()
     this->combo_authentication_method->setCurrentText(email_auth);
     this->edit_email_username->setText(email_username);
     
-    SimpleCrypt processSimpleCrypt(95839583);
+    SimpleCrypt processSimpleCrypt(KEY);
     QString email_pw_dec = processSimpleCrypt.decryptToString(email_password);
     this->edit_email_password->setText(email_pw_dec);
 }

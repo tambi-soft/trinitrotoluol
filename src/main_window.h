@@ -33,7 +33,7 @@ private:
     void deactivateCloseButtons();
     QMap<QString, int> open_tabs; // {tab_name} -> tab widget id
     // make shure only one of this type of tab is open at once
-    void createSingleTab(QString tab_name, QWidget *widget);
+    void createSingleTab(QString tab_name, QWidget *widget, QIcon *icon = nullptr);
     
     
 private slots:
