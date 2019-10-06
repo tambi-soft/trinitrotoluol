@@ -50,6 +50,7 @@ QT += widgets \
 
 # Input
 HEADERS += \
+    src/mail_curl.h \
     src/mail_list.h \
     src/mail_new.h \
     src/main_window.h \
@@ -58,17 +59,22 @@ HEADERS += \
     src/menubar.h \
     src/people_list.h \
     src/person_edit.h \
+    src/settings.h \
+    src/simplecrypt.h \
     src/sqlite_sync.h \
     src/stats.h \
     src/tnt_adapter.h
     
 
 SOURCES += \
+    src/mail_curl.cpp \
     src/mail_list.cpp \
     src/mail_new.cpp \
     src/menubar.cpp \
     src/people_list.cpp \
     src/person_edit.cpp \
+    src/settings.cpp \
+    src/simplecrypt.cpp \
     src/sqlite_sync.cpp \
     src/stats.cpp \
     src/tnt_adapter.cpp \

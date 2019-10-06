@@ -113,11 +113,10 @@ void DbAdapter::initializeTables()
         "cost INTEGER, "
         "settled INTEGER)", this->db);
     
-    QSqlQuery query_sent_mail("CREATE TABLE IF NOT EXISTS \"mail_sent\" (\
+    QSqlQuery query_sent_mail("CREATE TABLE IF NOT EXISTS mail_sent (\
         \"rowid_people\"    INTEGER,\
         \"rowid_mail\"         INTEGER,\
-        \"date\"            INTEGER\
-    )", this->db);
+        \"date\"            INTEGER)", this->db);
             
     QSqlQuery query_mail("CREATE TABLE IF NOT EXISTS mail ( "
         "rowid INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -359,6 +358,15 @@ QList<QMap<QString,QVariant>> DbAdapter::selectAllMails()
 }
 
 void DbAdapter::insertSettings(QString key, QString value)
+{
+    QSqlQuery query(this->db);
+    query.prepare("INSERT OR REPLACE INTO settings (key, value) VALUES (:key, :value)");
+    query.bindValue(":key", key);
+    query.bindValue(":value", value);
+    query.exec();
+}
+
+void DbAdapter::insertSettings(QString key, int value)
 {
     QSqlQuery query(this->db);
     query.prepare("INSERT OR REPLACE INTO settings (key, value) VALUES (:key, :value)");

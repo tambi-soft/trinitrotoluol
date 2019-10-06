@@ -18,6 +18,7 @@ public:
     explicit Config(QObject *parent = nullptr);
     
     QString getDbPath();
+    void setDbPath(QString path);
     
 private:
     QSettings *settings;

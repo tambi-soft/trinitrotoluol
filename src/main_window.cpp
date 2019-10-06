@@ -16,6 +16,7 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
     setMenuBar(this->menu_bar);
     connect(this->menu_bar, &MenuBar::signalNewMail, this, &QTNTMainWindow::addNewMailTab);
     connect(this->menu_bar, &MenuBar::signalMailList, this, &QTNTMainWindow::addMailListTab);
+    connect(this->menu_bar, &MenuBar::signalSettings, this, &QTNTMainWindow::addSettingsTab);
     
     setCentralWidget(this->tab_widget);
     tab_widget->setTabsClosable(true);
@@ -107,6 +108,13 @@ void QTNTMainWindow::addPersonEditTab(qlonglong rowid, QString name)
     connect(person, &PersonEdit::dataChanged, this, &QTNTMainWindow::onPeopleDataChanged);
     
     createSingleTab("Edit: "+name, person);
+}
+
+void QTNTMainWindow::addSettingsTab()
+{
+    SettingsWidget *settings = new SettingsWidget(this->config, this->db);
+    
+    createSingleTab("Settings", settings);
 }
 
 void QTNTMainWindow::addStatsTab()

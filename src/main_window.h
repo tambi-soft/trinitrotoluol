@@ -15,6 +15,7 @@
 #include "menubar.h"
 #include "mail_new.h"
 #include "mail_list.h"
+#include "settings.h"
 
 class QTNTMainWindow : public QMainWindow
 {
@@ -43,6 +44,7 @@ private slots:
     
     void addNewPersonTab();
     void addPersonEditTab(qlonglong rowid, QString name);
+    void addSettingsTab();
     void addStatsTab();
     void addPeopleTab();
     void onPeopleDataChanged();

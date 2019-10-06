@@ -57,3 +57,8 @@ QString Config::getDbPath()
     //qDebug() << result;
     return result;
 }
+
+void Config::setDbPath(QString path)
+{
+    this->settings->setValue("tnt/db_path", path);
+}

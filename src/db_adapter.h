@@ -37,6 +37,7 @@ public:
     QList<QMap<QString,QVariant>> selectAllMails();
     
     void insertSettings(QString key, QString value);
+    void insertSettings(QString key, int value);
     QString selectSettings(QString key);
     
 private:
