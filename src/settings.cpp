@@ -23,6 +23,12 @@ void SettingsWidget::addDatabasePathSettingsArea()
     
     this->edit_path = new QLineEdit;
     this->edit_path->setReadOnly(true);
+    
+    QPalette *palette = new QPalette();
+    palette->setColor(QPalette::Base, Qt::lightGray);
+    palette->setColor(QPalette::Text, Qt::darkGray);
+    edit_path->setPalette(*palette);
+    
     layout->addWidget(this->edit_path);
     
     edit_path->setText(this->config->getDbPath());

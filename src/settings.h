@@ -12,6 +12,7 @@
 #include <QComboBox>
 #include <QLabel>
 #include <QFileDialog>
+#include <QPalette>
 
 #include <QStringList>
 
