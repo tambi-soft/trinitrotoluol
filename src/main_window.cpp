@@ -121,7 +121,7 @@ void QTNTMainWindow::addSettingsTab()
 void QTNTMainWindow::addStatsTab()
 {
     Stats *stats = new Stats(this->db);
-    this->tab_widget->addTab(stats, "stats");
+    this->tab_widget->addTab(stats, QIcon::fromTheme("dialog-question"), "stats");
 }
 
 void QTNTMainWindow::addPeopleTab()
@@ -130,7 +130,7 @@ void QTNTMainWindow::addPeopleTab()
     connect(this->people_list, &PeopleList::editPersonSignal, this, &QTNTMainWindow::addPersonEditTab);
     connect(this->people_list, &PeopleList::addNewPersonSignal, this, &QTNTMainWindow::addNewPersonTab);
     
-    tab_widget->addTab(this->people_list, "people");
+    tab_widget->addTab(this->people_list, QIcon::fromTheme("x-office-address-book"), "people");
     
     activateNewTab();
 }
@@ -154,6 +154,7 @@ void QTNTMainWindow::addMailListTab()
     connect(list, &MailList::closeCurrentTabSignal, this, &QTNTMainWindow::closeCurrentTab);
     connect(list, &MailList::signalNewMail, this, &QTNTMainWindow::addNewMailTab);
     
+    //QIcon *icon = new QIcon(QIcon::fromTheme("emblem-mail"));
     createSingleTab("Mail List", list);
 }
 

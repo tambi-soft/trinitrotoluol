@@ -85,8 +85,9 @@ void SettingsWidget::addEmailSettingsArea()
     loadEmailParams();
     
     connect(this->edit_email_address, &QLineEdit::textChanged, this, &SettingsWidget::saveEmailParams);
-    //connect(this->edit_email_port, &QSpinBox::valueChanged, this, &SettingsWidget::saveEmailParams);
-    QObject::connect(this->edit_email_port, SIGNAL(valueChanged(int)), this, SLOT(saveEmailParams())); // old-style connect for connecting an int-signal to a paramless slot
+    
+    connect(this->edit_email_port, qOverload<int>(&QSpinBox::valueChanged), this, &SettingsWidget::savePort);
+    
     connect(this->edit_email_username, &QLineEdit::textChanged, this, &SettingsWidget::saveEmailParams);
     connect(this->edit_email_password, &QLineEdit::textChanged, this, &SettingsWidget::saveEmailParams);
     
@@ -113,8 +114,14 @@ void SettingsWidget::showFolderSelectDialog()
     }
 }
 
+void SettingsWidget::savePort(int /*just_for_compatibility*/)
+{
+    saveEmailParams();
+}
+
 void SettingsWidget::saveEmailParams()
 {
+    qDebug() << "rrr";
     QString email_server = this->edit_email_address->text();
     int email_port = this->edit_email_port->value();
     QString email_security = this->combo_connection_security->currentText();

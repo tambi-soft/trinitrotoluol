@@ -35,7 +35,6 @@ private:
     void showFolderSelectDialog();
     QLineEdit *edit_path;
     
-    void saveEmailParams();
     void loadEmailParams();
     QLineEdit *edit_email_address;
     QSpinBox *edit_email_port;
@@ -44,6 +43,10 @@ private:
     QLineEdit *edit_email_username;
     QLineEdit *edit_email_password;
     quint64 KEY = 95839583;
+    
+private slots:
+    void saveEmailParams();
+    void savePort(int just_for_compatibility);
 };
 
 #endif // SETTINGS_H
