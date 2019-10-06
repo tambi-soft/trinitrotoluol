@@ -61,6 +61,7 @@ HEADERS += \
     src/person_edit.h \
     src/settings.h \
     src/simplecrypt.h \
+    src/sqlite_editor_widget.h \
     src/sqlite_sync.h \
     src/stats.h \
     src/tnt_adapter.h
@@ -75,6 +76,7 @@ SOURCES += \
     src/person_edit.cpp \
     src/settings.cpp \
     src/simplecrypt.cpp \
+    src/sqlite_editor_widget.cpp \
     src/sqlite_sync.cpp \
     src/stats.cpp \
     src/tnt_adapter.cpp \

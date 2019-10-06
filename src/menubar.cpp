@@ -59,11 +59,14 @@ void MenuBar::addTNTMenu()
 
 void MenuBar::addToolsMenu()
 {
+    QAction *sqlEditorAction = new QAction(QIcon(":sqlite-logo"), "SQL-Editor");
+    connect(sqlEditorAction, &QAction::triggered, this, &MenuBar::showSQLEditor);
+    
     QAction *settingsAction = new QAction(QIcon::fromTheme("applications-system"), "&Settings");
-        //settingsAction->setShortcut(QKeySequence::fromString("Ctrl+S"));
-        connect(settingsAction, &QAction::triggered, this, &MenuBar::signalSettings);
+    connect(settingsAction, &QAction::triggered, this, &MenuBar::signalSettings);
     
     QMenu *menu = addMenu("&Tools");
+    menu->addAction(sqlEditorAction);
     menu->addAction(settingsAction);
 }
 
@@ -92,4 +95,9 @@ void MenuBar::mailList()
 void MenuBar::sendMail()
 {
     MailCurl *mail_curl = new MailCurl();
+}
+
+void MenuBar::showSQLEditor()
+{
+    emit signalSQLEditor();
 }

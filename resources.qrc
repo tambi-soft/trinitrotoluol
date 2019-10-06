@@ -3,5 +3,6 @@
         <file alias="logo">assets/logo2.png</file>
         <file alias="gpl">LICENSE.txt</file>
         <file alias="money_receive">assets/money_receive.svg</file>
+        <file alias="sqlite-logo">assets/sqlite-logo.jpg</file>
     </qresource>
 </RCC>

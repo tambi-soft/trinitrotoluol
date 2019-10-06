@@ -17,6 +17,7 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
     connect(this->menu_bar, &MenuBar::signalNewMail, this, &QTNTMainWindow::addNewMailTab);
     connect(this->menu_bar, &MenuBar::signalMailList, this, &QTNTMainWindow::addMailListTab);
     connect(this->menu_bar, &MenuBar::signalSettings, this, &QTNTMainWindow::addSettingsTab);
+    connect(this->menu_bar, &MenuBar::signalSQLEditor, this, &QTNTMainWindow::addSQLEditorTab);
     
     setCentralWidget(this->tab_widget);
     tab_widget->setTabsClosable(true);
@@ -116,6 +117,15 @@ void QTNTMainWindow::addSettingsTab()
     
     QIcon *icon = new QIcon(QIcon::fromTheme("applications-system"));
     createSingleTab("Settings", settings, icon);
+}
+
+void QTNTMainWindow::addSQLEditorTab()
+{
+    SQLiteEditorWidget *editor = new SQLiteEditorWidget(this->db);
+    
+    QIcon *icon = new QIcon(":sqlite-logo");
+    this->tab_widget->addTab(editor, *icon, "SQLite Editor");
+    activateNewTab();
 }
 
 void QTNTMainWindow::addStatsTab()

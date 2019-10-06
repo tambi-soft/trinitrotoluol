@@ -1,6 +1,8 @@
 #ifndef MENUBAR_H
 #define MENUBAR_H
 
+#include <QDebug>
+
 #include <QObject>
 #include <QWidget>
 #include <QMenuBar>
@@ -35,11 +37,13 @@ signals:
     void signalNewMail();
     void signalMailList();
     void signalSettings();
+    void signalSQLEditor();
     
 public slots:
     void newMail();
     void mailList();
     void sendMail();
+    void showSQLEditor();
 };
 
 #endif // MENUBAR_H

@@ -16,6 +16,7 @@
 #include "mail_new.h"
 #include "mail_list.h"
 #include "settings.h"
+#include "sqlite_editor_widget.h"
 
 class QTNTMainWindow : public QMainWindow
 {
@@ -45,6 +46,7 @@ private slots:
     void addNewPersonTab();
     void addPersonEditTab(qlonglong rowid, QString name);
     void addSettingsTab();
+    void addSQLEditorTab();
     void addStatsTab();
     void addPeopleTab();
     void onPeopleDataChanged();
