@@ -18,6 +18,7 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
     connect(this->menu_bar, &MenuBar::signalMailList, this, &QTNTMainWindow::addMailListTab);
     connect(this->menu_bar, &MenuBar::signalSettings, this, &QTNTMainWindow::addSettingsTab);
     connect(this->menu_bar, &MenuBar::signalSQLEditor, this, &QTNTMainWindow::addSQLEditorTab);
+    connect(this->menu_bar, &MenuBar::signalJourneyList, this, &QTNTMainWindow::addJourneyListTab);
     
     setCentralWidget(this->tab_widget);
     tab_widget->setTabsClosable(true);
@@ -90,6 +91,14 @@ void QTNTMainWindow::deactivateCloseButtons()
     QTabBar *tb = this->tab_widget->tabBar();
     tb->tabButton(0, QTabBar::RightSide)->hide();
     tb->tabButton(1, QTabBar::RightSide)->hide();
+}
+
+void QTNTMainWindow::addJourneyListTab()
+{
+    JourneyList *journey = new JourneyList(this->db);
+    
+    createSingleTab("Journey List", journey);
+    activateNewTab();
 }
 
 void QTNTMainWindow::addNewPersonTab()

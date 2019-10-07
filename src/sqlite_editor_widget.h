@@ -7,6 +7,8 @@
 #include <QComboBox>
 #include <QTextEdit>
 #include <QPushButton>
+#include <QTableWidget>
+#include <QTableWidgetItem>
 
 #include "db_adapter.h"
 

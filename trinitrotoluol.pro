@@ -50,6 +50,7 @@ QT += widgets \
 
 # Input
 HEADERS += \
+    src/journey_list.h \
     src/mail_curl.h \
     src/mail_list.h \
     src/mail_new.h \
@@ -68,6 +69,7 @@ HEADERS += \
     
 
 SOURCES += \
+    src/journey_list.cpp \
     src/mail_curl.cpp \
     src/mail_list.cpp \
     src/mail_new.cpp \

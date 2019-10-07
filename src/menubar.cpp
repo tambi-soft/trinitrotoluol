@@ -42,11 +42,11 @@ void MenuBar::addMailMenu()
 
 void MenuBar::addJourneysMenu()
 {
-    QAction *newJourneyAction = new QAction("New Journey");
-    
+    QAction *journeyListAction = new QAction("Journey List");
+    connect(journeyListAction, &QAction::triggered, this, &MenuBar::journeyList);
     
     QMenu *menu = addMenu("&Journey");
-    menu->addAction(newJourneyAction);
+    menu->addAction(journeyListAction);
 }
 
 void MenuBar::addTNTMenu()
@@ -100,4 +100,9 @@ void MenuBar::sendMail()
 void MenuBar::showSQLEditor()
 {
     emit signalSQLEditor();
+}
+
+void MenuBar::journeyList()
+{
+    emit signalJourneyList();
 }

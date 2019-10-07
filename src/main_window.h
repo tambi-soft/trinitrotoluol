@@ -17,6 +17,7 @@
 #include "mail_list.h"
 #include "settings.h"
 #include "sqlite_editor_widget.h"
+#include "journey_list.h"
 
 class QTNTMainWindow : public QMainWindow
 {
@@ -43,6 +44,7 @@ private slots:
     void closeTab(int tab_id);
     void closeCurrentTab();
     
+    void addJourneyListTab();
     void addNewPersonTab();
     void addPersonEditTab(qlonglong rowid, QString name);
     void addSettingsTab();

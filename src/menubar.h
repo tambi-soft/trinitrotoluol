@@ -38,12 +38,14 @@ signals:
     void signalMailList();
     void signalSettings();
     void signalSQLEditor();
+    void signalJourneyList();
     
 public slots:
     void newMail();
     void mailList();
     void sendMail();
     void showSQLEditor();
+    void journeyList();
 };
 
 #endif // MENUBAR_H
