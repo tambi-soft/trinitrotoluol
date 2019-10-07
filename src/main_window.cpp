@@ -101,6 +101,22 @@ void QTNTMainWindow::addJourneyListTab()
     activateNewTab();
 }
 
+void QTNTMainWindow::addJourneyNewTab()
+{
+    JourneyEdit *widget = new JourneyEdit(this->db);
+    
+    createSingleTab("New Journey", widget);
+    activateNewTab();
+}
+
+void QTNTMainWindow::addJourneyEditTab(qlonglong rowid, QString name)
+{
+    JourneyEdit *widget = new JourneyEdit(rowid, this->db);
+    
+    createSingleTab("Edit Journey "+name, widget);
+    activateNewTab();
+}
+
 void QTNTMainWindow::addNewPersonTab()
 {
     PersonEdit *person = new PersonEdit(this->db);

@@ -385,3 +385,10 @@ QString DbAdapter::selectSettings(QString key)
     
     return query.value("value").toString();
 }
+
+QList<QMap<QString,QVariant>> DbAdapter::selectJourneys()
+{
+    QSqlQuery query("SELECT name, date_from, date_to FROM journeys", this->db);
+    
+    return dbIteratorToMapList(query);
+}

@@ -40,6 +40,8 @@ public:
     void insertSettings(QString key, int value);
     QString selectSettings(QString key);
     
+    QList<QMap<QString, QVariant>> selectJourneys();
+    
 private:
     QSqlDatabase db;
     
