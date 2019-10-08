@@ -392,3 +392,13 @@ QList<QMap<QString,QVariant>> DbAdapter::selectJourneys()
     
     return dbIteratorToMapList(query);
 }
+
+void DbAdapter::insertJourneys(QString name, QString date_from, QString date_to)
+{
+    QSqlQuery query(this->db);
+    query.prepare("INSERT INTO journeys ()");
+    query.bindValue(":name", name);
+    query.bindValue(":date_from", date_from);
+    query.bindValue(":date_to", date_to);
+    query.exec();
+}
