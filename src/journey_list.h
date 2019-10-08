@@ -32,8 +32,12 @@ private:
     void showJourneys();
     
 signals:
+    void signalJourneyNew();
+    void signalJourneyEdit(qlonglong rowid, QString name);
     
 public slots:
+    void journeyNew();
+    void journeyEdit(qlonglong rowid, QString name);
     void showEvent(QShowEvent */*event*/);
 };
 

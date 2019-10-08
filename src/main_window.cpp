@@ -96,6 +96,8 @@ void QTNTMainWindow::deactivateCloseButtons()
 void QTNTMainWindow::addJourneyListTab()
 {
     JourneyList *journey = new JourneyList(this->db);
+    connect(journey, &JourneyList::signalJourneyNew, this, &QTNTMainWindow::addJourneyNewTab);
+    connect(journey, &JourneyList::signalJourneyEdit, this, &QTNTMainWindow::addJourneyEditTab);
     
     createSingleTab("Journey List", journey);
     activateNewTab();
@@ -113,7 +115,7 @@ void QTNTMainWindow::addJourneyEditTab(qlonglong rowid, QString name)
 {
     JourneyEdit *widget = new JourneyEdit(rowid, this->db);
     
-    createSingleTab("Edit Journey "+name, widget);
+    createSingleTab("Edit Journey: "+name, widget);
     activateNewTab();
 }
 

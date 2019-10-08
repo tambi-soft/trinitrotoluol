@@ -10,6 +10,7 @@ JourneyList::JourneyList(DbAdapter *db, QWidget *parent)
     setLayout(this->layout);
     
     QPushButton *button_new_journey = new QPushButton("new journey");
+    connect(button_new_journey, &QPushButton::clicked, this, &JourneyList::journeyNew);
     
     this->layout->addWidget(this->table);
     this->layout->addWidget(button_new_journey);
@@ -22,7 +23,7 @@ void JourneyList::showJourneys()
     
     this->table->setRowCount(data.length());
     QStringList labels;
-    labels << "name" << "date from" << "date to";
+    labels << "" << "name" << "date from" << "date to";
     this->table->setColumnCount(labels.length());
     this->table->setHorizontalHeaderLabels(labels);
     
@@ -31,15 +32,30 @@ void JourneyList::showJourneys()
     {
         QMap<QString,QVariant> journey = data.at(i);
         
-        qDebug() << journey["name"].toString();
+        qlonglong rowid = journey["rowid"].toLongLong();
+        QString name = journey["name"].toString();
+        QPushButton *button_edit = new QPushButton("edit");
+        connect(button_edit, &QPushButton::clicked, this, [this, rowid, name]{ JourneyList::journeyEdit(rowid, name); });
         
-        this->table->setItem(i, 0, new QTableWidgetItem(journey["name"].toString()));
-        this->table->setItem(i, 1, new QTableWidgetItem(journey["date_from"].toString()));
-        this->table->setItem(i, 2, new QTableWidgetItem(journey["date_to"].toString()));
+        this->table->setCellWidget(i, 0, button_edit);
+        
+        this->table->setItem(i, 1, new QTableWidgetItem(name));
+        this->table->setItem(i, 2, new QTableWidgetItem(journey["date_from"].toString()));
+        this->table->setItem(i, 3, new QTableWidgetItem(journey["date_to"].toString()));
     }
     
     this->table->resizeColumnsToContents();
     this->table->setEditTriggers(QAbstractItemView::NoEditTriggers);
+}
+
+void JourneyList::journeyNew()
+{
+    emit signalJourneyNew();
+}
+
+void JourneyList::journeyEdit(qlonglong rowid, QString name)
+{
+    emit signalJourneyEdit(rowid, name);
 }
 
 void JourneyList::showEvent(QShowEvent */* event */)
