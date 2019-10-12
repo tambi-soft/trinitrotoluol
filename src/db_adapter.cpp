@@ -96,6 +96,7 @@ void DbAdapter::initializeTables()
     QSqlQuery query_groups("CREATE TABLE IF NOT EXISTS \"groups\" (rowid INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)", this->db);
     
     QSqlQuery query_people_visited("CREATE TABLE IF NOT EXISTS people_visits ( "
+        "rowid INTEGER PRIMARY KEY AUTOINCREMENT "
         "rowid_people INTEGER, "
         "rowid_journeys INTEGER, "
         "date TEXT, "
@@ -432,7 +433,7 @@ QMap<QString,QVariant> DbAdapter::selectJourney(qlonglong rowid)
 QList<QMap<QString,QVariant>> DbAdapter::selectVisitsForJourney(qlonglong rowid_journey)
 {
     QSqlQuery query(this->db);
-    query.prepare("SELECT rowid_people, people.name, date, people_visits.notes "
+    query.prepare("SELECT people_visits.rowid, rowid_people, people.name, date, people_visits.notes "
                   "FROM people_visits "
                   "LEFT JOIN people ON rowid_people=people.rowid "
                   "WHERE rowid_journeys=:rowid");
@@ -440,4 +441,44 @@ QList<QMap<QString,QVariant>> DbAdapter::selectVisitsForJourney(qlonglong rowid_
     query.exec();
     
     return dbIteratorToMapList(query);
+}
+
+qlonglong DbAdapter::insertVisit(qlonglong rowid_journey)
+{
+    QSqlQuery query(this->db);
+    query.prepare("INSERT INTO people_visits (rowid_journeys) VALUES (:rowid)");
+    query.bindValue(":rowid", rowid_journey);
+    query.exec();
+    
+    this->db.commit();
+    return query.lastInsertId().toLongLong();
+}
+
+void DbAdapter::updateVisit(qlonglong rowid, QString name, QString date, QString notes)
+{
+    QSqlQuery query(this->db);
+    query.prepare("INSERT people_visits SET date=:date, notes=:notes WHERE rowid=:rowid");
+    //query.bindValue(":name", name);
+    query.bindValue(":date", date);
+    query.bindValue(":notes", notes);
+    query.bindValue(":rowid", rowid);
+    query.exec();
+}
+
+QMap<QString,QVariant> DbAdapter::selectVisit(qlonglong rowid)
+{
+    QSqlQuery query(this->db);
+    query.prepare("SELECT date, notes FROM people_visits WHERE rowid=:rowid");
+    query.bindValue(":rowid", rowid);
+    query.exec();
+    
+    return dbIteratorToMap(query);
+}
+
+void DbAdapter::deleteVisit(qlonglong rowid)
+{
+    QSqlQuery query(this->db);
+    query.prepare("DELETE FROM people_visits WHERE rowid=:rowid");
+    query.bindValue(":rowid", rowid);
+    query.exec();
 }
