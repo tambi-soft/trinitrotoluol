@@ -27,6 +27,7 @@ private:
     void addFileMenu();
     void addMailMenu();
     void addJourneysMenu();
+    void addExpensesMenu();
     void addTNTMenu();
     void addToolsMenu();
     void addHelpMenu();

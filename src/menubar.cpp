@@ -5,6 +5,7 @@ MenuBar::MenuBar(QMenuBar *parent) : QMenuBar(parent)
     addFileMenu();
     addMailMenu();
     addJourneysMenu();
+    addExpensesMenu();
     addTNTMenu();
     addToolsMenu();
     addHelpMenu();
@@ -45,8 +46,16 @@ void MenuBar::addJourneysMenu()
     QAction *journeyListAction = new QAction("Journey List");
     connect(journeyListAction, &QAction::triggered, this, &MenuBar::journeyList);
     
-    QMenu *menu = addMenu("&Journey");
+    QMenu *menu = addMenu("&Journeys");
     menu->addAction(journeyListAction);
+}
+
+void MenuBar::addExpensesMenu()
+{
+    
+    
+    QMenu *menu = addMenu("&Expenses");
+    
 }
 
 void MenuBar::addTNTMenu()
