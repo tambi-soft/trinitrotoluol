@@ -41,7 +41,9 @@ public:
     QString selectSettings(QString key);
     
     QList<QMap<QString, QVariant>> selectJourneys();
-    void insertJourneys(QString name, QString date_from, QString date_to);
+    qlonglong insertJourney(QString name, QString date_from, QString date_to, QString notes);
+    void updateJourney(qlonglong rowid, QString name, QString date_from, QString date_to, QString notes);
+    QMap<QString,QVariant> selectJourney(qlonglong rowid);
     
 private:
     QSqlDatabase db;

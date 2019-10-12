@@ -388,17 +388,43 @@ QString DbAdapter::selectSettings(QString key)
 
 QList<QMap<QString,QVariant>> DbAdapter::selectJourneys()
 {
-    QSqlQuery query("SELECT rowid, name, date_from, date_to FROM journeys", this->db);
+    QSqlQuery query("SELECT rowid, name, date_from, date_to FROM journeys ORDER BY date_from, date_to", this->db);
     
     return dbIteratorToMapList(query);
 }
 
-void DbAdapter::insertJourneys(QString name, QString date_from, QString date_to)
+qlonglong DbAdapter::insertJourney(QString name, QString date_from, QString date_to, QString notes)
 {
     QSqlQuery query(this->db);
-    query.prepare("INSERT INTO journeys ()");
+    query.prepare("INSERT INTO journeys (name, date_from, date_to, notes) VALUES (:name, :date_from, :date_to, :notes)");
     query.bindValue(":name", name);
     query.bindValue(":date_from", date_from);
     query.bindValue(":date_to", date_to);
+    query.bindValue(":notes", notes);
     query.exec();
+    
+    this->db.commit();
+    return query.lastInsertId().toLongLong();
+}
+
+void DbAdapter::updateJourney(qlonglong rowid, QString name, QString date_from, QString date_to, QString notes)
+{
+    QSqlQuery query(this->db);
+    query.prepare("UPDATE journeys SET name=:name, date_from=:date_from, date_to=:date_to, notes=:notes WHERE rowid=:rowid");
+    query.bindValue(":name", name);
+    query.bindValue(":date_from", date_from);
+    query.bindValue(":date_to", date_to);
+    query.bindValue(":notes", notes);
+    query.bindValue(":rowid", rowid);
+    query.exec();
+}
+
+QMap<QString,QVariant> DbAdapter::selectJourney(qlonglong rowid)
+{
+    QSqlQuery query(this->db);
+    query.prepare("SELECT rowid, name, date_from, date_to, notes FROM journeys WHERE rowid=:rowid");
+    query.bindValue(":rowid", rowid);
+    query.exec();
+    
+    return dbIteratorToMap(query);
 }

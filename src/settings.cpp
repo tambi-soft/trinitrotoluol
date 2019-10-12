@@ -127,7 +127,6 @@ void SettingsWidget::savePort(int /*just_for_compatibility*/)
 
 void SettingsWidget::saveEmailParams()
 {
-    qDebug() << "rrr";
     QString email_server = this->edit_email_address->text();
     int email_port = this->edit_email_port->value();
     QString email_security = this->combo_connection_security->currentText();

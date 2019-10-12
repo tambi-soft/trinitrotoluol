@@ -45,7 +45,7 @@ private slots:
     void closeCurrentTab();
     
     void addJourneyListTab();
-    void addJourneyNewTab();
+    //void addJourneyNewTab();
     void addJourneyEditTab(qlonglong rowid, QString name);
     
     void addNewPersonTab();

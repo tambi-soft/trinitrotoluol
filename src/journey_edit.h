@@ -4,14 +4,37 @@
 #include <QObject>
 #include <QWidget>
 
+#include <QVBoxLayout>
+#include <QLineEdit>
+#include <QTextEdit>
+#include <QDateEdit>
+#include <QDate>
+#include <QLabel>
+
+#include <QMap>
+
 #include "db_adapter.h"
 
 class JourneyEdit : public QWidget
 {
     Q_OBJECT
 public:
-    explicit JourneyEdit(DbAdapter *db, QWidget *parent = nullptr);
-    explicit JourneyEdit(int rowid, DbAdapter *db, QWidget *parent = nullptr);
+    //explicit JourneyEdit(DbAdapter *db, QWidget *parent = nullptr);
+    explicit JourneyEdit(qlonglong rowid, DbAdapter *db, QWidget *parent = nullptr);
+    
+private:
+    qlonglong rowid;
+    DbAdapter *db;
+    QVBoxLayout *layout;
+    
+    QLineEdit *edit_name;
+    QDateEdit *edit_date_from;
+    QDateEdit *edit_date_to;
+    QTextEdit *edit_notes;
+    
+    void drawGUI();
+    void loadData();
+    void saveData();
     
 signals:
     

@@ -34,7 +34,9 @@ void JourneyList::showJourneys()
         
         qlonglong rowid = journey["rowid"].toLongLong();
         QString name = journey["name"].toString();
-        QPushButton *button_edit = new QPushButton("edit");
+        QPushButton *button_edit = new QPushButton();
+        button_edit->setIcon(QIcon::fromTheme("document-properties"));
+        button_edit->setMaximumWidth(40);
         connect(button_edit, &QPushButton::clicked, this, [this, rowid, name]{ JourneyList::journeyEdit(rowid, name); });
         
         this->table->setCellWidget(i, 0, button_edit);
@@ -50,7 +52,10 @@ void JourneyList::showJourneys()
 
 void JourneyList::journeyNew()
 {
-    emit signalJourneyNew();
+    //emit signalJourneyNew();
+    
+    qlonglong rowid = this->db->insertJourney("", "", "", "");
+    emit signalJourneyEdit(rowid, "");
 }
 
 void JourneyList::journeyEdit(qlonglong rowid, QString name)
