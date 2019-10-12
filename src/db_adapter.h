@@ -45,6 +45,8 @@ public:
     void updateJourney(qlonglong rowid, QString name, QString date_from, QString date_to, QString notes);
     QMap<QString,QVariant> selectJourney(qlonglong rowid);
     
+    QList<QMap<QString, QVariant>> selectVisitsForJourney(qlonglong rowid_journey);
+    
 private:
     QSqlDatabase db;
     

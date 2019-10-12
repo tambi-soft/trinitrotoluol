@@ -39,11 +39,14 @@ void JourneyList::showJourneys()
         button_edit->setMaximumWidth(40);
         connect(button_edit, &QPushButton::clicked, this, [this, rowid, name]{ JourneyList::journeyEdit(rowid, name); });
         
+        QString date_from = QDate::fromString(journey["date_from"].toString(), "yyyy-MM-dd").toString();
+        QString date_to = QDate::fromString(journey["date_to"].toString(), "yyyy-MM-dd").toString();
+        
         this->table->setCellWidget(i, 0, button_edit);
         
         this->table->setItem(i, 1, new QTableWidgetItem(name));
-        this->table->setItem(i, 2, new QTableWidgetItem(journey["date_from"].toString()));
-        this->table->setItem(i, 3, new QTableWidgetItem(journey["date_to"].toString()));
+        this->table->setItem(i, 2, new QTableWidgetItem(date_from));
+        this->table->setItem(i, 3, new QTableWidgetItem(date_to));
     }
     
     this->table->resizeColumnsToContents();

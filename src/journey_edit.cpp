@@ -51,7 +51,33 @@ void JourneyEdit::drawGUI()
     connect(this->edit_date_to, &QDateEdit::dateChanged, this, &JourneyEdit::saveData);
     connect(this->edit_notes, &QTextEdit::textChanged, this, &JourneyEdit::saveData);
     
-    this->layout->addStretch();
+    // BEGIN: groups for visits and tickets areas
+    QWidget *widget_groups = new QWidget;
+    QHBoxLayout *layout_groups = new QHBoxLayout;
+    widget_groups->setLayout(layout_groups);
+    layout_groups->setMargin(0);
+    this->layout->addWidget(widget_groups);
+    
+    QGroupBox *group_visits = new QGroupBox("Visited People");
+    QGroupBox *group_tickets = new QGroupBox("Tickets");
+    
+    JourneyVisits *visits = new JourneyVisits(this->rowid, this->db);
+    QVBoxLayout *layout_visits = new QVBoxLayout();
+    layout_visits->setMargin(0);
+    layout_visits->addWidget(visits);
+    group_visits->setLayout(layout_visits);
+    
+    JourneyTickets *tickets = new JourneyTickets(this->rowid, this->db);
+    QVBoxLayout *layout_tickets = new QVBoxLayout();
+    layout_tickets->setMargin(0);
+    layout_tickets->addWidget(tickets);
+    group_tickets->setLayout(layout_tickets);
+    
+    layout_groups->addWidget(group_visits);
+    layout_groups->addWidget(group_tickets);
+    // END: groups for visits and tickets areas
+    
+    //this->layout->addStretch();
 }
 
 void JourneyEdit::loadData()

@@ -12,6 +12,7 @@
 #include <QStringList>
 #include <QList>
 #include <QMap>
+#include <QDate>
 
 #include <QShowEvent>
 

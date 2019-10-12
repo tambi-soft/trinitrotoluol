@@ -5,15 +5,22 @@
 #include <QWidget>
 
 #include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QGroupBox>
+
 #include <QLineEdit>
 #include <QTextEdit>
 #include <QDateEdit>
 #include <QDate>
 #include <QLabel>
+#include <QTableWidget>
+#include <QTableWidgetItem>
 
 #include <QMap>
 
 #include "db_adapter.h"
+#include "journey_visits.h"
+#include "journey_tickets.h"
 
 class JourneyEdit : public QWidget
 {

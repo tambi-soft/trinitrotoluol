@@ -52,6 +52,8 @@ QT += widgets \
 HEADERS += \
     src/journey_edit.h \
     src/journey_list.h \
+    src/journey_tickets.h \
+    src/journey_visits.h \
     src/mail_curl.h \
     src/mail_list.h \
     src/mail_new.h \
@@ -72,6 +74,8 @@ HEADERS += \
 SOURCES += \
     src/journey_edit.cpp \
     src/journey_list.cpp \
+    src/journey_tickets.cpp \
+    src/journey_visits.cpp \
     src/mail_curl.cpp \
     src/mail_list.cpp \
     src/mail_new.cpp \

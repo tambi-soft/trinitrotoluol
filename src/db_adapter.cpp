@@ -95,17 +95,17 @@ void DbAdapter::initializeTables()
     
     QSqlQuery query_groups("CREATE TABLE IF NOT EXISTS \"groups\" (rowid INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)", this->db);
     
-    QSqlQuery query_people_visited("CREATE TABLE IF NOT EXISTS people_visited ( "
+    QSqlQuery query_people_visited("CREATE TABLE IF NOT EXISTS people_visits ( "
         "rowid_people INTEGER, "
-        "rowid_journey INTEGER, "
-        "date INTEGER, "
+        "rowid_journeys INTEGER, "
+        "date TEXT, "
         "notes TEXT)", this->db);
     
     QSqlQuery query_journeys("CREATE TABLE IF NOT EXISTS journeys ( "
         "rowid INTEGER PRIMARY KEY AUTOINCREMENT, "
         "name TEXT, "
-        "date_from INTEGER, "
-        "date_to INTEGER, "
+        "date_from TEXT, "
+        "date_to TEXT, "
         "notes TEXT)", this->db);
     
     QSqlQuery query_tickets("CREATE TABLE IF NOT EXISTS journey_tickets ( "
@@ -427,4 +427,17 @@ QMap<QString,QVariant> DbAdapter::selectJourney(qlonglong rowid)
     query.exec();
     
     return dbIteratorToMap(query);
+}
+
+QList<QMap<QString,QVariant>> DbAdapter::selectVisitsForJourney(qlonglong rowid_journey)
+{
+    QSqlQuery query(this->db);
+    query.prepare("SELECT rowid_people, people.name, date, people_visits.notes "
+                  "FROM people_visits "
+                  "LEFT JOIN people ON rowid_people=people.rowid "
+                  "WHERE rowid_journeys=:rowid");
+    query.bindValue(":rowid", rowid_journey);
+    query.exec();
+    
+    return dbIteratorToMapList(query);
 }
