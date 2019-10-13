@@ -4,6 +4,14 @@
 #include <QObject>
 #include <QWidget>
 
+#include <QVBoxLayout>
+#include <QTableWidget>
+#include <QTableWidgetItem>
+
+#include <QComboBox>
+#include <QPushButton>
+#include <QLabel>
+
 #include "db_adapter.h"
 
 class Currencies : public QWidget
@@ -14,6 +22,9 @@ public:
     
 private:
     DbAdapter *db;
+    QVBoxLayout *layout;
+    QTableWidget *table;
+    QComboBox *combo_default_currency;
     
 signals:
     
