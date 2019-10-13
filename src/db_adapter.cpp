@@ -93,7 +93,7 @@ void DbAdapter::initializeTables()
         "flag_waiting    INTEGER DEFAULT 0, "
         "flag_supporter  INTEGER DEFAULT 0)", this->db);
     
-    QSqlQuery query_groups("CREATE TABLE IF NOT EXISTS \"groups\" (rowid INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)", this->db);
+    QSqlQuery query_groups("CREATE TABLE IF NOT EXISTS people_groups (rowid INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)", this->db);
     
     QSqlQuery query_people_visited("CREATE TABLE IF NOT EXISTS people_visits ( "
         "rowid INTEGER PRIMARY KEY AUTOINCREMENT "
@@ -226,7 +226,7 @@ QMap<QString,QVariant> DbAdapter::selectPerson(qlonglong rowid)
     query.prepare("SELECT b.name AS spouse_name, a.tnt_id, a.name, a.group_rowid, g.name AS group_name, a.\"email\", a.\"address\", a.\"phone\", a.\"agreed_mail\", a.\"agreed_prayer\", a.\"agreement\", a.\"notes\", a.\"donations_monthly\", a.\"donations_monthly_promised\", a.flag_todo, a.flag_waiting\
         FROM people a\
         LEFT JOIN people b ON a.spouse_rowid=b.rowid\
-        JOIN groups g ON a.group_rowid=g.rowid\
+        JOIN people_groups g ON a.group_rowid=g.rowid\
         WHERE a.rowid=:rowid");
     query.bindValue(":rowid", rowid);
     query.exec();
@@ -246,9 +246,9 @@ QList<QMap<QString,QVariant>> DbAdapter::selectAllPersonsFiltered(int todo, int 
 {
     QSqlQuery query(this->db);
     // the ORs in the last two lines should really be XORs, but SQLite do not support XOR for now, and it would be far to annoying to fiddle a XOR together by myself
-    query.prepare("SELECT people.rowid, people.name, groups.name AS \"group\", email, agreed_mail, agreed_prayer, agreement, flag_todo, flag_waiting, donations_monthly, donations_monthly_promised "
+    query.prepare("SELECT people.rowid, people.name, people_groups.name AS \"group\", email, agreed_mail, agreed_prayer, agreement, flag_todo, flag_waiting, donations_monthly, donations_monthly_promised "
                   "FROM people "
-                  "JOIN groups ON people.group_rowid=groups.rowid "
+                  "JOIN people_groups ON people.group_rowid=people_groups.rowid "
                   "WHERE "
                   "CASE "
                       "WHEN (:todo=0) THEN flag_todo = 0 OR flag_todo IS NULL "
@@ -279,7 +279,7 @@ QList<QMap<QString,QVariant>> DbAdapter::selectAllPersonsFiltered(int todo, int 
                       "WHEN (:agreed_mail=1) THEN agreed_mail = 1 "
                       "ELSE agreed_mail = agreed_mail "
                   "END "
-                  "AND groups.name LIKE :group "
+                  "AND people_groups.name LIKE :group "
                   "AND (people.name LIKE :name OR people.name IS NULL) "
                   "AND (email LIKE :mail OR email IS NULL) ");
     query.bindValue(":todo", todo);
@@ -300,7 +300,7 @@ QList<QMap<QString,QVariant>> DbAdapter::selectAllPersonsFiltered(int todo, int 
 
 QList<QMap<QString,QVariant>> DbAdapter::selectGroups()
 {
-    QSqlQuery query("SELECT rowid, name FROM groups", this->db);
+    QSqlQuery query("SELECT rowid, name FROM people_groups", this->db);
     
     return dbIteratorToMapList(query);
 }
