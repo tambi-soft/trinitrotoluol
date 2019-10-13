@@ -23,7 +23,7 @@ void JourneyList::showJourneys()
     
     this->table->setRowCount(data.length());
     QStringList labels;
-    labels << "" << "name" << "date from" << "date to";
+    labels << "" << "name" << "date from" << "date to" << "costs";
     this->table->setColumnCount(labels.length());
     this->table->setHorizontalHeaderLabels(labels);
     
@@ -47,6 +47,10 @@ void JourneyList::showJourneys()
         this->table->setItem(i, 1, new QTableWidgetItem(name));
         this->table->setItem(i, 2, new QTableWidgetItem(date_from));
         this->table->setItem(i, 3, new QTableWidgetItem(date_to));
+        
+        QTableWidgetItem *costs = new QTableWidgetItem(journey["costs"].toString());
+        costs->setData(Qt::TextAlignmentRole,int(Qt::AlignRight|Qt::AlignVCenter));
+        this->table->setItem(i, 4, costs);
     }
     
     this->table->resizeColumnsToContents();

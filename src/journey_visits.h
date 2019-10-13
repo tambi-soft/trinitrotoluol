@@ -10,6 +10,7 @@
 #include <QPushButton>
 #include <QTableWidget>
 #include <QTableWidgetItem>
+#include <QAbstractItemView>
 #include <QDateEdit>
 #include <QLineEdit>
 #include <QTextEdit>
@@ -46,11 +47,11 @@ private slots:
     void deleteVisit(qlonglong rowid_visits, QString name);
 };
 
-class JourneyVisitsNew : public QWidget
+class JourneyVisitsEdit : public QWidget
 {
     Q_OBJECT
 public:
-    explicit JourneyVisitsNew(qlonglong rowid_visits, qlonglong rowid_journey, DbAdapter *db, QWidget *parent = nullptr);
+    explicit JourneyVisitsEdit(qlonglong rowid_visits, DbAdapter *db, QWidget *parent = nullptr);
     
 private:
     qlonglong rowid_visits;

@@ -51,6 +51,7 @@ void JourneyVisits::loadData()
         this->table->setItem(i, 4, new QTableWidgetItem(journey["notes"].toString()));
     }
     
+    this->table->setEditTriggers(QAbstractItemView::NoEditTriggers);
     this->table->resizeColumnsToContents();
 }
 
@@ -66,15 +67,15 @@ void JourneyVisits::addNewVisit()
 
 void JourneyVisits::editVisit(qlonglong rowid_visits)
 {
-    JourneyVisitsNew *visit_new = new JourneyVisitsNew(rowid_visits, this->rowid_journey, this->db);
+    JourneyVisitsEdit *edit = new JourneyVisitsEdit(rowid_visits, this->db);
     
-    QDialog *dialog_visit_new = new QDialog();
+    QDialog *dialog = new QDialog();
     QVBoxLayout *layout_dialog = new QVBoxLayout;
     layout_dialog->setMargin(0);
-    dialog_visit_new->setLayout(layout_dialog);
-    layout_dialog->addWidget(visit_new);
+    dialog->setLayout(layout_dialog);
+    layout_dialog->addWidget(edit);
     
-    dialog_visit_new->exec();
+    dialog->exec();
 }
 
 void JourneyVisits::deleteVisit(qlonglong rowid, QString name)
@@ -92,7 +93,7 @@ void JourneyVisits::deleteVisit(qlonglong rowid, QString name)
 
 
 
-JourneyVisitsNew::JourneyVisitsNew(qlonglong rowid_visits, qlonglong rowid_journey, DbAdapter *db, QWidget *parent)
+JourneyVisitsEdit::JourneyVisitsEdit(qlonglong rowid_visits, DbAdapter *db, QWidget *parent)
     : QWidget(parent)
     , layout (new QVBoxLayout)
     , edit_name (new QLineEdit)
@@ -100,7 +101,6 @@ JourneyVisitsNew::JourneyVisitsNew(qlonglong rowid_visits, qlonglong rowid_journ
     , edit_notes (new QTextEdit)
 {
     this->rowid_visits = rowid_visits;
-    this->rowid_journey = rowid_journey;
     this->db = db;
     
     setLayout(this->layout);
@@ -120,7 +120,7 @@ JourneyVisitsNew::JourneyVisitsNew(qlonglong rowid_visits, qlonglong rowid_journ
     this->edit_notes->setText(data["notes"].toString());
 }
 
-void JourneyVisitsNew::saveData()
+void JourneyVisitsEdit::saveData()
 {
     QString name = this->edit_name->text();
     QString date = QDate::fromString(this->edit_date->date().toString(), "yyyy-MM-dd").toString();

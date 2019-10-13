@@ -110,9 +110,12 @@ void DbAdapter::initializeTables()
         "notes TEXT)", this->db);
     
     QSqlQuery query_tickets("CREATE TABLE IF NOT EXISTS journey_tickets ( "
-        "rowid_journey INTEGER, "
+        "rowid INTEGER PRIMARY KEY AUTOINCREMENT, "
+        "rowid_journeys INTEGER, "
+        "name TEXT, "
         "cost INTEGER, "
-        "settled INTEGER)", this->db);
+        "flag_settled INTEGER, "
+        "notes TEXT)", this->db);
     
     QSqlQuery query_sent_mail("CREATE TABLE IF NOT EXISTS mail_sent (\
         \"rowid_people\"    INTEGER,\
@@ -389,7 +392,14 @@ QString DbAdapter::selectSettings(QString key)
 
 QList<QMap<QString,QVariant>> DbAdapter::selectJourneys()
 {
-    QSqlQuery query("SELECT rowid, name, date_from, date_to FROM journeys ORDER BY date_from, date_to", this->db);
+    QSqlQuery query("SELECT j.rowid, j.name, j.date_from, j.date_to, printf('%.2f', t.costs) AS costs "
+                    "FROM journeys j "
+                    "LEFT JOIN ( "
+                        "SELECT rowid_journeys, SUM(cost) AS costs "
+                        "FROM journey_tickets "
+                        "GROUP BY rowid_journeys "
+                    ") t ON t.rowid_journeys = j.rowid "
+                    "ORDER BY date_from, date_to", this->db);
     
     return dbIteratorToMapList(query);
 }
@@ -479,6 +489,57 @@ void DbAdapter::deleteVisit(qlonglong rowid)
 {
     QSqlQuery query(this->db);
     query.prepare("DELETE FROM people_visits WHERE rowid=:rowid");
+    query.bindValue(":rowid", rowid);
+    query.exec();
+}
+
+QList<QMap<QString,QVariant>> DbAdapter::selectTicketsForJourney(qlonglong rowid_journey)
+{
+    QSqlQuery query(this->db);
+    query.prepare("SELECT rowid, name, printf('%.2f', cost) AS cost, flag_settled, notes FROM journey_tickets WHERE rowid_journeys=:rowid_journeys");
+    query.bindValue(":rowid_journeys", rowid_journey);
+    query.exec();
+    
+    return dbIteratorToMapList(query);
+}
+
+QMap<QString,QVariant> DbAdapter::selectTicket(qlonglong rowid)
+{
+    QSqlQuery query(this->db);
+    query.prepare("SELECT name, cost, flag_settled, notes FROM journey_tickets WHERE rowid=:rowid");
+    query.bindValue(":rowid", rowid);
+    query.exec();
+    
+    return dbIteratorToMap(query);
+}
+
+qlonglong DbAdapter::insertTicket(qlonglong rowid_journey)
+{
+    QSqlQuery query(this->db);
+    query.prepare("INSERT INTO journey_tickets (rowid_journeys) VALUES (:rowid)");
+    query.bindValue(":rowid", rowid_journey);
+    query.exec();
+    
+    this->db.commit();
+    return query.lastInsertId().toLongLong();
+}
+
+void DbAdapter::updateTicket(qlonglong rowid, QString name, double cost, bool flag_settled, QString notes)
+{
+    QSqlQuery query(this->db);
+    query.prepare("UPDATE journey_tickets SET name=:name, cost=:cost, flag_settled=:flag_settled, notes=:notes WHERE rowid=:rowid");
+    query.bindValue(":name", name);
+    query.bindValue(":cost", cost);
+    query.bindValue(":flag_settled", flag_settled);
+    query.bindValue(":notes", notes);
+    query.bindValue(":rowid", rowid);
+    query.exec();
+}
+
+void DbAdapter::deleteTicket(qlonglong rowid)
+{
+    QSqlQuery query(this->db);
+    query.prepare("DELETE FROM journey_tickets WHERE rowid=:rowid");
     query.bindValue(":rowid", rowid);
     query.exec();
 }

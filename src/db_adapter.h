@@ -51,6 +51,12 @@ public:
     QMap<QString,QVariant> selectVisit(qlonglong rowid);
     void deleteVisit(qlonglong rowid);
     
+    QList<QMap<QString,QVariant>> selectTicketsForJourney(qlonglong rowid_journey);
+    QMap<QString,QVariant> selectTicket(qlonglong rowid);
+    qlonglong insertTicket(qlonglong rowid_journey);
+    void updateTicket(qlonglong rowid, QString name, double cost, bool flag_settled, QString notes);
+    void deleteTicket(qlonglong rowid);
+    
 private:
     QSqlDatabase db;
     
