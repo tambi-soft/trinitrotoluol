@@ -153,6 +153,8 @@ void DbAdapter::initializeTables()
     
     QSqlQuery query_currencies("CREATE TABLE IF NOT EXISTS currencies (rowid INTEGER PRIMARY KEY AUTOINCREMENT, code TEXT, exchange_rate INTEGER, flag_default INTEGER UNIQUE, notes TEXT)", this->db);
     
+    QSqlQuery query_people_donations("CREATE TABLE IF NOT EXISTS people_donations (rowid_people INTEGER PRIMARY KEY, amount INTEGER, date TEXT)", this->db);
+    
     //qDebug() << this->db.lastError();
     //qDebug() << query_sent_mail.lastQuery();
 }
