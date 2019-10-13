@@ -19,6 +19,7 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
     connect(this->menu_bar, &MenuBar::signalSettings, this, &QTNTMainWindow::addSettingsTab);
     connect(this->menu_bar, &MenuBar::signalSQLEditor, this, &QTNTMainWindow::addSQLEditorTab);
     connect(this->menu_bar, &MenuBar::signalJourneyList, this, &QTNTMainWindow::addJourneyListTab);
+    connect(this->menu_bar, &MenuBar::signalCurrencies, this, &QTNTMainWindow::addCurrenciesTab);
     
     setCentralWidget(this->tab_widget);
     tab_widget->setTabsClosable(true);
@@ -187,6 +188,13 @@ void QTNTMainWindow::addNewMailTab()
     
     QIcon *icon = new QIcon(QIcon::fromTheme("document-new"));
     createSingleTab("New Mail", mail, icon);
+}
+
+void QTNTMainWindow::addCurrenciesTab()
+{
+    Currencies *currencies = new Currencies(this->db);
+    
+    createSingleTab("Currencies", currencies);
 }
 
 void QTNTMainWindow::addMailListTab()

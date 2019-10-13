@@ -18,6 +18,7 @@
 #include "settings.h"
 #include "sqlite_editor_widget.h"
 #include "journey_list.h"
+#include "currencies.h"
 
 class QTNTMainWindow : public QMainWindow
 {
@@ -55,6 +56,7 @@ private slots:
     void addStatsTab();
     void addPeopleTab();
     void onPeopleDataChanged();
+    void addCurrenciesTab();
     
     void addNewMailTab();
     void addMailListTab();

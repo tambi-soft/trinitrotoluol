@@ -127,7 +127,8 @@ JourneyTicketsEdit::JourneyTicketsEdit(qlonglong rowid, DbAdapter *db, QWidget *
     
     setLayout(this->layout);
     
-    edit_cost->setMaximum(100000);
+    edit_cost->setMinimum(0);
+    edit_cost->setMaximum(1000000);
     
     this->layout->addWidget(new QLabel("name"));
     this->layout->addWidget(edit_name);

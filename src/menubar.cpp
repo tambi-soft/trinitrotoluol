@@ -71,11 +71,15 @@ void MenuBar::addToolsMenu()
     QAction *sqlEditorAction = new QAction(QIcon(":sqlite-logo"), "SQL-Editor");
     connect(sqlEditorAction, &QAction::triggered, this, &MenuBar::showSQLEditor);
     
+    QAction *currenciesAction = new QAction("Currencies");
+    connect(currenciesAction, &QAction::triggered, this, &MenuBar::currencies);
+    
     QAction *settingsAction = new QAction(QIcon::fromTheme("applications-system"), "&Settings");
     connect(settingsAction, &QAction::triggered, this, &MenuBar::signalSettings);
     
     QMenu *menu = addMenu("&Tools");
     menu->addAction(sqlEditorAction);
+    menu->addAction(currenciesAction);
     menu->addAction(settingsAction);
 }
 
@@ -114,4 +118,9 @@ void MenuBar::showSQLEditor()
 void MenuBar::journeyList()
 {
     emit signalJourneyList();
+}
+
+void MenuBar::currencies()
+{
+    emit signalCurrencies();
 }

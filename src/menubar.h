@@ -40,6 +40,7 @@ signals:
     void signalSettings();
     void signalSQLEditor();
     void signalJourneyList();
+    void signalCurrencies();
     
 public slots:
     void newMail();
@@ -47,6 +48,7 @@ public slots:
     void sendMail();
     void showSQLEditor();
     void journeyList();
+    void currencies();
 };
 
 #endif // MENUBAR_H
