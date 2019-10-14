@@ -63,6 +63,7 @@ HEADERS += \
     src/db_adapter.h \
     src/menubar.h \
     src/people_list.h \
+    src/people_selector.h \
     src/person_edit.h \
     src/settings.h \
     src/simplecrypt.h \
@@ -83,6 +84,7 @@ SOURCES += \
     src/mail_new.cpp \
     src/menubar.cpp \
     src/people_list.cpp \
+    src/people_selector.cpp \
     src/person_edit.cpp \
     src/settings.cpp \
     src/simplecrypt.cpp \
