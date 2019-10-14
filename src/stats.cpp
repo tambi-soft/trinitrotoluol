@@ -83,14 +83,6 @@ void Stats::addRemainingStats()
 {
     QGroupBox* group = new QGroupBox("Remaining");
     
-    QMap<QString,QVariant> money = this->db->selectMoneyStats();
-    int monthly_sum = money["monthly_sum"].toInt();
-    int monthly_sum_promised = money["monthly_sum_promised"].toInt();
-    
-    QMap<QString,QVariant> data = this->db->selectPeopleStats();
-    int dp = data["donation_partners"].toInt();
-    int dpp = data["donation_partners_promised"].toInt();
-    
     QGridLayout *grid = new QGridLayout;
     group->setLayout(grid);
     this->layout->addWidget(group);
@@ -99,42 +91,45 @@ void Stats::addRemainingStats()
     grid->addWidget(new QLabel("<b>Remaining Need</b>"), 0, 1);
     grid->addWidget(new QLabel("<b>Needed Donors</b"), 0, 2);
     
-    QWidget *money_target_widget = new QWidget;
-    QHBoxLayout *money_target_layout = new QHBoxLayout;
-    money_target_layout->setMargin(0);
+    this->label_need_remaining = new QLabel;
+    this->label_need_donors = new QLabel;
+    
+    grid->addWidget(this->label_need_remaining, 1, 1);
+    grid->addWidget(this->label_need_donors, 1, 2);
+    
+    this->label_need_donors->setToolTip("= (needed_money * people_sum) / monthly_sum");
     
     QString needed_money = this->db->selectSettings("money_target");
-    QLineEdit *line_money_needed = new QLineEdit();
-    line_money_needed->setPlaceholderText("type here your money-target");
-    line_money_needed->setText(needed_money);
-    line_money_needed->setMaximumWidth(100);
-    connect(line_money_needed, &QLineEdit::returnPressed, this, [this, line_money_needed]{ onMoneyTargetChanged(line_money_needed->text()); });
+    this->edit_money_needed = new QLineEdit();
+    edit_money_needed->setPlaceholderText("type here your money-target");
+    edit_money_needed->setText(needed_money);
+    edit_money_needed->setMaximumWidth(100);
+    grid->addWidget(this->edit_money_needed, 1, 0, Qt::AlignLeft);
     
-    QPushButton *button_money_target_save = new QPushButton();
-    button_money_target_save->setIcon(QIcon::fromTheme("document-save"));
-    button_money_target_save->setToolTip("save and apply");
-    button_money_target_save->setMaximumWidth(50);
-    connect(button_money_target_save, &QPushButton::clicked, this, [this, line_money_needed]{ onMoneyTargetChanged(line_money_needed->text()); });
+    QString money_target = this->edit_money_needed->text();
+    connect(this->edit_money_needed, &QLineEdit::textChanged, this, &Stats::onMoneyTargetChanged);
     
-    money_target_layout->addWidget(line_money_needed);
-    money_target_layout->addWidget(button_money_target_save);
-    
-    money_target_widget->setLayout(money_target_layout);
-    
-    QLabel *donors_needed = new QLabel(QString::number( needed_money.toInt() - monthly_sum - monthly_sum_promised ));
-    donors_needed->setToolTip("= (needed_money * people_sum) / monthly_sum");
-    grid->addWidget(money_target_widget, 1, 0, Qt::AlignLeft);
-    grid->addWidget(donors_needed, 1, 1);
-    if (monthly_sum + monthly_sum_promised > 0)
-    {
-        grid->addWidget(new QLabel(QString::number( ((dp + dpp) * needed_money.toInt()) / (monthly_sum + monthly_sum_promised) )), 1, 2);
-    }
+    onMoneyTargetChanged(needed_money);
 }
 
 void Stats::onMoneyTargetChanged(QString target)
 {
+    QMap<QString,QVariant> money = this->db->selectMoneyStats();
+    int monthly_sum = money["monthly_sum"].toInt();
+    int monthly_sum_promised = money["monthly_sum_promised"].toInt();
+    
+    QMap<QString,QVariant> data = this->db->selectPeopleStats();
+    int dp = data["donation_partners"].toInt();
+    int dpp = data["donation_partners_promised"].toInt();
+    
     this->db->insertSettings("money_target", target);
-    showEvent(new QShowEvent);
+    
+    this->label_need_remaining->setText(QString::number( this->edit_money_needed->text().toInt() - monthly_sum - monthly_sum_promised ));
+    
+    if (monthly_sum + monthly_sum_promised > 0)
+    {
+        this->label_need_donors->setText(QString::number( ((dp + dpp) * this->edit_money_needed->text().toInt()) / (monthly_sum + monthly_sum_promised) ));
+    }
 }
 
 void Stats::clearLayout(QLayout* layout)

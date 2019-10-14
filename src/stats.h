@@ -37,10 +37,16 @@ private:
     void addRemainingStats();
     void clearLayout(QLayout *layout);
     
+    /* needed to be able to update these values while the lineedit is edited */
+    QLineEdit *edit_money_needed;
+    QLabel *label_need_remaining;
+    QLabel *label_need_donors;
+    
 signals:
     
 public slots:
     void showEvent(QShowEvent */*event*/);
+    /* needed to be able to update these values while the lineedit is edited */
     void onMoneyTargetChanged(QString target);
 };
 
