@@ -10,17 +10,6 @@ PersonEdit::PersonEdit(DbAdapter *db, qlonglong rowid, QWidget *parent)
     this->db = db;
     
     drawGUI();
-    loadData();
-}
-
-PersonEdit::PersonEdit(DbAdapter *db, QWidget *parent)
-    : QWidget(parent)
-{
-    this->layout = new QGridLayout;
-    setLayout(this->layout);
-    
-    this->db = db;
-    drawGUI();
 }
 
 void PersonEdit::drawGUI()
@@ -81,13 +70,24 @@ void PersonEdit::drawGUI()
     this->layout->addWidget(new QLabel("Spouse"), 13, 0);
     this->layout->addWidget(new QLabel("Notes"), 14, 0);
     
-    QPushButton *button_cancel = new QPushButton("cancel");
-    this->layout->addWidget(button_cancel, 15, 0);
-    QPushButton *button_save = new QPushButton("save");
-    this->layout->addWidget(button_save, 15, 1);
+    loadData();
     
-    connect(button_cancel, &QPushButton::clicked, this, &PersonEdit::onCancelButton);
-    connect(button_save, &QPushButton::clicked, this, &PersonEdit::onSaveButton);
+    QList<QCheckBox*> allCheckboxesToAutosave;
+    allCheckboxesToAutosave << check_todo << check_waiting << check_agreed_mail << check_agreed_prayer;
+    QList<QLineEdit*> allLineEditsToAutosave;
+    allLineEditsToAutosave << edit_tnt_id << edit_name << edit_email << edit_address << edit_phone << edit_agreement << edit_donations_monthly << edit_donations_monthly_promised;
+    foreach(QCheckBox *item, allCheckboxesToAutosave)
+    {
+        connect(item, &QCheckBox::stateChanged, this, &PersonEdit::saveData);
+    }
+    foreach(QLineEdit *item, allLineEditsToAutosave)
+    {
+        connect(item, &QLineEdit::textChanged, this, &PersonEdit::saveData);
+    }
+    
+    connect(combo_group, qOverload<int>(&QComboBox::currentIndexChanged), this, &PersonEdit::saveDataWithInt);
+    connect(edit_notes, &QTextEdit::textChanged, this, &PersonEdit::saveData);
+                               
     //this->layout->setRowStretch(14, 100);
     
     loadGroupsComboData();
@@ -173,20 +173,6 @@ QMap<QString,QVariant> PersonEdit::collectSaveData()
     return data;
 }
 
-qlonglong PersonEdit::savePerson()
-{
-    QMap<QString,QVariant> data = collectSaveData();
-    
-    return this->db->insertNewPerson(data);
-}
-
-void PersonEdit::updatePerson()
-{
-    QMap<QString,QVariant> data = collectSaveData();
-    
-    this->db->updatePerson(this->rowid, data);
-}
-
 void PersonEdit::onAddNewGroupButton()
 {
     
@@ -197,25 +183,14 @@ void PersonEdit::onSelectSpouseButton()
     
 }
 
-void PersonEdit::onCancelButton()
+void PersonEdit::saveDataWithInt(int /*param just for compat*/)
 {
-    emit closeCurrentTabSignal();
+    saveData();
 }
-
-void PersonEdit::onSaveButton()
+void PersonEdit::saveData()
 {
-    if (this->rowid == -1)
-    {
-        qlonglong rowid = savePerson();
-        
-        // convert this view from an "adding a new person" to an "editing an existing one"
-        delete this->layout;
-        PersonEdit(this->db, rowid);
-    }
-    else
-    {
-        updatePerson();
-    }
+    QMap<QString,QVariant> data = collectSaveData();
+    this->db->updatePerson(this->rowid, data);
     
     emit dataChanged();
 }

@@ -50,7 +50,7 @@ private:
     bool data_changed = true;
     
 signals:
-    void addNewPersonSignal();
+    //void addNewPersonSignal();
     void editPersonSignal(qlonglong rowid, QString name);
     void showDonationsForPersonSignal(qlonglong rowid);
     

@@ -6,6 +6,7 @@
 #include <QIcon>
 #include <QMouseEvent>
 #include <QToolTip>
+#include <QCloseEvent>
 
 #include "config.h"
 #include "people_list.h"
@@ -27,6 +28,9 @@ class QTNTMainWindow : public QMainWindow
 public:
     QTNTMainWindow(QWidget *parent = nullptr);
     
+protected:
+    void closeEvent(QCloseEvent *event) override;
+    
 private:
     Config *config;
     MenuBar *menu_bar;
@@ -38,7 +42,6 @@ private:
     // make shure only one of this type of tab is open at once
     void createSingleTab(QString tab_name, QWidget *widget, QIcon *icon = nullptr);
     
-    
 private slots:
     void onTabMoved(int from, int to);
     void activateNewTab();
@@ -49,7 +52,7 @@ private slots:
     //void addJourneyNewTab();
     void addJourneyEditTab(qlonglong rowid, QString name);
     
-    void addNewPersonTab();
+    //void addNewPersonTab();
     void addPersonEditTab(qlonglong rowid, QString name);
     void addSettingsTab();
     void addSQLEditorTab();

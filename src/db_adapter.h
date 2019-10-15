@@ -18,8 +18,10 @@ class DbAdapter : public QObject
     
 public:
     explicit DbAdapter(Config *config, QObject *parent = nullptr);
+    void commit();
     QSqlQuery bindPersonParams(QSqlQuery query, QMap<QString, QVariant> data);
-    qlonglong insertNewPerson(QMap<QString, QVariant> data);
+    qlonglong insertNewPerson();
+    //qlonglong insertNewPerson(QMap<QString, QVariant> data);
     void updatePerson(qlonglong rowid, QMap<QString,QVariant> data);
     void deletePerson(qlonglong rowid);
     QMap<QString, QVariant> selectPerson(qlonglong rowid);

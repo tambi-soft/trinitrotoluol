@@ -16,4 +16,6 @@ Currencies::Currencies(DbAdapter *db, QWidget *parent)
     this->layout->addWidget(this->combo_default_currency);
     this->layout->addWidget(this->table);
     this->layout->addWidget(button_new_currency);
+    
+    // iso-4217
 }

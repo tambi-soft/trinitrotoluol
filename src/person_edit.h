@@ -17,20 +17,13 @@ class PersonEdit : public QWidget
 {
     Q_OBJECT
 public:
-    // edit an existing person
     explicit PersonEdit(DbAdapter *db, qlonglong rowid, QWidget *parent = nullptr);
-    // create a new person
-    explicit PersonEdit(DbAdapter *db, QWidget *parent = nullptr);
     
     void drawGUI();
     void loadData();
     void loadGroupsComboData();
     /* pack all data in a qmap for beeing send to the db */
     QMap<QString,QVariant> collectSaveData();
-    /* save new person */
-    qlonglong savePerson();
-    /* update existing person */
-    void updatePerson();
     
 private:
     QGridLayout *layout;
@@ -63,8 +56,8 @@ private:
 private slots:
     void onAddNewGroupButton();
     void onSelectSpouseButton();
-    void onCancelButton();
-    void onSaveButton();
+    void saveDataWithInt(int /* param just for compat */);
+    void saveData();
     
 signals:
     void closeCurrentTabSignal();

@@ -83,6 +83,8 @@ void QTNTMainWindow::closeTab(int tab_id)
 
 void QTNTMainWindow::closeCurrentTab()
 {
+    // make shure, everything is saved to the db
+    this->db->commit();
     int id = this->tab_widget->currentIndex();
     closeTab(id);
 }
@@ -121,6 +123,7 @@ void QTNTMainWindow::addJourneyEditTab(qlonglong rowid, QString name)
     activateNewTab();
 }
 
+/*
 void QTNTMainWindow::addNewPersonTab()
 {
     PersonEdit *person = new PersonEdit(this->db);
@@ -130,7 +133,7 @@ void QTNTMainWindow::addNewPersonTab()
     this->tab_widget->addTab(person, "New Person");
     activateNewTab();
 }
-
+*/
 void QTNTMainWindow::addPersonEditTab(qlonglong rowid, QString name)
 {
     PersonEdit *person = new PersonEdit(this->db, rowid);
@@ -169,7 +172,7 @@ void QTNTMainWindow::addPeopleTab()
 {
     this->people_list = new PeopleList(this->db, this);
     connect(this->people_list, &PeopleList::editPersonSignal, this, &QTNTMainWindow::addPersonEditTab);
-    connect(this->people_list, &PeopleList::addNewPersonSignal, this, &QTNTMainWindow::addNewPersonTab);
+    //connect(this->people_list, &PeopleList::addNewPersonSignal, this, &QTNTMainWindow::addNewPersonTab);
     
     QIcon *icon = new QIcon(QIcon::fromTheme("x-office-address-book"));
     createSingleTab("people", this->people_list, icon);
@@ -227,4 +230,12 @@ void QTNTMainWindow::createSingleTab(QString tab_name, QWidget *widget, QIcon *i
         activateNewTab();
         this->open_tabs[tab_name] = this->tab_widget->currentIndex();
     }
+}
+
+void QTNTMainWindow::closeEvent( QCloseEvent* event )
+{
+    // just make shure all database changes are really are applied before closing
+    this->db->commit();
+    
+    event->accept();
 }

@@ -159,6 +159,11 @@ void DbAdapter::initializeTables()
     //qDebug() << query_sent_mail.lastQuery();
 }
 
+void DbAdapter::commit()
+{
+    this->db.commit();
+}
+
 void DbAdapter::deletePerson(qlonglong rowid)
 {
     QSqlQuery query(this->db);
@@ -187,6 +192,16 @@ QSqlQuery DbAdapter::bindPersonParams(QSqlQuery query, QMap<QString,QVariant> da
     return query;
 }
 
+qlonglong DbAdapter::insertNewPerson()
+{
+    QSqlQuery query(this->db);
+    query.prepare("INSERT INTO people DEFAULT VALUES");
+    query.exec();
+    
+    this->db.commit();
+    return query.lastInsertId().toLongLong();
+}
+/*
 qlonglong DbAdapter::insertNewPerson(QMap<QString,QVariant> data)
 {
     QSqlQuery query(this->db);
@@ -206,7 +221,7 @@ qlonglong DbAdapter::insertNewPerson(QMap<QString,QVariant> data)
     
     return query.lastInsertId().toLongLong();
 }
-
+*/
 void DbAdapter::updatePerson(qlonglong rowid, QMap<QString,QVariant> data)
 {
     QSqlQuery query(this->db);

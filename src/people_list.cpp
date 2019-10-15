@@ -272,7 +272,6 @@ void PeopleList::onNameFilterChanged()
 
 void PeopleList::onGroupsFilterChanged()
 {
-    qDebug() << "onGroupFilterChanged";
     /*
     this->combo_groups->blockSignals(true);
     clear();
@@ -286,7 +285,10 @@ void PeopleList::onGroupsFilterChanged()
 
 void PeopleList::onNewPersonButtonClicked()
 {
-    emit addNewPersonSignal();
+    //emit addNewPersonSignal();
+    
+    qlonglong rowid = this->db->insertNewPerson();
+    emit editPersonSignal(rowid, "new");
 }
 
 void PeopleList::onEditPersonButtonClicked(qlonglong rowid, QString name)
