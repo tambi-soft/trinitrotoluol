@@ -285,7 +285,7 @@ void PeopleList::onGroupsFilterChanged()
 
 void PeopleList::onNewPersonButtonClicked()
 {
-    //emit addNewPersonSignal();
+    this->data_changed = true;
     
     qlonglong rowid = this->db->insertNewPerson();
     emit editPersonSignal(rowid, "new");
@@ -315,7 +315,6 @@ void PeopleList::onDeletePersonButtonClicked(qlonglong rowid, QString name)
 
 void PeopleList::dataChanged()
 {
-    qDebug() << "people list data changed";
     this->data_changed = true;
 }
 
