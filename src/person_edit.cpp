@@ -31,7 +31,6 @@ void PersonEdit::drawGUI()
     layout_groups->addWidget(combo_group);
     layout_groups->addWidget(button_edit_groups);
     widget_groups->setLayout(layout_groups);
-    //this->layout->addWidget(combo_group, 5, 1);
     this->layout->addWidget(widget_groups, 7, 1);
     
     this->layout->addWidget(check_agreed_mail, 8, 1);
@@ -70,6 +69,7 @@ void PersonEdit::drawGUI()
     this->layout->addWidget(new QLabel("Spouse"), 13, 0);
     this->layout->addWidget(new QLabel("Notes"), 14, 0);
     
+    loadGroupsComboData();
     loadData();
     
     QList<QCheckBox*> allCheckboxesToAutosave;
@@ -89,8 +89,6 @@ void PersonEdit::drawGUI()
     connect(edit_notes, &QTextEdit::textChanged, this, &PersonEdit::saveData);
                                
     //this->layout->setRowStretch(14, 100);
-    
-    loadGroupsComboData();
 }
 
 void PersonEdit::loadData()

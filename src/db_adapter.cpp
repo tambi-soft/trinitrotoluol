@@ -155,6 +155,8 @@ void DbAdapter::initializeTables()
     
     QSqlQuery query_people_donations("CREATE TABLE IF NOT EXISTS people_donations (rowid_people INTEGER PRIMARY KEY, amount INTEGER, date TEXT)", this->db);
     
+    QSqlQuery query_expenses("CREATE TABLE IF NOT EXISTS expenses (rowid INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, amount INTEGER, cost_one INTEGER, rowid_currency INTEGER, date TEXT, notes TEXT, flag_settled INTEGER)", this->db);
+    
     //qDebug() << this->db.lastError();
     //qDebug() << query_sent_mail.lastQuery();
 }

@@ -20,6 +20,7 @@
 #include "sqlite_editor_widget.h"
 #include "journey_list.h"
 #include "currencies.h"
+#include "expenses_list.h"
 
 class QTNTMainWindow : public QMainWindow
 {

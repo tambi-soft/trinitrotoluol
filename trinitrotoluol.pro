@@ -51,6 +51,7 @@ QT += widgets \
 # Input
 HEADERS += \
     src/currencies.h \
+    src/expenses_list.h \
     src/journey_edit.h \
     src/journey_list.h \
     src/journey_tickets.h \
@@ -75,6 +76,7 @@ HEADERS += \
 
 SOURCES += \
     src/currencies.cpp \
+    src/expenses_list.cpp \
     src/journey_edit.cpp \
     src/journey_list.cpp \
     src/journey_tickets.cpp \
