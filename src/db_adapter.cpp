@@ -561,10 +561,10 @@ QList<QMap<QString,QVariant>> DbAdapter::selectTicketsForJourney(qlonglong rowid
 QMap<QString,QVariant> DbAdapter::selectTicket(qlonglong rowid)
 {
     QSqlQuery query(this->db);
-    query.prepare("SELECT name, cost, currencies.code AS currency_code, flag_settled, notes "
+    query.prepare("SELECT journey_tickets.name, cost, currencies.code AS currency_code, flag_settled, journey_tickets.notes "
                   "FROM journey_tickets "
                   "JOIN currencies ON rowid_currency=currencies.rowid "
-                  "WHERE rowid=:rowid");
+                  "WHERE journey_tickets.rowid=:rowid");
     query.bindValue(":rowid", rowid);
     query.exec();
     
