@@ -26,7 +26,7 @@ void JourneyTickets::loadData()
     this->table->setRowCount(data.length());
     
     QStringList header;
-    header << "" << "" << "name" << "cost" << "settled" << "notes";
+    header << "" << "" << "name" << "cost" << "currency" << "settled" << "notes";
     this->table->setColumnCount(header.length());
     this->table->setHorizontalHeaderLabels(header);
     
@@ -54,16 +54,20 @@ void JourneyTickets::loadData()
         cost->setData(Qt::TextAlignmentRole,int(Qt::AlignRight|Qt::AlignVCenter));
         this->table->setItem(i, 3, cost);
         
+        this->table->setItem(i, 4, new QTableWidgetItem(ticket["currency_code"].toString()));
+        
+        qDebug() << ticket;
+        
         if (ticket["flag_settled"].toInt() == 1)
         {
-            this->table->setItem(i, 4, new QTableWidgetItem("yes"));
+            this->table->setItem(i, 5, new QTableWidgetItem("yes"));
         }
         else
         {
-            this->table->setItem(i, 4, new QTableWidgetItem("not yet"));
+            this->table->setItem(i, 5, new QTableWidgetItem("not yet"));
         }
         
-        this->table->setItem(i, 5, new QTableWidgetItem(ticket["notes"].toString()));
+        this->table->setItem(i, 6, new QTableWidgetItem(ticket["notes"].toString()));
     }
     
     this->table->setEditTriggers(QAbstractItemView::NoEditTriggers);

@@ -548,7 +548,10 @@ void DbAdapter::deleteVisit(qlonglong rowid)
 QList<QMap<QString,QVariant>> DbAdapter::selectTicketsForJourney(qlonglong rowid_journey)
 {
     QSqlQuery query(this->db);
-    query.prepare("SELECT rowid, name, printf('%.2f', cost) AS cost, flag_settled, notes FROM journey_tickets WHERE rowid_journeys=:rowid_journeys");
+    query.prepare("SELECT journey_tickets.rowid, name, printf('%.2f', cost) AS cost, currencies.code AS currency_code, flag_settled, journey_tickets.notes "
+                  "FROM journey_tickets "
+                  "JOIN currencies ON rowid_currency=currencies.rowid "
+                  "WHERE rowid_journeys=:rowid_journeys");
     query.bindValue(":rowid_journeys", rowid_journey);
     query.exec();
     
@@ -558,7 +561,10 @@ QList<QMap<QString,QVariant>> DbAdapter::selectTicketsForJourney(qlonglong rowid
 QMap<QString,QVariant> DbAdapter::selectTicket(qlonglong rowid)
 {
     QSqlQuery query(this->db);
-    query.prepare("SELECT name, cost, flag_settled, notes FROM journey_tickets WHERE rowid=:rowid");
+    query.prepare("SELECT name, cost, currencies.code AS currency_code, flag_settled, notes "
+                  "FROM journey_tickets "
+                  "JOIN currencies ON rowid_currency=currencies.rowid "
+                  "WHERE rowid=:rowid");
     query.bindValue(":rowid", rowid);
     query.exec();
     
