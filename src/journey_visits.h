@@ -22,6 +22,7 @@
 #include <QDate>
 
 #include "db_adapter.h"
+#include "people_selector.h"
 
 class JourneyVisits : public QWidget
 {
@@ -36,6 +37,7 @@ private:
     QVBoxLayout *layout;
     
     void loadData();
+    void reloadData();
     
 signals:
     
@@ -59,11 +61,18 @@ private:
     DbAdapter *db;
     QVBoxLayout *layout;
     
-    QLineEdit *edit_name;
+    QPushButton *button_name;
     QDateEdit *edit_date;
     QTextEdit *edit_notes;
+    QDialog *dialog_select_person;
+    qlonglong rowid_person;
     
 private slots:
+    void selectPerson();
+    void onPersonSelected(qlonglong rowid, QString name);
     void saveData();
+    
+signals:
+    void signalReload();
 };
 #endif // JOURNEYVISITS_H

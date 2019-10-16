@@ -10,8 +10,10 @@
 #include <QComboBox>
 #include <QLabel>
 #include <QPushButton>
+#include <QDialog>
 
 #include "db_adapter.h"
+#include "people_selector.h"
 
 class PersonEdit : public QWidget
 {
@@ -31,6 +33,8 @@ private:
     DbAdapter *db;
     QList<QMap<QString,QVariant>> group_data;
     QMap<QString,int> group_data_map;
+    
+    QDialog *dialog_select_spouse;
     
     QCheckBox *check_todo = new QCheckBox;
     QCheckBox *check_waiting = new QCheckBox;
@@ -56,6 +60,7 @@ private:
 private slots:
     void onAddNewGroupButton();
     void onSelectSpouseButton();
+    void onSpouseSelected(qlonglong rowid, QString name);
     void saveDataWithInt(int /* param just for compat */);
     void saveData();
     

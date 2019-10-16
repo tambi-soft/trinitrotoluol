@@ -172,6 +172,34 @@ void DbAdapter::deletePerson(qlonglong rowid)
     query.exec();
 }
 
+void DbAdapter::linkSpouses(qlonglong rowid_a, qlonglong rowid_b)
+{
+    QSqlQuery query_a(this->db);
+    query_a.prepare("UPDATE people SET spouse_rowid=:rowid_a WHERE rowid=:rowid_b");
+    query_a.bindValue(":rowid_a", rowid_a);
+    query_a.bindValue(":rowid_b", rowid_b);
+    query_a.exec();
+    
+    QSqlQuery query_b(this->db);
+    query_b.prepare("UPDATE people SET spouse_rowid=:rowid_b WHERE rowid=:rowid_a");
+    query_b.bindValue(":rowid_a", rowid_a);
+    query_b.bindValue(":rowid_b", rowid_b);
+    query_b.exec();
+}
+
+void DbAdapter::unlinkSpouses(qlonglong rowid_a, qlonglong rowid_b)
+{
+    QSqlQuery query_a(this->db);
+    query_a.prepare("UPDATE people SET spouse_rowid=NULL WHERE spouse_rowid=:rowid");
+    query_a.bindValue(":rowid", rowid_a);
+    query_a.exec();
+    
+    QSqlQuery query_b(this->db);
+    query_b.prepare("UPDATE people SET spouse_rowid=NULL WHERE spouse_rowid=:rowid");
+    query_a.bindValue(":rowid", rowid_b);
+    query_b.exec();
+}
+
 QSqlQuery DbAdapter::bindPersonParams(QSqlQuery query, QMap<QString,QVariant> data)
 {
     query.bindValue(":tnt_id", data["tnt_id"].toInt());
@@ -483,11 +511,11 @@ qlonglong DbAdapter::insertVisit(qlonglong rowid_journey)
     return query.lastInsertId().toLongLong();
 }
 
-void DbAdapter::updateVisit(qlonglong rowid, QString name, QString date, QString notes)
+void DbAdapter::updateVisit(qlonglong rowid, qlonglong rowid_people, QString date, QString notes)
 {
     QSqlQuery query(this->db);
-    query.prepare("INSERT people_visits SET date=:date, notes=:notes WHERE rowid=:rowid");
-    //query.bindValue(":name", name);
+    query.prepare("UPDATE people_visits SET rowid_people=:rowid_people, date=:date, notes=:notes WHERE rowid=:rowid");
+    query.bindValue(":rowid_people", rowid_people);
     query.bindValue(":date", date);
     query.bindValue(":notes", notes);
     query.bindValue(":rowid", rowid);
@@ -497,7 +525,10 @@ void DbAdapter::updateVisit(qlonglong rowid, QString name, QString date, QString
 QMap<QString,QVariant> DbAdapter::selectVisit(qlonglong rowid)
 {
     QSqlQuery query(this->db);
-    query.prepare("SELECT date, notes FROM people_visits WHERE rowid=:rowid");
+    query.prepare("SELECT rowid_people, people.name, people_visits.date, people_visits.notes "
+                  "FROM people_visits "
+                  "JOIN people ON rowid_people=people.rowid "
+                  "WHERE people_visits.rowid=:rowid");
     query.bindValue(":rowid", rowid);
     query.exec();
     

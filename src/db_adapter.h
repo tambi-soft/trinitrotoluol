@@ -25,6 +25,8 @@ public:
     void updatePerson(qlonglong rowid, QMap<QString,QVariant> data);
     void deletePerson(qlonglong rowid);
     QMap<QString, QVariant> selectPerson(qlonglong rowid);
+    void linkSpouses(qlonglong rowid_a, qlonglong rowid_b);
+    void unlinkSpouses(qlonglong rowid_a, qlonglong rowid_b);
     //QList<QMap<QString, QVariant>> selectAllPersons();
     // "todo", "waiting", "donating" and "mail" are tristate: -1: show both, 0: show 0, 1: show = 1 (or with donating: > 0)
     QList<QMap<QString, QVariant>> selectAllPersonsFiltered(int todo, int waiting, int donating, int deactivated, int agreed_mail, QString group, QString name, QString mail);
@@ -49,7 +51,7 @@ public:
     
     QList<QMap<QString, QVariant>> selectVisitsForJourney(qlonglong rowid_journey);
     qlonglong insertVisit(qlonglong rowid_journey);
-    void updateVisit(qlonglong rowid, QString name, QString date, QString notes);
+    void updateVisit(qlonglong rowid, qlonglong rowid_people, QString date, QString notes);
     QMap<QString,QVariant> selectVisit(qlonglong rowid);
     void deleteVisit(qlonglong rowid);
     

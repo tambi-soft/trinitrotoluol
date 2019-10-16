@@ -5,6 +5,12 @@
 #include <QWidget>
 
 #include <QVBoxLayout>
+#include <QRadioButton>
+#include <QLabel>
+#include <QPushButton>
+#include <QScrollArea>
+#include <QLineEdit>
+#include <QComboBox>
 
 #include "db_adapter.h"
 
@@ -17,10 +23,16 @@ public:
 private:
     DbAdapter *db;
     QVBoxLayout *layout;
+    QComboBox *filter_group;
+    QLineEdit *filter_name;
+    
+    void drawData();
     
 signals:
+    void personSelected(qlonglong rowid, QString name);
     
-public slots:
+private slots:
+    void personButtonClicked(qlonglong rowid, QString name);
 };
 
 #endif // PEOPLESELECTOR_H

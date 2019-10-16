@@ -55,6 +55,12 @@ void JourneyVisits::loadData()
     this->table->resizeColumnsToContents();
 }
 
+void JourneyVisits::reloadData()
+{
+    this->table->clear();
+    loadData();
+}
+
 void JourneyVisits::addNewVisit()
 {
     qlonglong rowid_visits = this->db->insertVisit(this->rowid_journey);
@@ -68,6 +74,7 @@ void JourneyVisits::addNewVisit()
 void JourneyVisits::editVisit(qlonglong rowid_visits)
 {
     JourneyVisitsEdit *edit = new JourneyVisitsEdit(rowid_visits, this->db);
+    connect(edit, &JourneyVisitsEdit::signalReload, this, &JourneyVisits::reloadData);
     
     QDialog *dialog = new QDialog();
     QVBoxLayout *layout_dialog = new QVBoxLayout;
@@ -96,9 +103,10 @@ void JourneyVisits::deleteVisit(qlonglong rowid, QString name)
 JourneyVisitsEdit::JourneyVisitsEdit(qlonglong rowid_visits, DbAdapter *db, QWidget *parent)
     : QWidget(parent)
     , layout (new QVBoxLayout)
-    , edit_name (new QLineEdit)
+    , button_name (new QPushButton)
     , edit_date (new QDateEdit)
     , edit_notes (new QTextEdit)
+    , dialog_select_person (new QDialog)
 {
     this->rowid_visits = rowid_visits;
     this->db = db;
@@ -108,24 +116,54 @@ JourneyVisitsEdit::JourneyVisitsEdit(qlonglong rowid_visits, DbAdapter *db, QWid
     this->edit_date->setCalendarPopup(true);
     
     this->layout->addWidget(new QLabel("name"));
-    this->layout->addWidget(this->edit_name);
+    this->layout->addWidget(this->button_name);
     this->layout->addWidget(new QLabel("date"));
     this->layout->addWidget(this->edit_date);
     this->layout->addWidget(new QLabel("notes"));
     this->layout->addWidget(this->edit_notes);
     
     QMap<QString,QVariant> data = this->db->selectVisit(this->rowid_visits);
-    this->edit_name->setText(data["name"].toString());
+    this->rowid_person = data["rowid_people"].toLongLong();
+    
+    this->button_name->setText(data["name"].toString());
     this->edit_date->setDate(QDate::fromString(data["date"].toString(), "yyyy-MM-dd"));
     this->edit_notes->setText(data["notes"].toString());
+    
+    connect(this->button_name, &QPushButton::clicked, this, &JourneyVisitsEdit::selectPerson);
+    connect(this->edit_date, &QDateEdit::dateChanged, this, &JourneyVisitsEdit::saveData);
+    connect(this->edit_notes, &QTextEdit::textChanged, this, &JourneyVisitsEdit::saveData);
+}
+
+void JourneyVisitsEdit::selectPerson()
+{
+    PeopleSelector *selector = new PeopleSelector(this->db);
+    connect(selector, &PeopleSelector::personSelected, this, &JourneyVisitsEdit::onPersonSelected);
+    
+    this->dialog_select_person = new QDialog();
+    QVBoxLayout *layout_dialog = new QVBoxLayout;
+    layout_dialog->setMargin(0);
+    this->dialog_select_person->setLayout(layout_dialog);
+    layout_dialog->addWidget(selector);
+    
+    this->dialog_select_person->exec();
+}
+
+void JourneyVisitsEdit::onPersonSelected(qlonglong rowid, QString name)
+{
+    this->rowid_person = rowid;
+    this->button_name->setText(name);
+    
+    this->dialog_select_person->close();
+    
+    saveData();
 }
 
 void JourneyVisitsEdit::saveData()
 {
-    QString name = this->edit_name->text();
-    QString date = QDate::fromString(this->edit_date->date().toString(), "yyyy-MM-dd").toString();
+    QString date = this->edit_date->date().toString("yyyy-MM-dd");
     QString notes = this->edit_notes->toPlainText();
     
-    //this->db->updateVisit(this->rowid_visits, this->rowid_journey, name, date, notes);
+    this->db->updateVisit(this->rowid_visits, this->rowid_person, date, notes);
     
+    emit signalReload();
 }

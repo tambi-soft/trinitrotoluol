@@ -180,7 +180,25 @@ void PersonEdit::onAddNewGroupButton()
 
 void PersonEdit::onSelectSpouseButton()
 {
+    PeopleSelector *selector = new PeopleSelector(this->db);
+    connect(selector, &PeopleSelector::personSelected, this, &PersonEdit::onSpouseSelected);
     
+    this->dialog_select_spouse = new QDialog();
+    QVBoxLayout *layout_dialog = new QVBoxLayout;
+    layout_dialog->setMargin(0);
+    this->dialog_select_spouse->setLayout(layout_dialog);
+    layout_dialog->addWidget(selector);
+    
+    this->dialog_select_spouse->exec();
+}
+
+void PersonEdit::onSpouseSelected(qlonglong rowid, QString name)
+{
+    this->dialog_select_spouse->close();
+    
+    this->db->linkSpouses(this->rowid, rowid);
+    
+    this->edit_spouse->setText(name);
 }
 
 void PersonEdit::saveDataWithInt(int /*param just for compat*/)
