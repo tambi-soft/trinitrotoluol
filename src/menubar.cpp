@@ -24,9 +24,6 @@ void MenuBar::addFileMenu()
 
 void MenuBar::addMailMenu()
 {
-    QAction *newMailAction = new QAction(QIcon::fromTheme("document-new"), "Prepare New Mail");
-    connect(newMailAction, &QAction::triggered, this, &MenuBar::newMail);
-    
     QAction *mailListAction = new QAction("Mail List");
     connect(mailListAction, &QAction::triggered, this, &MenuBar::mailList);
     
@@ -36,7 +33,6 @@ void MenuBar::addMailMenu()
     connect(sendMailAction, &QAction::triggered, this, &MenuBar::sendMail);
     
     QMenu *menu = addMenu("&Mail");
-    menu->addAction(newMailAction);
     menu->addAction(mailListAction);
     menu->addAction(sendMailAction);
 }
@@ -93,11 +89,6 @@ void MenuBar::addHelpMenu()
 void MenuBar::quitApplication()
 {
     QApplication::quit();
-}
-
-void MenuBar::newMail()
-{
-    emit signalNewMail();
 }
 
 void MenuBar::mailList()

@@ -35,7 +35,6 @@ private:
     void quitApplication();
     
 signals:
-    void signalNewMail();
     void signalMailList();
     void signalSettings();
     void signalSQLEditor();
@@ -43,7 +42,6 @@ signals:
     void signalCurrencies();
     
 public slots:
-    void newMail();
     void mailList();
     void sendMail();
     void showSQLEditor();

@@ -124,12 +124,13 @@ void DbAdapter::initializeTables()
             
     QSqlQuery query_mail("CREATE TABLE IF NOT EXISTS mail ( "
         "rowid INTEGER PRIMARY KEY AUTOINCREMENT, "
-        "number INTEGER, "
+        "number TEXT, "
         "subject TEXT, "
         "cover TEXT, "
         "content_path TEXT, "
         "attachment_path TEXT, "
-        "date TEXT)", this->db);
+        "date TEXT, "
+        "date_last_edit TEXT)", this->db);
     
     QSqlQuery query_donations("CREATE VIEW IF NOT EXISTS donations_monthly AS "
         "SELECT SUM(donations_monthly) AS monthly_sum, "
@@ -364,26 +365,25 @@ QMap<QString,QVariant> DbAdapter::selectPeopleStats()
     return  dbIteratorToMap(query);
 }
 
-QSqlQuery DbAdapter::bindMailParams(QSqlQuery query, QMap<QString, QVariant> data)
+qlonglong DbAdapter::insertNewMail()
 {
-    query.bindValue(":number", data["number"].toInt());
+    QSqlQuery query("INSERT INTO mail (date) VALUES (CURRENT_TIMESTAMP)", this->db);
+    
+    this->db.commit();
+    return query.lastInsertId().toLongLong();
+}
+
+void DbAdapter::updateMail(qlonglong rowid, QMap<QString,QVariant> data)
+{
+    QSqlQuery query(this->db);
+    query.prepare("UPDATE mail SET number=:number, subject=:subject, cover=:cover, content_path=:content_path, attachment_path=:attachment_path, date_last_edit=CURRENT_TIMESTAMP WHERE rowid=:rowid");
+    query.bindValue(":number", data["number"].toString());
     query.bindValue(":subject", data["subject"].toString());
     query.bindValue(":cover", data["cover"].toString());
     query.bindValue(":content_path", data["content_path"].toString());
     query.bindValue(":attachment_path", data["attachment_path"].toString());
-    
-    return query;
-}
-
-void DbAdapter::insertNewMail(QMap<QString, QVariant> data)
-{
-    QSqlQuery query(this->db);
-    query.prepare("INSERT INTO mail (number, subject, cover, content_path, attachment_path, date) VALUES (:number, :subject, :cover, :content_path, :attachment_path, CURRENT_TIMESTAMP)");
-    query = bindMailParams(query, data);
+    query.bindValue(":rowid", rowid);
     query.exec();
-    
-    //qDebug() << this->db.lastError();
-    //qDebug() << query.lastQuery();
 }
 
 void DbAdapter::deleteMail(qlonglong rowid)
@@ -397,15 +397,18 @@ void DbAdapter::deleteMail(qlonglong rowid)
 QMap<QString,QVariant> DbAdapter::selectMail(qlonglong rowid)
 {
     QSqlQuery query(this->db);
-    query.prepare("SELECT number, subject, cover, content_path, attachment_path, date FROM mail WHERE rowid=:rowid");
+    query.prepare("SELECT number, subject, cover, content_path, attachment_path, date, date_last_edit "
+                  "FROM mail "
+                  "WHERE rowid=:rowid");
     query.bindValue(":rowid", rowid);
+    query.exec();
     
     return dbIteratorToMap(query);
 }
 
 QList<QMap<QString,QVariant>> DbAdapter::selectAllMails()
 {
-    QSqlQuery query("SELECT rowid, number, subject, cover, content_path, attachment_path, date FROM mail", this->db);
+    QSqlQuery query("SELECT rowid, number, subject, cover, content_path, attachment_path, date, date_last_edit FROM mail ORDER BY number", this->db);
     
     return dbIteratorToMapList(query);
 }

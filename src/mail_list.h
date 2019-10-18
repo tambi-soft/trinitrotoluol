@@ -15,7 +15,7 @@
 #include <QMap>
 
 #include "db_adapter.h"
-#include "mail_new.h"
+#include "mail_edit.h"
 
 class MailList : public QWidget
 {
@@ -31,11 +31,10 @@ private:
     QList<QMap<QString,QVariant>> data;
     
 signals:
-    void closeCurrentTabSignal();
-    void signalNewMail();
+    void signalEditMail(qlonglong rowid);
     
 public slots:
-    void onNewMailButton();
+    void onNewMail();
     void onDeleteMail(qlonglong rowid, QString subject);
     void onEditMail(qlonglong rowid);
     void showEvent(QShowEvent *event);

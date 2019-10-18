@@ -3,6 +3,7 @@
 MailList::MailList(DbAdapter *db, QWidget *parent)
     : QWidget(parent)
     , layout (new QVBoxLayout)
+    , table (new QTableWidget)
 {
     this->db = db;
     
@@ -10,23 +11,22 @@ MailList::MailList(DbAdapter *db, QWidget *parent)
  
     this->data = this->db->selectAllMails();
     
-    QList<QString> labels;
-    labels << "" << "" << "No" << "Subject" << "Date";
-    
-    this->table = new QTableWidget(this->data.length(), 5);
-    this->table->setHorizontalHeaderLabels(labels);
-    
-    this->layout->addWidget(table);
+    this->layout->addWidget(this->table);
     
     //initView();
     
     QPushButton *button_new_mail = new QPushButton("new Mail");
-    connect(button_new_mail, &QPushButton::clicked, this, &MailList::onNewMailButton);
+    connect(button_new_mail, &QPushButton::clicked, this, &MailList::onNewMail);
     this->layout->addWidget(button_new_mail);
 }
 
 void MailList::initView()
 {
+    QStringList headers;
+    headers << "" << "" << "number" << "subject" << "date" << "date last edit";
+    this->table->setColumnCount(headers.length());
+    this->table->setHorizontalHeaderLabels(headers);
+    
     this->data = this->db->selectAllMails();
     
     if (this->data.length() > 0)
@@ -51,15 +51,29 @@ void MailList::initView()
             this->table->setItem(i, 2, new QTableWidgetItem(data.at(i)["number"].toString()));
             this->table->setItem(i, 3, new QTableWidgetItem(subject));
             this->table->setItem(i, 4, new QTableWidgetItem(data.at(i)["date"].toString()));
+            this->table->setItem(i, 5, new QTableWidgetItem(data.at(i)["date_last_edit"].toString()));
         }
         
         this->table->resizeColumnsToContents();
     }
 }
 
-void MailList::onNewMailButton()
+void MailList::onNewMail()
 {
-    emit signalNewMail();
+    qlonglong rowid = this->db->insertNewMail();
+    
+    emit signalEditMail(rowid);
+    
+    this->table->clear();
+    initView();
+}
+
+void MailList::onEditMail(qlonglong rowid)
+{
+    emit signalEditMail(rowid);
+    
+    this->table->clear();
+    initView();
 }
 
 void MailList::onDeleteMail(qlonglong rowid, QString subject)
@@ -72,11 +86,6 @@ void MailList::onDeleteMail(qlonglong rowid, QString subject)
         this->table->clear();
         initView();
     }
-}
-
-void MailList::onEditMail(qlonglong rowid)
-{
-    
 }
 
 void MailList::showEvent(QShowEvent */*event*/)

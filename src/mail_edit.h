@@ -1,5 +1,5 @@
-#ifndef MAILNEW_H
-#define MAILNEW_H
+#ifndef MailEdit_H
+#define MailEdit_H
 
 #include <QObject>
 #include <QWidget>
@@ -14,14 +14,11 @@
 
 #include "db_adapter.h"
 
-class MailNew : public QWidget
+class MailEdit : public QWidget
 {
     Q_OBJECT
 public:
-    // new mail
-    explicit MailNew(DbAdapter *db, QWidget *parent = nullptr);
-    // edit mail
-    explicit MailNew(DbAdapter *db, qlonglong rowid, QWidget* parent = nullptr);
+    explicit MailEdit(DbAdapter *db, qlonglong rowid, QWidget* parent = nullptr);
     
 private:
     qlonglong rowid = -1;
@@ -34,17 +31,18 @@ private:
     QLineEdit* line_content;
     QLineEdit* line_attachment;
     QLineEdit* line_date;
+    QLineEdit* line_date_last_edit;
     
     void initializeGUI();
+    void loadData();
+    void addEditListeners();
     
 signals:
-    void closeCurrentTabSignal();
     
 public slots:
-    void onCancelButton();
-    void onSaveButton();
+    void saveData();
     void onContentPathButton();
     void onAttachmentPathButton();
 };
 
-#endif // MAILNEW_H
+#endif // MailEdit_H

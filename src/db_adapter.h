@@ -34,8 +34,8 @@ public:
     QMap<QString, QVariant> selectMoneyStats();
     QMap<QString, QVariant> selectPeopleStats();
     
-    QSqlQuery bindMailParams(QSqlQuery query, QMap<QString,QVariant> data);
-    void insertNewMail(QMap<QString,QVariant> data);
+    qlonglong insertNewMail();
+    void updateMail(qlonglong rowid, QMap<QString, QVariant> data);
     void deleteMail(qlonglong rowid);
     QMap<QString,QVariant> selectMail(qlonglong rowid);
     QList<QMap<QString,QVariant>> selectAllMails();

@@ -1,21 +1,16 @@
-#include "mail_new.h"
+#include "mail_edit.h"
 
-MailNew::MailNew(DbAdapter *db, QWidget *parent) : QWidget(parent)
-{
-    this->db = db;
-    
-    initializeGUI();
-}
-
-MailNew::MailNew(DbAdapter *db, qlonglong rowid, QWidget* parent) : QWidget(parent)
+MailEdit::MailEdit(DbAdapter *db, qlonglong rowid, QWidget* parent) : QWidget(parent)
 {
     this->db = db;
     this->rowid = rowid;
     
     initializeGUI();
+    loadData();
+    addEditListeners();
 }
 
-void MailNew::initializeGUI()
+void MailEdit::initializeGUI()
 {
     this->grid = new QGridLayout;
     this->line_number = new QLineEdit;
@@ -33,6 +28,10 @@ void MailNew::initializeGUI()
     this->line_date = new QLineEdit;
     this->line_date->setReadOnly(true);
     this->line_date->setPlaceholderText("will be inserted automatically");
+    
+    this->line_date_last_edit = new QLineEdit;
+    this->line_date_last_edit->setReadOnly(true);
+    this->line_date_last_edit->setPlaceholderText("will be inserted automatically");
             
     setLayout(this->grid);
     
@@ -40,41 +39,54 @@ void MailNew::initializeGUI()
     this->grid->addWidget(this->line_number, 0, 1);
     
     this->grid->addWidget(new QLabel("Subject:"), 1, 0);
-    this->grid->addWidget(line_subject, 1, 1);
+    this->grid->addWidget(this->line_subject, 1, 1);
     
     this->grid->addWidget(new QLabel("Cover:"), 2, 0);
-    this->grid->addWidget(line_cover, 2, 1);
+    this->grid->addWidget(this->line_cover, 2, 1);
     
     this->grid->addWidget(new QLabel("Content:"), 3, 0);
-    this->grid->addWidget(line_content, 3, 1);
+    this->grid->addWidget(this->line_content, 3, 1);
+    
     QPushButton *button_add_content = new QPushButton("select Content Path");
-    connect(button_add_content, &QPushButton::clicked, this, &MailNew::onContentPathButton);
+    connect(button_add_content, &QPushButton::clicked, this, &MailEdit::onContentPathButton);
     this->grid->addWidget(button_add_content, 3, 2);
     
     this->grid->addWidget(new QLabel("Attachment:"), 4, 0);
-    this->grid->addWidget(line_attachment, 4, 1);
+    this->grid->addWidget(this->line_attachment, 4, 1);
     QPushButton *button_add_attachment = new QPushButton("select Attachment Path");
-    connect(button_add_attachment, &QPushButton::clicked, this, &MailNew::onAttachmentPathButton);
+    connect(button_add_attachment, &QPushButton::clicked, this, &MailEdit::onAttachmentPathButton);
     this->grid->addWidget(button_add_attachment, 4, 2);
     
     this->grid->addWidget(new QLabel("Date:"), 5, 0);
-    this->grid->addWidget(line_date, 5, 1);
-    
-    QPushButton* button_cancel = new QPushButton("Cancel");
-    this->grid->addWidget(button_cancel, 6, 0);
-    connect(button_cancel, &QPushButton::clicked, this, &MailNew::onCancelButton);
-    
-    QPushButton* button_save = new QPushButton("Save");
-    this->grid->addWidget(button_save, 6, 1);
-    connect(button_save, &QPushButton::clicked, this, &MailNew::onSaveButton);
+    this->grid->addWidget(this->line_date, 5, 1);
+    this->grid->addWidget(new QLabel("Date last Edit"), 6, 0);
+    this->grid->addWidget(this->line_date_last_edit, 6, 1);
 }
 
-void MailNew::onCancelButton()
+void MailEdit::loadData()
 {
-    emit closeCurrentTabSignal();
+    QMap<QString,QVariant> data = this->db->selectMail(this->rowid);
+    // number, subject, cover, content_path, attachment_path, date
+    
+    this->line_number->setText(data["number"].toString());
+    this->line_subject->setText(data["subject"].toString());
+    this->line_cover->setText(data["cover"].toString());
+    this->line_content->setText(data["content_path"].toString());
+    this->line_attachment->setText(data["attachment_path"].toString());
+    this->line_date->setText(data["date"].toString());
+    this->line_date_last_edit->setText(data["date_last_edit"].toString());
 }
 
-void MailNew::onSaveButton()
+void MailEdit::addEditListeners()
+{
+    connect(this->line_number, &QLineEdit::textChanged, this, &MailEdit::saveData);
+    connect(this->line_subject, &QLineEdit::textChanged, this, &MailEdit::saveData);
+    connect(this->line_cover, &QTextEdit::textChanged, this, &MailEdit::saveData);
+    connect(this->line_content, &QLineEdit::textChanged, this, &MailEdit::saveData);
+    connect(this->line_attachment, &QLineEdit::textChanged, this, &MailEdit::saveData);
+}
+
+void MailEdit::saveData()
 {
     QMap<QString,QVariant> data;
     data["number"] = this->line_number->text();
@@ -83,10 +95,10 @@ void MailNew::onSaveButton()
     data["content_path"] = this->line_content->text();
     data["attachment_path"] = this->line_attachment->text();
     
-    this->db->insertNewMail(data);
+    this->db->updateMail(this->rowid, data);
 }
 
-void MailNew::onContentPathButton()
+void MailEdit::onContentPathButton()
 {
     QString last_mail_path = this->db->selectSettings("last_mail_path");
     last_mail_path = QFileDialog::getOpenFileName(this, tr("Select Directory"),
@@ -97,7 +109,7 @@ void MailNew::onContentPathButton()
     this->db->insertSettings("last_mail_path", last_mail_path);
 }
 
-void MailNew::onAttachmentPathButton()
+void MailEdit::onAttachmentPathButton()
 {
     QString last_mail_path = this->db->selectSettings("last_mail_path");
     last_mail_path = QFileDialog::getOpenFileName(this, tr("Select Directory"),

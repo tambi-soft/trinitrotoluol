@@ -14,7 +14,6 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
     
     this->menu_bar = new MenuBar();
     setMenuBar(this->menu_bar);
-    connect(this->menu_bar, &MenuBar::signalNewMail, this, &QTNTMainWindow::addNewMailTab);
     connect(this->menu_bar, &MenuBar::signalMailList, this, &QTNTMainWindow::addMailListTab);
     connect(this->menu_bar, &MenuBar::signalSettings, this, &QTNTMainWindow::addSettingsTab);
     connect(this->menu_bar, &MenuBar::signalSQLEditor, this, &QTNTMainWindow::addSQLEditorTab);
@@ -184,13 +183,20 @@ void QTNTMainWindow::onPeopleDataChanged()
     this->people_list->dataChanged();
 }
 
-void QTNTMainWindow::addNewMailTab()
+void QTNTMainWindow::addMailEditTab(qlonglong rowid)
 {
-    MailNew *mail = new MailNew(this->db);
-    connect(mail, &MailNew::closeCurrentTabSignal, this, &QTNTMainWindow::closeCurrentTab);
-    
+    MailEdit *mail = new MailEdit(this->db, rowid);
     QIcon *icon = new QIcon(QIcon::fromTheme("document-new"));
     createSingleTab("New Mail", mail, icon);
+}
+
+void QTNTMainWindow::addMailListTab()
+{
+    MailList *list = new MailList(this->db);
+    connect(list, &MailList::signalEditMail, this, &QTNTMainWindow::addMailEditTab);
+    
+    QIcon *icon = new QIcon(QIcon::fromTheme("emblem-mail"));
+    createSingleTab("Mail List", list, icon);
 }
 
 void QTNTMainWindow::addCurrenciesTab()
@@ -198,16 +204,6 @@ void QTNTMainWindow::addCurrenciesTab()
     Currencies *currencies = new Currencies(this->db);
     
     createSingleTab("Currencies", currencies);
-}
-
-void QTNTMainWindow::addMailListTab()
-{
-    MailList *list = new MailList(this->db);
-    connect(list, &MailList::closeCurrentTabSignal, this, &QTNTMainWindow::closeCurrentTab);
-    connect(list, &MailList::signalNewMail, this, &QTNTMainWindow::addNewMailTab);
-    
-    //QIcon *icon = new QIcon(QIcon::fromTheme("emblem-mail"));
-    createSingleTab("Mail List", list);
 }
 
 void QTNTMainWindow::createSingleTab(QString tab_name, QWidget *widget, QIcon *icon)

@@ -14,7 +14,7 @@
 #include "person_edit.h"
 #include "stats.h"
 #include "menubar.h"
-#include "mail_new.h"
+#include "mail_edit.h"
 #include "mail_list.h"
 #include "settings.h"
 #include "sqlite_editor_widget.h"
@@ -60,8 +60,9 @@ private slots:
     void addStatsTab();
     void addPeopleTab();
     void onPeopleDataChanged();
-    void addCurrenciesTab();
     
-    void addNewMailTab();
+    void addMailEditTab(qlonglong rowid);
     void addMailListTab();
+    
+    void addCurrenciesTab();
 };
