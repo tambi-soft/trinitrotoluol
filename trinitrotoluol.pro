@@ -46,7 +46,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += qt debug #release
 #CONFIG += qt release
 QT += widgets \
-    sql
+    sql \
+    webenginewidgets
 
 # Input
 HEADERS += \

@@ -12,6 +12,10 @@
 #include <QFileDialog>
 #include <QUrl>
 
+#include <QMessageBox>
+#include <QTextBrowser>
+#include <QWebEngineView>
+
 #include "db_adapter.h"
 
 class MailEdit : public QWidget
@@ -32,6 +36,7 @@ private:
     QLineEdit* line_attachment;
     QLineEdit* line_date;
     QLineEdit* line_date_last_edit;
+    QWebEngineView* preview = new QWebEngineView;
     
     void initializeGUI();
     void loadData();
@@ -43,6 +48,7 @@ public slots:
     void saveData();
     void onContentPathButton();
     void onAttachmentPathButton();
+    void updatePreview();
 };
 
 #endif // MailEdit_H
