@@ -5,6 +5,7 @@
 #include <QWidget>
 #include <QGridLayout>
 #include <QTextEdit>
+#include <QPlainTextEdit>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QLabel>
@@ -12,11 +13,14 @@
 #include <QFileDialog>
 #include <QUrl>
 
+/*
 #include <QMessageBox>
 #include <QTextBrowser>
 #include <QWebEngineView>
+*/
 
 #include "db_adapter.h"
+#include "mail_preview.h"
 
 class MailEdit : public QWidget
 {
@@ -31,12 +35,13 @@ private:
     
     QLineEdit* line_number;
     QLineEdit* line_subject;
-    QTextEdit* line_cover;
+    QPlainTextEdit* line_cover = new QPlainTextEdit;
     QLineEdit* line_content;
     QLineEdit* line_attachment;
     QLineEdit* line_date;
     QLineEdit* line_date_last_edit;
-    QWebEngineView* preview = new QWebEngineView;
+    //QWebEngineView* preview = new QWebEngineView;
+    MailPreview *preview = new MailPreview;
     
     void initializeGUI();
     void loadData();

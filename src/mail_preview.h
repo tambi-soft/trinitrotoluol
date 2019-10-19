@@ -4,16 +4,20 @@
 #include <QObject>
 #include <QWidget>
 
-#include <QVBoxLayout>
+#include <QFile>
+#include <QTextStream>
+#include <QWebEngineView>
 
-class MailPreview : public QWidget
+class MailPreview : public QWebEngineView
 {
     Q_OBJECT
 public:
-    explicit MailPreview(QWidget *parent = nullptr);
+    explicit MailPreview(QWebEngineView *parent = nullptr);
+    
+    void updateContent(QString cover_text, QString html_path);
     
 private:
-    QVBoxLayout *layout = new QVBoxLayout;
+    QString html;
     
 signals:
     

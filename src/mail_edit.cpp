@@ -16,7 +16,7 @@ void MailEdit::initializeGUI()
     this->grid = new QGridLayout;
     this->line_number = new QLineEdit;
     this->line_subject = new QLineEdit;
-    this->line_cover = new QTextEdit;
+    
     this->line_cover->setMaximumHeight(200);
     
     this->line_content = new QLineEdit;
@@ -76,7 +76,7 @@ void MailEdit::loadData()
     
     this->line_number->setText(data["number"].toString());
     this->line_subject->setText(data["subject"].toString());
-    this->line_cover->setText(data["cover"].toString());
+    this->line_cover->setPlainText(data["cover"].toString());
     this->line_content->setText(data["content_path"].toString());
     this->line_attachment->setText(data["attachment_path"].toString());
     this->line_date->setText(data["date"].toString());
@@ -87,11 +87,11 @@ void MailEdit::addEditListeners()
 {
     connect(this->line_number, &QLineEdit::textChanged, this, &MailEdit::saveData);
     connect(this->line_subject, &QLineEdit::textChanged, this, &MailEdit::saveData);
-    connect(this->line_cover, &QTextEdit::textChanged, this, &MailEdit::saveData);
+    connect(this->line_cover, &QPlainTextEdit::textChanged, this, &MailEdit::saveData);
     connect(this->line_content, &QLineEdit::textChanged, this, &MailEdit::saveData);
     connect(this->line_attachment, &QLineEdit::textChanged, this, &MailEdit::saveData);
     
-    connect(this->line_cover, &QTextEdit::textChanged, this, &MailEdit::updatePreview);
+    connect(this->line_cover, &QPlainTextEdit::textChanged, this, &MailEdit::updatePreview);
     connect(this->line_content, &QLineEdit::textChanged, this, &MailEdit::updatePreview);
     connect(this->line_attachment, &QLineEdit::textChanged, this, &MailEdit::updatePreview);
 }
@@ -101,7 +101,7 @@ void MailEdit::saveData()
     QMap<QString,QVariant> data;
     data["number"] = this->line_number->text();
     data["subject"] = this->line_subject->text();
-    data["cover"] = this->line_cover->toHtml();
+    data["cover"] = this->line_cover->toPlainText();
     data["content_path"] = this->line_content->text();
     data["attachment_path"] = this->line_attachment->text();
     
@@ -132,6 +132,8 @@ void MailEdit::onAttachmentPathButton()
 
 void MailEdit::updatePreview()
 {
+    this->preview->updateContent(this->line_cover->toPlainText(), this->line_content->text());
+    /*
     QFile file(this->line_content->text());
     if(!file.open(QIODevice::ReadOnly)) {
         //QMessageBox::information(nullptr, "error", file.errorString());
@@ -156,4 +158,5 @@ void MailEdit::updatePreview()
     file.close();
     
     this->preview->setHtml(html);
+    */
 }

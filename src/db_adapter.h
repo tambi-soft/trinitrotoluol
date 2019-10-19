@@ -19,6 +19,7 @@ class DbAdapter : public QObject
 public:
     explicit DbAdapter(Config *config, QObject *parent = nullptr);
     void commit();
+    
     QSqlQuery bindPersonParams(QSqlQuery query, QMap<QString, QVariant> data);
     qlonglong insertNewPerson();
     //qlonglong insertNewPerson(QMap<QString, QVariant> data);
@@ -30,6 +31,8 @@ public:
     //QList<QMap<QString, QVariant>> selectAllPersons();
     // "todo", "waiting", "donating" and "mail" are tristate: -1: show both, 0: show 0, 1: show = 1 (or with donating: > 0)
     QList<QMap<QString, QVariant>> selectAllPersonsFiltered(int todo, int waiting, int donating, int deactivated, int agreed_mail, QString group, QString name, QString mail);
+    QList<QMap<QString, QVariant>> selectAllPersonsForMail(bool agreed_mail);
+    
     QList<QMap<QString, QVariant>> selectGroups();
     QMap<QString, QVariant> selectMoneyStats();
     QMap<QString, QVariant> selectPeopleStats();

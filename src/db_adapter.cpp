@@ -344,6 +344,18 @@ QList<QMap<QString,QVariant>> DbAdapter::selectAllPersonsFiltered(int todo, int 
     return dbIteratorToMapList(query);
 }
 
+QList<QMap<QString,QVariant>> DbAdapter::selectAllPersonsForMail(bool agreed_mail)
+{
+    QSqlQuery query(this->db);
+    query.prepare("SELECT name, email FROM people "
+                  "WHERE flag_deactivated = 0 "
+                  "AND agreed_mail=:agreed_mail");
+    query.bindValue(":agreed_mail", agreed_mail);
+    query.exec();
+    
+    return dbIteratorToMapList(query);
+}
+
 QList<QMap<QString,QVariant>> DbAdapter::selectGroups()
 {
     QSqlQuery query("SELECT rowid, name FROM people_groups", this->db);

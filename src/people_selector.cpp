@@ -37,8 +37,10 @@ void PeopleSelector::drawData()
         qlonglong rowid = person["rowid"].toLongLong();
         QString name = person["name"].toString();
         QPushButton *button_person = new QPushButton(person["name"].toString());
-        scroll_layout->addWidget(button_person);
+        
         connect(button_person, &QPushButton::clicked, this, [this, rowid, name]{ personButtonClicked(rowid, name); });
+        
+        scroll_layout->addWidget(button_person);
     }
 }
 
