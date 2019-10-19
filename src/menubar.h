@@ -27,7 +27,6 @@ private:
     void addFileMenu();
     void addMailMenu();
     void addJourneysMenu();
-    void addExpensesMenu();
     void addTNTMenu();
     void addToolsMenu();
     void addHelpMenu();
@@ -39,6 +38,7 @@ signals:
     void signalSettings();
     void signalSQLEditor();
     void signalJourneyList();
+    void signalExpensesList();
     void signalCurrencies();
     
 public slots:
@@ -46,6 +46,7 @@ public slots:
     void sendMail();
     void showSQLEditor();
     void journeyList();
+    void expensesList();
     void currencies();
 };
 

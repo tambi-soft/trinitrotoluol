@@ -3,9 +3,8 @@
 MenuBar::MenuBar(QMenuBar *parent) : QMenuBar(parent)
 {
     addFileMenu();
-    addMailMenu();
-    addJourneysMenu();
-    addExpensesMenu();
+    //addMailMenu();
+    //addJourneysMenu();
     addTNTMenu();
     addToolsMenu();
     addHelpMenu();
@@ -27,14 +26,16 @@ void MenuBar::addMailMenu()
     QAction *mailListAction = new QAction("Mail List");
     connect(mailListAction, &QAction::triggered, this, &MenuBar::mailList);
     
+    /*
     QAction *sendMailAction = new QAction(QIcon::fromTheme("mail-send"), "Send &Mail");
     sendMailAction->setShortcut(QKeySequence::fromString("Ctrl+M"));
     sendMailAction->setStatusTip("Send a new Mailing");
     connect(sendMailAction, &QAction::triggered, this, &MenuBar::sendMail);
+    */
     
     QMenu *menu = addMenu("&Mail");
     menu->addAction(mailListAction);
-    menu->addAction(sendMailAction);
+    //menu->addAction(sendMailAction);
 }
 
 void MenuBar::addJourneysMenu()
@@ -44,14 +45,6 @@ void MenuBar::addJourneysMenu()
     
     QMenu *menu = addMenu("&Journeys");
     menu->addAction(journeyListAction);
-}
-
-void MenuBar::addExpensesMenu()
-{
-    
-    
-    QMenu *menu = addMenu("&Expenses");
-    
 }
 
 void MenuBar::addTNTMenu()
@@ -64,16 +57,28 @@ void MenuBar::addTNTMenu()
 
 void MenuBar::addToolsMenu()
 {
+    QAction *mailListAction = new QAction(QIcon::fromTheme("mail-send"), "Mailings");
+    connect(mailListAction, &QAction::triggered, this, &MenuBar::mailList);
+    
+    QAction *journeyListAction = new QAction(QIcon(":icon_journey"), "Journeys");
+    connect(journeyListAction, &QAction::triggered, this, &MenuBar::journeyList);
+    
+    QAction *expensesListAction = new QAction(QIcon(":icon_expenses"), "Expenses");
+    connect(expensesListAction, &QAction::triggered, this, &MenuBar::expensesList);
+    
     QAction *sqlEditorAction = new QAction(QIcon(":sqlite-logo"), "SQL-Editor");
     connect(sqlEditorAction, &QAction::triggered, this, &MenuBar::showSQLEditor);
     
-    QAction *currenciesAction = new QAction("Currencies");
+    QAction *currenciesAction = new QAction(QIcon(":icon_currencies"), "Currencies");
     connect(currenciesAction, &QAction::triggered, this, &MenuBar::currencies);
     
     QAction *settingsAction = new QAction(QIcon::fromTheme("applications-system"), "&Settings");
     connect(settingsAction, &QAction::triggered, this, &MenuBar::signalSettings);
     
     QMenu *menu = addMenu("&Tools");
+    menu->addAction(mailListAction);
+    menu->addAction(journeyListAction);
+    menu->addAction(expensesListAction);
     menu->addAction(sqlEditorAction);
     menu->addAction(currenciesAction);
     menu->addAction(settingsAction);
@@ -109,6 +114,11 @@ void MenuBar::showSQLEditor()
 void MenuBar::journeyList()
 {
     emit signalJourneyList();
+}
+
+void MenuBar::expensesList()
+{
+    emit signalExpensesList();
 }
 
 void MenuBar::currencies()

@@ -32,11 +32,13 @@ private:
     
 signals:
     void signalEditMail(qlonglong rowid);
+    void signalSendMail(qlonglong rowid, QString number);
     
 public slots:
     void onNewMail();
     void onDeleteMail(qlonglong rowid, QString subject);
     void onEditMail(qlonglong rowid);
+    void onSendMail(qlonglong rowid, QString number);
     void showEvent(QShowEvent *event);
 };
 

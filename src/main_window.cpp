@@ -18,6 +18,7 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
     connect(this->menu_bar, &MenuBar::signalSettings, this, &QTNTMainWindow::addSettingsTab);
     connect(this->menu_bar, &MenuBar::signalSQLEditor, this, &QTNTMainWindow::addSQLEditorTab);
     connect(this->menu_bar, &MenuBar::signalJourneyList, this, &QTNTMainWindow::addJourneyListTab);
+    connect(this->menu_bar, &MenuBar::signalExpensesList, this, &QTNTMainWindow::addExpensesListTab);
     connect(this->menu_bar, &MenuBar::signalCurrencies, this, &QTNTMainWindow::addCurrenciesTab);
     
     setCentralWidget(this->tab_widget);
@@ -98,22 +99,14 @@ void QTNTMainWindow::deactivateCloseButtons()
 void QTNTMainWindow::addJourneyListTab()
 {
     JourneyList *journey = new JourneyList(this->db);
-    //connect(journey, &JourneyList::signalJourneyNew, this, &QTNTMainWindow::addJourneyNewTab);
     connect(journey, &JourneyList::signalJourneyEdit, this, &QTNTMainWindow::addJourneyEditTab);
     
-    createSingleTab("Journey List", journey);
+    QIcon *icon = new QIcon(":icon_journey");
+    
+    createSingleTab("Journey List", journey, icon);
     activateNewTab();
 }
 
-/*
-void QTNTMainWindow::addJourneyNewTab()
-{
-    JourneyEdit *widget = new JourneyEdit(this->db);
-    
-    createSingleTab("New Journey", widget);
-    activateNewTab();
-}
-*/
 void QTNTMainWindow::addJourneyEditTab(qlonglong rowid, QString name)
 {
     JourneyEdit *widget = new JourneyEdit(rowid, this->db);
@@ -122,17 +115,15 @@ void QTNTMainWindow::addJourneyEditTab(qlonglong rowid, QString name)
     activateNewTab();
 }
 
-/*
-void QTNTMainWindow::addNewPersonTab()
+void QTNTMainWindow::addExpensesListTab()
 {
-    PersonEdit *person = new PersonEdit(this->db);
-    connect(person, &PersonEdit::closeCurrentTabSignal, this, &QTNTMainWindow::closeCurrentTab);
-    connect(person, &PersonEdit::dataChanged, this, &QTNTMainWindow::onPeopleDataChanged);
+    ExpensesList *expenses = new ExpensesList(this->db);
     
-    this->tab_widget->addTab(person, "New Person");
+    QIcon *icon = new QIcon(":icon_expenses");
+    createSingleTab("Expenses", expenses, icon);
     activateNewTab();
 }
-*/
+
 void QTNTMainWindow::addPersonEditTab(qlonglong rowid, QString name)
 {
     PersonEdit *person = new PersonEdit(this->db, rowid);
@@ -183,6 +174,16 @@ void QTNTMainWindow::onPeopleDataChanged()
     this->people_list->dataChanged();
 }
 
+void QTNTMainWindow::addMailListTab()
+{
+    MailList *list = new MailList(this->db);
+    connect(list, &MailList::signalEditMail, this, &QTNTMainWindow::addMailEditTab);
+    connect(list, &MailList::signalSendMail, this, &QTNTMainWindow::addMailSendTab);
+    
+    QIcon *icon = new QIcon(QIcon::fromTheme("emblem-mail"));
+    createSingleTab("Mail List", list, icon);
+}
+
 void QTNTMainWindow::addMailEditTab(qlonglong rowid)
 {
     MailEdit *mail = new MailEdit(this->db, rowid);
@@ -190,20 +191,20 @@ void QTNTMainWindow::addMailEditTab(qlonglong rowid)
     createSingleTab("New Mail", mail, icon);
 }
 
-void QTNTMainWindow::addMailListTab()
+void QTNTMainWindow::addMailSendTab(qlonglong rowid, QString number)
 {
-    MailList *list = new MailList(this->db);
-    connect(list, &MailList::signalEditMail, this, &QTNTMainWindow::addMailEditTab);
-    
-    QIcon *icon = new QIcon(QIcon::fromTheme("emblem-mail"));
-    createSingleTab("Mail List", list, icon);
+    MailSend *send = new MailSend(this->db, rowid);
+    QIcon *icon = new QIcon(QIcon::fromTheme("document-send"));
+    createSingleTab("Send Email No. "+number, send, icon);
 }
 
 void QTNTMainWindow::addCurrenciesTab()
 {
     Currencies *currencies = new Currencies(this->db);
     
-    createSingleTab("Currencies", currencies);
+    QIcon *icon = new QIcon(":icon_currencies");
+    
+    createSingleTab("Currencies", currencies, icon);
 }
 
 void QTNTMainWindow::createSingleTab(QString tab_name, QWidget *widget, QIcon *icon)

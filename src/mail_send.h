@@ -4,11 +4,17 @@
 #include <QObject>
 #include <QWidget>
 
+#include "db_adapter.h"
+
 class MailSend : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MailSend(QWidget *parent = nullptr);
+    explicit MailSend(DbAdapter *db, qlonglong rowid, QWidget *parent = nullptr);
+    
+private:
+    DbAdapter *db;
+    qlonglong rowid;
     
 signals:
     

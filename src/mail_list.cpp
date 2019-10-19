@@ -36,6 +36,7 @@ void MailList::initView()
         for (int i=0; i < data.length(); ++i)
         {
             qlonglong rowid = data.at(i)["rowid"].toLongLong();
+            QString number = data.at(i)["number"].toString();
             QString subject = data.at(i)["subject"].toString();
             
             QPushButton *button_delete = new QPushButton();
@@ -51,12 +52,12 @@ void MailList::initView()
             QPushButton *button_send = new QPushButton();
             button_send->setIcon(QIcon::fromTheme("document-send"));
             button_send->setToolTip("send this email");
-            connect(button_send, &QPushButton::clicked, this, [this, rowid]{ onEditMail(rowid); });
+            connect(button_send, &QPushButton::clicked, this, [this, rowid, number]{ onSendMail(rowid, number); });
             
             this->table->setCellWidget(i, 0, button_delete);
             this->table->setCellWidget(i, 1, button_edit);
             this->table->setCellWidget(i, 2, button_send);
-            this->table->setItem(i, 3, new QTableWidgetItem(data.at(i)["number"].toString()));
+            this->table->setItem(i, 3, new QTableWidgetItem(number));
             this->table->setItem(i, 4, new QTableWidgetItem(subject));
             this->table->setItem(i, 5, new QTableWidgetItem(data.at(i)["date"].toString()));
             this->table->setItem(i, 6, new QTableWidgetItem(data.at(i)["date_last_edit"].toString()));
@@ -80,8 +81,13 @@ void MailList::onEditMail(qlonglong rowid)
 {
     emit signalEditMail(rowid);
     
-    this->table->clear();
-    initView();
+    //this->table->clear();
+    //initView();
+}
+
+void MailList::onSendMail(qlonglong rowid, QString number)
+{
+    emit signalSendMail(rowid, number);
 }
 
 void MailList::onDeleteMail(qlonglong rowid, QString subject)

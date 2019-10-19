@@ -3,5 +3,7 @@
 MailPreview::MailPreview(QWidget *parent)
     : QWidget(parent)
 {
+    setLayout(this->layout);
+    
     
 }

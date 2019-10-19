@@ -14,8 +14,11 @@
 #include "person_edit.h"
 #include "stats.h"
 #include "menubar.h"
-#include "mail_edit.h"
+
 #include "mail_list.h"
+#include "mail_edit.h"
+#include "mail_send.h"
+
 #include "settings.h"
 #include "sqlite_editor_widget.h"
 #include "journey_list.h"
@@ -50,10 +53,10 @@ private slots:
     void closeCurrentTab();
     
     void addJourneyListTab();
-    //void addJourneyNewTab();
     void addJourneyEditTab(qlonglong rowid, QString name);
     
-    //void addNewPersonTab();
+    void addExpensesListTab();
+    
     void addPersonEditTab(qlonglong rowid, QString name);
     void addSettingsTab();
     void addSQLEditorTab();
@@ -61,8 +64,9 @@ private slots:
     void addPeopleTab();
     void onPeopleDataChanged();
     
-    void addMailEditTab(qlonglong rowid);
     void addMailListTab();
+    void addMailEditTab(qlonglong rowid);
+    void addMailSendTab(qlonglong rowid, QString number);
     
     void addCurrenciesTab();
 };

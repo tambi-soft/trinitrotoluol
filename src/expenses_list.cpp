@@ -1,6 +1,6 @@
 #include "expenses_list.h"
 
-ExpensesList::ExpensesList(QWidget *parent)
+ExpensesList::ExpensesList(DbAdapter *db, QWidget *parent)
     : QWidget(parent)
 {
     

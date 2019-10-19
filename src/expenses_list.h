@@ -4,11 +4,13 @@
 #include <QObject>
 #include <QWidget>
 
+#include "db_adapter.h"
+
 class ExpensesList : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ExpensesList(QWidget *parent = nullptr);
+    explicit ExpensesList(DbAdapter *db, QWidget *parent = nullptr);
     
 signals:
     
