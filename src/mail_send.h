@@ -11,6 +11,9 @@
 
 #include <QLabel>
 #include <QCheckBox>
+#include <QPushButton>
+
+#include <QMessageBox>
 
 #include "db_adapter.h"
 #include "mail_preview.h"
@@ -24,18 +27,31 @@ public:
 private:
     DbAdapter *db;
     qlonglong rowid;
-    QVBoxLayout *layout = new QVBoxLayout;
+    QGridLayout *grid = new QGridLayout;
+    //QVBoxLayout *layout = new QVBoxLayout;
     //QHBoxLayout *layout = new QHBoxLayout;
     
+    bool flag_mail_agreed = true;
+    QList<QCheckBox*> list_checkboxes;
+    QList<QString> list_emails;
+    
     QScrollArea *recipients = new QScrollArea;
+    QWidget *recipients_widget;
+    QWidget *controls = new QWidget;
     MailPreview *preview = new MailPreview;
     
     void addRecipientsArea();
+    void addControlsArea();
     void addPreviewArea();
     
 signals:
     
 public slots:
+    void showAgreed();
+    void showNotAgreed();
+    void selectAll();
+    void deselectAll();
+    void sendMail();
 };
 
 #endif // MAILSEND_H
