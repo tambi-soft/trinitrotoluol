@@ -269,11 +269,11 @@ void DbAdapter::updatePerson(qlonglong rowid, QMap<QString,QVariant> data)
 QMap<QString,QVariant> DbAdapter::selectPerson(qlonglong rowid)
 {
     QSqlQuery query(this->db);
-    query.prepare("SELECT b.name AS spouse_name, a.tnt_id, a.name, a.group_rowid, g.name AS group_name, a.\"email\", a.\"address\", a.\"phone\", a.\"agreed_mail\", a.\"agreed_prayer\", a.\"agreement\", a.\"notes\", a.\"donations_monthly\", a.\"donations_monthly_promised\", a.flag_todo, a.flag_waiting\
-        FROM people a\
-        LEFT JOIN people b ON a.spouse_rowid=b.rowid\
-        JOIN people_groups g ON a.group_rowid=g.rowid\
-        WHERE a.rowid=:rowid");
+    query.prepare("SELECT b.name AS spouse_name, a.tnt_id, a.name, a.group_rowid, g.name AS group_name, a.email, a.address, a.phone, a.agreed_mail, a.agreed_prayer, a.agreement, a.notes, a.donations_monthly, a.donations_monthly_promised, a.flag_todo, a.flag_waiting "
+        "FROM people a "
+        "LEFT JOIN people b ON a.spouse_rowid=b.rowid "
+        "LEFT JOIN people_groups g ON a.group_rowid=g.rowid "
+        "WHERE a.rowid=:rowid");
     query.bindValue(":rowid", rowid);
     query.exec();
     
@@ -294,7 +294,7 @@ QList<QMap<QString,QVariant>> DbAdapter::selectAllPersonsFiltered(int todo, int 
     // the ORs in the last two lines should really be XORs, but SQLite do not support XOR for now, and it would be far to annoying to fiddle a XOR together by myself
     query.prepare("SELECT people.rowid, people.name, people_groups.name AS \"group\", email, agreed_mail, agreed_prayer, agreement, flag_todo, flag_waiting, donations_monthly, donations_monthly_promised "
                   "FROM people "
-                  "JOIN people_groups ON people.group_rowid=people_groups.rowid "
+                  "LEFT JOIN people_groups ON people.group_rowid=people_groups.rowid "
                   "WHERE "
                   "CASE "
                       "WHEN (:todo=0) THEN flag_todo = 0 OR flag_todo IS NULL "
@@ -325,7 +325,7 @@ QList<QMap<QString,QVariant>> DbAdapter::selectAllPersonsFiltered(int todo, int 
                       "WHEN (:agreed_mail=1) THEN agreed_mail = 1 "
                       "ELSE agreed_mail = agreed_mail "
                   "END "
-                  "AND people_groups.name LIKE :group "
+                  "AND (people_groups.name LIKE :group OR people_groups.name IS NULL) "
                   "AND (people.name LIKE :name OR people.name IS NULL) "
                   "AND (email LIKE :mail OR email IS NULL) ");
     query.bindValue(":todo", todo);
