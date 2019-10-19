@@ -60,6 +60,8 @@ HEADERS += \
     src/mail_curl.h \
     src/mail_edit.h \
     src/mail_list.h \
+    src/mail_preview.h \
+    src/mail_send.h \
     src/main_window.h \
     src/config.h \
     src/db_adapter.h \
@@ -85,6 +87,8 @@ SOURCES += \
     src/mail_curl.cpp \
     src/mail_edit.cpp \
     src/mail_list.cpp \
+    src/mail_preview.cpp \
+    src/mail_send.cpp \
     src/menubar.cpp \
     src/people_list.cpp \
     src/people_selector.cpp \

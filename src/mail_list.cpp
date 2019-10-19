@@ -23,7 +23,7 @@ MailList::MailList(DbAdapter *db, QWidget *parent)
 void MailList::initView()
 {
     QStringList headers;
-    headers << "" << "" << "number" << "subject" << "date" << "date last edit";
+    headers << "" << "" << "" << "number" << "subject" << "date of creation" << "date last edit";
     this->table->setColumnCount(headers.length());
     this->table->setHorizontalHeaderLabels(headers);
     
@@ -40,18 +40,26 @@ void MailList::initView()
             
             QPushButton *button_delete = new QPushButton();
             button_delete->setIcon(QIcon::fromTheme("edit-delete"));
+            button_delete->setToolTip("delete this email");
             connect(button_delete, &QPushButton::clicked, this, [this, rowid, subject]{ onDeleteMail(rowid, subject); });
             
             QPushButton *button_edit = new QPushButton();
             button_edit->setIcon(QIcon::fromTheme("document-properties"));
+            button_edit->setToolTip("edit this email");
             connect(button_edit, &QPushButton::clicked, this, [this, rowid]{ onEditMail(rowid); });
+            
+            QPushButton *button_send = new QPushButton();
+            button_send->setIcon(QIcon::fromTheme("document-send"));
+            button_send->setToolTip("send this email");
+            connect(button_send, &QPushButton::clicked, this, [this, rowid]{ onEditMail(rowid); });
             
             this->table->setCellWidget(i, 0, button_delete);
             this->table->setCellWidget(i, 1, button_edit);
-            this->table->setItem(i, 2, new QTableWidgetItem(data.at(i)["number"].toString()));
-            this->table->setItem(i, 3, new QTableWidgetItem(subject));
-            this->table->setItem(i, 4, new QTableWidgetItem(data.at(i)["date"].toString()));
-            this->table->setItem(i, 5, new QTableWidgetItem(data.at(i)["date_last_edit"].toString()));
+            this->table->setCellWidget(i, 2, button_send);
+            this->table->setItem(i, 3, new QTableWidgetItem(data.at(i)["number"].toString()));
+            this->table->setItem(i, 4, new QTableWidgetItem(subject));
+            this->table->setItem(i, 5, new QTableWidgetItem(data.at(i)["date"].toString()));
+            this->table->setItem(i, 6, new QTableWidgetItem(data.at(i)["date_last_edit"].toString()));
         }
         
         this->table->resizeColumnsToContents();

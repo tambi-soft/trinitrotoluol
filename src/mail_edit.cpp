@@ -139,7 +139,7 @@ void MailEdit::updatePreview()
     
     QTextStream in(&file);
     
-    QString html;// = this->line_cover->toPlainText();
+    QString html;
     while(!in.atEnd()) {
         QString line = in.readLine();
         
@@ -149,15 +149,8 @@ void MailEdit::updatePreview()
         }
         else
         {
-            //html.append(in.readLine());
             html.append(line);
         }
-        
-        /*
-        QString line = in.readLine();    
-        QStringList fields = line.split(",");    
-        model->appendRow(fields);
-        */
     }
     
     file.close();
