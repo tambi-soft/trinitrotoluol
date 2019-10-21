@@ -15,8 +15,6 @@
 #include <QImage>
 #include <QMessageBox>
 
-#include "mail_curl.h"
-
 class MenuBar : public QMenuBar
 {
     Q_OBJECT
@@ -25,7 +23,6 @@ public:
     
 private:
     void addFileMenu();
-    void addMailMenu();
     void addJourneysMenu();
     void addTNTMenu();
     void addToolsMenu();
@@ -43,7 +40,6 @@ signals:
     
 public slots:
     void mailList();
-    void sendMail();
     void showSQLEditor();
     void journeyList();
     void expensesList();

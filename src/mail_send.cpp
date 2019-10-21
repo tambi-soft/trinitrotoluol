@@ -88,9 +88,9 @@ void MailSend::addControlsArea()
 
 void MailSend::addPreviewArea()
 {
-    QMap<QString,QVariant> data = this->db->selectMail(this->rowid);
-    QString cover = data["cover"].toString();
-    QString content_path = data["content_path"].toString();
+    this->mail = this->db->selectMail(this->rowid);
+    QString cover = mail["cover"].toString();
+    QString content_path = mail["content_path"].toString();
     
     this->preview->updateContent(cover, content_path);
 }
@@ -143,5 +143,28 @@ void MailSend::sendMail()
         }
         
         qDebug() << emails;
+        
+        MailMessage *message = new MailMessage;
+        message->setSMTPPort(this->db->selectSettings("email_port").toInt());
+        message->setSMTPAddress(this->db->selectSettings("email_server"));
+        message->setSMTPUser(this->db->selectSettings("email_username"));
+        
+        SimpleCrypt processSimpleCrypt(KEY);
+        QString email_pw_dec = processSimpleCrypt.decryptToString(this->db->selectSettings("email_password"));
+        message->setSMTPPassword(email_pw_dec);
+        
+        message->addTo(emails.at(1));
+        message->setFrom(this->db->selectSettings("email_username"));
+        message->setSubject(this->mail["subject"].toString());
+        
+        message->setAlternativeText(this->mail["alternative_text"].toString());
+        message->setHTML(this->preview->html);
+        
+        message->generateMessage();
+        int error_happened = message->sendMail();
+        if (error_happened == 0)
+        {
+            //this->db->insertMailSent();
+        }
     }
 }

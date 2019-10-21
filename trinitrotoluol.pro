@@ -57,9 +57,10 @@ HEADERS += \
     src/journey_list.h \
     src/journey_tickets.h \
     src/journey_visits.h \
-    src/mail_curl.h \
     src/mail_edit.h \
     src/mail_list.h \
+    src/mail_message.h \
+    src/mail_notification.h \
     src/mail_preview.h \
     src/mail_send.h \
     src/main_window.h \
@@ -76,7 +77,6 @@ HEADERS += \
     src/stats.h \
     src/tnt_adapter.h
     
-
 SOURCES += \
     src/currencies.cpp \
     src/expenses_list.cpp \
@@ -84,9 +84,9 @@ SOURCES += \
     src/journey_list.cpp \
     src/journey_tickets.cpp \
     src/journey_visits.cpp \
-    src/mail_curl.cpp \
     src/mail_edit.cpp \
     src/mail_list.cpp \
+    src/mail_message.cpp \
     src/mail_preview.cpp \
     src/mail_send.cpp \
     src/menubar.cpp \

@@ -16,7 +16,6 @@ public:
     
     void updateContent(QString cover_text, QString html_path);
     
-private:
     QString html;
     
 signals:

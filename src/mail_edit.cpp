@@ -17,6 +17,7 @@ void MailEdit::initializeGUI()
     this->line_number = new QLineEdit;
     this->line_subject = new QLineEdit;
     
+    this->line_alternative->setMaximumHeight(200);
     this->line_cover->setMaximumHeight(200);
     
     this->line_content = new QLineEdit;
@@ -43,29 +44,32 @@ void MailEdit::initializeGUI()
     this->grid->addWidget(new QLabel("Subject:"), 1, 0);
     this->grid->addWidget(this->line_subject, 1, 1, 1, 3);
     
-    this->grid->addWidget(new QLabel("Cover:"), 2, 0);
-    this->grid->addWidget(this->line_cover, 2, 1, 1, 3);
+    this->grid->addWidget(new QLabel("Non-HTML Message\nAlternative:"), 2, 0);
+    this->grid->addWidget(this->line_alternative, 2, 1, 1, 3);
     
-    this->grid->addWidget(new QLabel("Content:"), 3, 0);
-    this->grid->addWidget(this->line_content, 3, 1);
+    this->grid->addWidget(new QLabel("Cover:"), 3, 0);
+    this->grid->addWidget(this->line_cover, 3, 1, 1, 3);
+    
+    this->grid->addWidget(new QLabel("Content:"), 4, 0);
+    this->grid->addWidget(this->line_content, 4, 1);
     
     QPushButton *button_add_content = new QPushButton("select Content Path");
     connect(button_add_content, &QPushButton::clicked, this, &MailEdit::onContentPathButton);
-    this->grid->addWidget(button_add_content, 3, 2);
+    this->grid->addWidget(button_add_content, 4, 2);
     
-    this->grid->addWidget(new QLabel("Attachment:"), 4, 0);
-    this->grid->addWidget(this->line_attachment, 4, 1);
+    this->grid->addWidget(new QLabel("Attachment:"), 5, 0);
+    this->grid->addWidget(this->line_attachment, 5, 1);
     
     QPushButton *button_add_attachment = new QPushButton("select Attachment Path");
     connect(button_add_attachment, &QPushButton::clicked, this, &MailEdit::onAttachmentPathButton);
-    this->grid->addWidget(button_add_attachment, 4, 2);
+    this->grid->addWidget(button_add_attachment, 5, 2);
     
-    this->grid->addWidget(new QLabel("Date Created:"), 5, 0);
-    this->grid->addWidget(this->line_date, 5, 1, 1, 3);
-    this->grid->addWidget(new QLabel("Date last Edit:"), 6, 0);
-    this->grid->addWidget(this->line_date_last_edit, 6, 1, 1, 3);
+    this->grid->addWidget(new QLabel("Date Created:"), 6, 0);
+    this->grid->addWidget(this->line_date, 6, 1, 1, 3);
+    this->grid->addWidget(new QLabel("Date last Edit:"), 7, 0);
+    this->grid->addWidget(this->line_date_last_edit, 7, 1, 1, 3);
     
-    this->grid->addWidget(this->preview, 7, 0, 1, 3);
+    this->grid->addWidget(this->preview, 8, 0, 1, 3);
     //this->preview->setReadOnly(true);
 }
 
@@ -76,6 +80,7 @@ void MailEdit::loadData()
     
     this->line_number->setText(data["number"].toString());
     this->line_subject->setText(data["subject"].toString());
+    this->line_alternative->setPlainText(data["alternative_text"].toString());
     this->line_cover->setPlainText(data["cover"].toString());
     this->line_content->setText(data["content_path"].toString());
     this->line_attachment->setText(data["attachment_path"].toString());
@@ -87,6 +92,7 @@ void MailEdit::addEditListeners()
 {
     connect(this->line_number, &QLineEdit::textChanged, this, &MailEdit::saveData);
     connect(this->line_subject, &QLineEdit::textChanged, this, &MailEdit::saveData);
+    connect(this->line_alternative, &QPlainTextEdit::textChanged, this, &MailEdit::saveData);
     connect(this->line_cover, &QPlainTextEdit::textChanged, this, &MailEdit::saveData);
     connect(this->line_content, &QLineEdit::textChanged, this, &MailEdit::saveData);
     connect(this->line_attachment, &QLineEdit::textChanged, this, &MailEdit::saveData);
@@ -101,6 +107,7 @@ void MailEdit::saveData()
     QMap<QString,QVariant> data;
     data["number"] = this->line_number->text();
     data["subject"] = this->line_subject->text();
+    data["alternative_text"] = this->line_alternative->toPlainText();
     data["cover"] = this->line_cover->toPlainText();
     data["content_path"] = this->line_content->text();
     data["attachment_path"] = this->line_attachment->text();

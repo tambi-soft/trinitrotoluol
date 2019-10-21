@@ -3,7 +3,6 @@
 MenuBar::MenuBar(QMenuBar *parent) : QMenuBar(parent)
 {
     addFileMenu();
-    //addMailMenu();
     //addJourneysMenu();
     addTNTMenu();
     addToolsMenu();
@@ -19,23 +18,6 @@ void MenuBar::addFileMenu()
     
     QMenu *menu = addMenu("&File");
     menu->addAction(exitAction);
-}
-
-void MenuBar::addMailMenu()
-{
-    QAction *mailListAction = new QAction("Mail List");
-    connect(mailListAction, &QAction::triggered, this, &MenuBar::mailList);
-    
-    /*
-    QAction *sendMailAction = new QAction(QIcon::fromTheme("mail-send"), "Send &Mail");
-    sendMailAction->setShortcut(QKeySequence::fromString("Ctrl+M"));
-    sendMailAction->setStatusTip("Send a new Mailing");
-    connect(sendMailAction, &QAction::triggered, this, &MenuBar::sendMail);
-    */
-    
-    QMenu *menu = addMenu("&Mail");
-    menu->addAction(mailListAction);
-    //menu->addAction(sendMailAction);
 }
 
 void MenuBar::addJourneysMenu()
@@ -99,11 +81,6 @@ void MenuBar::quitApplication()
 void MenuBar::mailList()
 {
     emit signalMailList();
-}
-
-void MenuBar::sendMail()
-{
-    MailCurl *mail_curl = new MailCurl();
 }
 
 void MenuBar::showSQLEditor()

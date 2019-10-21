@@ -126,6 +126,7 @@ void DbAdapter::initializeTables()
         "rowid INTEGER PRIMARY KEY AUTOINCREMENT, "
         "number TEXT, "
         "subject TEXT, "
+        "alternative_text TEXT, "
         "cover TEXT, "
         "content_path TEXT, "
         "attachment_path TEXT, "
@@ -226,7 +227,7 @@ QSqlQuery DbAdapter::bindPersonParams(QSqlQuery query, QMap<QString,QVariant> da
 qlonglong DbAdapter::insertNewPerson()
 {
     QSqlQuery query(this->db);
-    query.prepare("INSERT INTO people DEFAULT VALUES");
+    query.prepare("INSERT INTO people (date_collected) VALUES (CURRENT_TIMESTAMP)");
     query.exec();
     
     this->db.commit();
@@ -280,14 +281,6 @@ QMap<QString,QVariant> DbAdapter::selectPerson(qlonglong rowid)
     return dbIteratorToMap(query);
 }
 
-/*
-QList<QMap<QString,QVariant>> DbAdapter::selectAllPersons()
-{
-    QSqlQuery query("SELECT rowid, \"name\", \"group\", email, agreed_mail, agreed_prayer, agreement, flag_todo, flag_waiting FROM people", this->db);
-    
-    return dbIteratorToMapList(query);
-}
-*/
 QList<QMap<QString,QVariant>> DbAdapter::selectAllPersonsFiltered(int todo, int waiting, int donating, int deactivated, int agreed_mail, QString group, QString name, QString mail)
 {
     QSqlQuery query(this->db);
@@ -388,14 +381,17 @@ qlonglong DbAdapter::insertNewMail()
 void DbAdapter::updateMail(qlonglong rowid, QMap<QString,QVariant> data)
 {
     QSqlQuery query(this->db);
-    query.prepare("UPDATE mail SET number=:number, subject=:subject, cover=:cover, content_path=:content_path, attachment_path=:attachment_path, date_last_edit=CURRENT_TIMESTAMP WHERE rowid=:rowid");
+    query.prepare("UPDATE mail SET number=:number, subject=:subject, alternative_text=:alternative_text, cover=:cover, content_path=:content_path, attachment_path=:attachment_path, date_last_edit=CURRENT_TIMESTAMP WHERE rowid=:rowid");
     query.bindValue(":number", data["number"].toString());
     query.bindValue(":subject", data["subject"].toString());
+    query.bindValue(":alternative_text", data["alternative_text"].toString());
     query.bindValue(":cover", data["cover"].toString());
     query.bindValue(":content_path", data["content_path"].toString());
     query.bindValue(":attachment_path", data["attachment_path"].toString());
     query.bindValue(":rowid", rowid);
     query.exec();
+    
+    qDebug() << data["alternative_text"].toString();
 }
 
 void DbAdapter::deleteMail(qlonglong rowid)
@@ -409,7 +405,7 @@ void DbAdapter::deleteMail(qlonglong rowid)
 QMap<QString,QVariant> DbAdapter::selectMail(qlonglong rowid)
 {
     QSqlQuery query(this->db);
-    query.prepare("SELECT number, subject, cover, content_path, attachment_path, date, date_last_edit "
+    query.prepare("SELECT number, subject, alternative_text, cover, content_path, attachment_path, date, date_last_edit "
                   "FROM mail "
                   "WHERE rowid=:rowid");
     query.bindValue(":rowid", rowid);
@@ -423,6 +419,15 @@ QList<QMap<QString,QVariant>> DbAdapter::selectAllMails()
     QSqlQuery query("SELECT rowid, number, subject, cover, content_path, attachment_path, date, date_last_edit FROM mail ORDER BY number", this->db);
     
     return dbIteratorToMapList(query);
+}
+
+void DbAdapter::insertMailSent(qlonglong rowid_people, qlonglong rowid_mail)
+{
+    QSqlQuery query(this->db);
+    query.prepare("INSERT INTO mail_sent (rowid_people, rowid_mail, date) VALUES (:rowid_people, :rowid_mail, CURRENT_TIMESTAMP)");
+    query.bindValue(":rowid_people", rowid_people);
+    query.bindValue(":rowid_mail", rowid_mail);
+    query.exec();
 }
 
 void DbAdapter::insertSettings(QString key, QString value)

@@ -17,6 +17,8 @@
 
 #include "db_adapter.h"
 #include "mail_preview.h"
+#include "mail_message.h"
+#include "simplecrypt.h"
 
 class MailSend : public QWidget
 {
@@ -31,6 +33,8 @@ private:
     //QVBoxLayout *layout = new QVBoxLayout;
     //QHBoxLayout *layout = new QHBoxLayout;
     
+    QMap<QString,QVariant> mail;
+    
     bool flag_mail_agreed = true;
     QList<QCheckBox*> list_checkboxes;
     QList<QString> list_emails;
@@ -43,6 +47,8 @@ private:
     void addRecipientsArea();
     void addControlsArea();
     void addPreviewArea();
+    
+    quint64 KEY = 95839583;
     
 signals:
     

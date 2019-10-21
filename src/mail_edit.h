@@ -35,6 +35,7 @@ private:
     
     QLineEdit* line_number;
     QLineEdit* line_subject;
+    QPlainTextEdit *line_alternative = new QPlainTextEdit;
     QPlainTextEdit* line_cover = new QPlainTextEdit;
     QLineEdit* line_content;
     QLineEdit* line_attachment;
