@@ -116,11 +116,6 @@ void DbAdapter::initializeTables()
         "cost INTEGER, "
         "flag_settled INTEGER, "
         "notes TEXT)", this->db);
-    
-    QSqlQuery query_sent_mail("CREATE TABLE IF NOT EXISTS mail_sent (\
-        \"rowid_people\"    INTEGER,\
-        \"rowid_mail\"         INTEGER,\
-        \"date\"            INTEGER)", this->db);
             
     QSqlQuery query_mail("CREATE TABLE IF NOT EXISTS mail ( "
         "rowid INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -129,9 +124,17 @@ void DbAdapter::initializeTables()
         "alternative_text TEXT, "
         "cover TEXT, "
         "content_path TEXT, "
-        "attachment_path TEXT, "
         "date TEXT, "
         "date_last_edit TEXT)", this->db);
+    
+    QSqlQuery query_mail_attachment("CREATE TABLE IF NOT EXISTS mail_attachments ( "
+        "rowid_mail INTEGER PRIMARY KEY, "
+        "path TEXT)", this->db);
+    
+    QSqlQuery query_sent_mail("CREATE TABLE IF NOT EXISTS mail_sent (\
+        \"rowid_people\"    INTEGER,\
+        \"rowid_mail\"         INTEGER,\
+        \"date\"            INTEGER)", this->db);
     
     QSqlQuery query_donations("CREATE VIEW IF NOT EXISTS donations_monthly AS "
         "SELECT SUM(donations_monthly) AS monthly_sum, "

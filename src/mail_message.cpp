@@ -156,10 +156,9 @@ int MailMessage::sendMail()
     
     qDebug() << "smtp_address: " << this->smtp_address.toStdString().c_str();
     qDebug() << "smtp_user: " << this->smtp_user.toStdString().c_str();
-    qDebug() << "smtp_password: " << this->smtp_password.toStdString().c_str();
+    //qDebug() << "smtp_password: " << this->smtp_password.toStdString().c_str();
     qDebug() << "address_from: " << this->address_from.toStdString().c_str();
     qDebug() << "address_to: " << this->address_to.toStdString().c_str();
-    
     
     
     CURLcode res = CURLE_OK;

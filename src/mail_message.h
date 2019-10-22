@@ -11,6 +11,7 @@
 
 #include <curl/curl.h>
 #include <stdio.h>
+#include <iostream>
 
 class MailMessage : public QObject
 {
