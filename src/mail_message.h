@@ -2,6 +2,15 @@
 #define MAILMESSAGE_H
 
 #include <QObject>
+#include <QDebug>
+
+#include <QFileInfo>
+#include <QFile>
+#include <QIODevice>
+#include <QByteArray>
+
+#include <curl/curl.h>
+#include <stdio.h>
 
 class MailMessage : public QObject
 {
@@ -9,7 +18,7 @@ class MailMessage : public QObject
 public:
     explicit MailMessage(QObject *parent = nullptr);
     
-    void setSMTPPort(int smtp_port);
+    void setSMTPPort(QString smtp_port);
     void setSMTPAddress(QString smtp_address);
     void setSMTPUser(QString smtp_user);
     void setSMTPPassword(QString smtp_password);
@@ -20,15 +29,19 @@ public:
     
     void setAlternativeText(QString text);
     void setHTML(QString html);
-    void addAttachment(QString attachment_path, QString filename);
+    void addAttachment(QString attachment_path);
     
     void generateMessage();
+    void saveMessage(QString filepath);
     // return POSIX-style: 0: ok; 1: error
     int sendMail();
     
     QString message;
+    QByteArray message_array;
+    unsigned long message_size;
+    const char* message_char;
     
-    int smtp_port;
+    QString smtp_port;
     QString smtp_address;
     QString smtp_user;
     QString smtp_password;
@@ -39,7 +52,13 @@ public:
     QString payload_text;
     QString payload_html;
     QStringList attachments_base64;
+    QStringList attachments_filename;
     
+    double upload_speed;
+    double upload_time;
+    
+protected:
+    static size_t process_mail(void *ptr, size_t size, size_t nmemb, void *userp);
     
 signals:
     

@@ -145,7 +145,7 @@ void MailSend::sendMail()
         qDebug() << emails;
         
         MailMessage *message = new MailMessage;
-        message->setSMTPPort(this->db->selectSettings("email_port").toInt());
+        message->setSMTPPort(this->db->selectSettings("email_port"));
         message->setSMTPAddress(this->db->selectSettings("email_server"));
         message->setSMTPUser(this->db->selectSettings("email_username"));
         
@@ -159,8 +159,11 @@ void MailSend::sendMail()
         
         message->setAlternativeText(this->mail["alternative_text"].toString());
         message->setHTML(this->preview->html);
+        message->addAttachment(this->mail["attachment_path"].toString());
         
         message->generateMessage();
+        message->saveMessage("/tmp/bla.eml");
+        
         int error_happened = message->sendMail();
         if (error_happened == 0)
         {
