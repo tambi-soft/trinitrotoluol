@@ -6,8 +6,11 @@
 
 #include <QFileInfo>
 #include <QFile>
+#include <QDir>
 #include <QIODevice>
 #include <QByteArray>
+#include <QProcess>
+#include <QDateTime>
 
 #include <curl/curl.h>
 #include <stdio.h>
@@ -24,7 +27,7 @@ public:
     void setSMTPUser(QString smtp_user);
     void setSMTPPassword(QString smtp_password);
     
-    void addTo(QString address_to);
+    void addTo(QStringList address_to);
     void setFrom(QString address_from);
     void setSubject(QString subject);
     
@@ -36,6 +39,7 @@ public:
     void saveMessage(QString filepath);
     // return POSIX-style: 0: ok; 1: error
     int sendMail();
+    int sendMailWithExternalCURL();
     
     QString message;
     QByteArray message_array;
@@ -47,7 +51,7 @@ public:
     QString smtp_user;
     QString smtp_password;
     //QStringList addresses_to;
-    QString address_to;
+    QStringList addresses_to;
     QString address_from;
     QString subject;
     QString payload_text;

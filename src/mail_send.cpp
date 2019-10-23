@@ -153,7 +153,7 @@ void MailSend::sendMail()
         QString email_pw_dec = processSimpleCrypt.decryptToString(this->db->selectSettings("email_password"));
         message->setSMTPPassword(email_pw_dec);
         
-        message->addTo(emails.at(1));
+        message->addTo(emails);
         message->setFrom(this->db->selectSettings("email_username"));
         message->setSubject(this->mail["subject"].toString());
         
@@ -162,12 +162,16 @@ void MailSend::sendMail()
         message->addAttachment(this->mail["attachment_path"].toString());
         
         message->generateMessage();
-        message->saveMessage("/tmp/bla.eml");
+        //message->saveMessage("/tmp/bla.eml");
         
+        message->sendMailWithExternalCURL();
+        
+        /*
         int error_happened = message->sendMail();
         if (error_happened == 0)
         {
             //this->db->insertMailSent();
         }
+        */
     }
 }
