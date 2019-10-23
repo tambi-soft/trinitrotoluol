@@ -29,6 +29,7 @@ public:
     
     void addTo(QStringList address_to);
     void setFrom(QString address_from);
+    void setReplyTo(QString address_reply);
     void setSubject(QString subject);
     
     void setAlternativeText(QString text);
@@ -53,6 +54,7 @@ public:
     //QStringList addresses_to;
     QStringList addresses_to;
     QString address_from;
+    QString address_reply;
     QString subject;
     QString payload_text;
     QString payload_html;

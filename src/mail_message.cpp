@@ -42,6 +42,11 @@ void MailMessage::setFrom(QString address_from)
     this->address_from = address_from;
 }
 
+void MailMessage::setReplyTo(QString address_reply)
+{
+    this->address_reply = address_reply;
+}
+
 void MailMessage::setSubject(QString subject)
 {
     this->subject = subject;
@@ -54,14 +59,52 @@ void MailMessage::setAlternativeText(QString text)
 
 void MailMessage::setHTML(QString html)
 {
-    
+    /*
     int step = 400;
     for (int i = step; i <= html.size(); i+=step+1)
             html.insert(i, "\r\n");
+    */
     
+    // RFC 2045: lines must not be longer than ~1000 chars
+    /*
+    int last_newline_pos = 0;
+    for (int i=0; i < html.size(); i++)
+    {
+        if (html.at(i) == "\n")
+        {
+            last_newline_pos = i;
+        }
+        
+        if (last_newline_pos < i-200)
+        {
+            html = html.left(i) + "\r\n" + html.right(i);
+        }
+    }
+    */
+    html = html.replace("</div>", "</div>\r\n");
+    html = html.replace("<br>", "\r\n");
+    html = html.replace("</span>", "</span>\r\n");
+    html = html.replace("}", "}\r\n");
     
-    //html = html.replace("</div>", "</div>\r\n");
-    //html = html.replace("}", "}\r\n");
+    int pos_base64_start = 0;
+    while (pos_base64_start >= 0)
+    {
+        pos_base64_start = html.indexOf("base64", pos_base64_start+5);
+        //qDebug() << "start" << pos_base64_start;
+        
+        if (pos_base64_start >= 0)
+        {
+            int pos_base64_end = html.indexOf("\">", pos_base64_start);
+            qDebug() << pos_base64_start << " - " << pos_base64_end;
+            
+            for (int i=pos_base64_start; i < pos_base64_end; i+=75)
+            {
+                html.insert(i, "\r\n");
+            }
+        }
+        
+    }
+    
     //html = html.replace("Lq", "Lq\r\n");
     
     this->payload_html = html;
@@ -95,8 +138,13 @@ void MailMessage::addAttachment(QString attachment_path)
 void MailMessage::generateMessage()
 {
     this->message = //"To: "+ this->address_to +"\r\n"
-            "From: "+ this->address_from +"\r\n" 
-            "Subject: "+ this->subject +"\r\n"
+            "From: "+ this->address_from +"\r\n";
+    
+    if (this->address_reply.contains("@"))
+    {
+        this->message.append("Reply-To: "+ this->address_reply +"\r\n");
+    }
+    this->message.append(
             "Content-Type: multipart/mixed; boundary=MixedBoundary\r\n"
             "\r\n"
             "--MixedBoundary\r\n"
@@ -107,8 +155,8 @@ void MailMessage::generateMessage()
             "\r\n"+ this->payload_text +"\r\n\r\n"
             "--AlternativeBoundary\r\n"
             "Content-Type: text/html; charset=\"utf-8\"\r\n"
-            "\r\n"+ this->payload_html +"\r\n"
-            "--AlternativeBoundary--\r\n";
+            "\r\n"+ this->payload_html +"\r\n\r\n"
+            "--AlternativeBoundary--\r\n");
             
     for (int i=0; i < this->attachments_base64.length(); ++i)
     {
@@ -123,12 +171,12 @@ void MailMessage::generateMessage()
     }
     
     this->message.append("\r\n\r\n"
-            "--MixedBoundary--\r\n\0");
+            "--MixedBoundary--\r\n");
     
     this->message_array = this->message.toLocal8Bit();
     this->message_char = this->message_array.data();
     this->message_size = strlen(this->message_char);
-    qDebug() << this->message_size;
+    //qDebug() << this->message_size;
 }
 
 void MailMessage::saveMessage(QString filepath)
@@ -226,7 +274,7 @@ int MailMessage::sendMailWithExternalCURL()
     
     QDateTime time = QDateTime::currentDateTime();
     
-    QString path = "/tmp/trinitrotoluol/outmail_"+time.toString("yyyy.MM.dd_HH:MM:ss:zzz")+".eml";
+    QString path = "/tmp/trinitrotoluol/outmail_"+time.toString("yyyy.MM.dd_HH:mm:ss:zzz")+".eml";
     QFile file;
     file.remove(path);
     saveMessage(path);
@@ -247,9 +295,7 @@ int MailMessage::sendMailWithExternalCURL()
     QString folder = "/tmp/trinitrotoluol/";
     
     QString args_ = "/home/samuel/Sync/scripts/alarm.sh";
-    //process->start(program, QStringList() << args_);
-    //process->execute("/home/samuel/Sync/scripts/alarm.sh");
-    process->execute(program + " " + args);
+    //process->execute(program + " " + args);
     
     QString output_err(process->readAllStandardError());
     qDebug() << output_err;

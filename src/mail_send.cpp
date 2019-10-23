@@ -155,6 +155,7 @@ void MailSend::sendMail()
         
         message->addTo(emails);
         message->setFrom(this->db->selectSettings("email_username"));
+        message->setReplyTo(this->db->selectSettings("email_reply"));
         message->setSubject(this->mail["subject"].toString());
         
         message->setAlternativeText(this->mail["alternative_text"].toString());
