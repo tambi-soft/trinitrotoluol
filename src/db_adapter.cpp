@@ -132,8 +132,8 @@ void DbAdapter::initializeTables()
         "path TEXT)", this->db);
     
     QSqlQuery query_sent_mail("CREATE TABLE IF NOT EXISTS mail_sent (\
+        \"rowid_mail\"      INTEGER,\
         \"rowid_people\"    INTEGER,\
-        \"rowid_mail\"         INTEGER,\
         \"date\"            INTEGER)", this->db);
     
     QSqlQuery query_donations("CREATE VIEW IF NOT EXISTS donations_monthly AS "
@@ -424,12 +424,12 @@ QList<QMap<QString,QVariant>> DbAdapter::selectAllMails()
     return dbIteratorToMapList(query);
 }
 
-void DbAdapter::insertMailSent(qlonglong rowid_people, qlonglong rowid_mail)
+void DbAdapter::insertMailSent(qlonglong rowid_mail, qlonglong rowid_people)
 {
     QSqlQuery query(this->db);
     query.prepare("INSERT INTO mail_sent (rowid_people, rowid_mail, date) VALUES (:rowid_people, :rowid_mail, CURRENT_TIMESTAMP)");
-    query.bindValue(":rowid_people", rowid_people);
     query.bindValue(":rowid_mail", rowid_mail);
+    query.bindValue(":rowid_people", rowid_people);
     query.exec();
 }
 

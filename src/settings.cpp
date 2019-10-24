@@ -90,6 +90,7 @@ void SettingsWidget::addEmailSettingsArea()
     
     layout->addWidget(new QLabel("Reply-To"));
     this->edit_email_reply = new QLineEdit;
+    this->edit_email_reply->setPlaceholderText("The Reply-To address. Leave empty for none");
     layout->addWidget(this->edit_email_reply);
     
     loadEmailParams();

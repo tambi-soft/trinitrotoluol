@@ -10,6 +10,7 @@
 #include <QScrollArea>
 
 #include <QLabel>
+#include <QLineEdit>
 #include <QCheckBox>
 #include <QPushButton>
 
@@ -35,9 +36,13 @@ private:
     
     QMap<QString,QVariant> mail;
     
-    bool flag_mail_agreed = true;
+    QLineEdit *filter_name = new QLineEdit;
+    QCheckBox *check_agreed = new QCheckBox("show agreed mail");
+    QCheckBox *check_not_agreed = new QCheckBox("show not agreed mail");
+    
     QList<QCheckBox*> list_checkboxes;
     QList<QString> list_emails;
+    QList<qlonglong> list_people_rowids;
     
     QScrollArea *recipients = new QScrollArea;
     QWidget *recipients_widget;
@@ -53,8 +58,8 @@ private:
 signals:
     
 public slots:
-    void showAgreed();
-    void showNotAgreed();
+    void filterForName();
+    void filterForAgreed();
     void selectAll();
     void deselectAll();
     void sendMail();

@@ -39,7 +39,6 @@ public:
     void generateMessage();
     void saveMessage(QString filepath);
     // return POSIX-style: 0: ok; 1: error
-    int sendMail();
     int sendMailWithExternalCURL();
     
     QString message;

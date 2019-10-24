@@ -59,62 +59,17 @@ void MailMessage::setAlternativeText(QString text)
 
 void MailMessage::setHTML(QString html)
 {
-    /*
-    int step = 400;
-    for (int i = step; i <= html.size(); i+=step+1)
-            html.insert(i, "\r\n");
-    */
-    
     // RFC 2045: lines must not be longer than ~1000 chars
-    /*
-    int last_newline_pos = 0;
-    for (int i=0; i < html.size(); i++)
-    {
-        if (html.at(i) == "\n")
-        {
-            last_newline_pos = i;
-        }
-        
-        if (last_newline_pos < i-200)
-        {
-            html = html.left(i) + "\r\n" + html.right(i);
-        }
-    }
-    */
-    html = html.replace("</div>", "</div>\r\n");
-    html = html.replace("<br>", "\r\n");
-    html = html.replace("</span>", "</span>\r\n");
-    html = html.replace("}", "}\r\n");
+    QString base = html.toUtf8().toBase64();
+    int step = 100;
+    for (int i = step; i <= base.size(); i+=step+1)
+            base.insert(i, "\r\n");
     
-    int pos_base64_start = 0;
-    while (pos_base64_start >= 0)
-    {
-        pos_base64_start = html.indexOf("base64", pos_base64_start+5);
-        //qDebug() << "start" << pos_base64_start;
-        
-        if (pos_base64_start >= 0)
-        {
-            int pos_base64_end = html.indexOf("\">", pos_base64_start);
-            qDebug() << pos_base64_start << " - " << pos_base64_end;
-            
-            for (int i=pos_base64_start; i < pos_base64_end; i+=75)
-            {
-                html.insert(i, "\r\n");
-            }
-        }
-        
-    }
-    
-    //html = html.replace("Lq", "Lq\r\n");
-    
-    this->payload_html = html;
+    this->payload_html = base;
 }
 
 void MailMessage::addAttachment(QString attachment_path)
 {
-    //QString base64 = attachment_path.toUtf8().toBase64();
-    //this->attachments_base64.append();
-    
     QFile file(attachment_path);
     
     QFileInfo fileInfo(file.fileName());
@@ -145,6 +100,7 @@ void MailMessage::generateMessage()
         this->message.append("Reply-To: "+ this->address_reply +"\r\n");
     }
     this->message.append(
+            "Subject: "+ this->subject +"\r\n"
             "Content-Type: multipart/mixed; boundary=MixedBoundary\r\n"
             "\r\n"
             "--MixedBoundary\r\n"
@@ -155,6 +111,7 @@ void MailMessage::generateMessage()
             "\r\n"+ this->payload_text +"\r\n\r\n"
             "--AlternativeBoundary\r\n"
             "Content-Type: text/html; charset=\"utf-8\"\r\n"
+                "Content-Transfer-Encoding: base64\r\n"
             "\r\n"+ this->payload_html +"\r\n\r\n"
             "--AlternativeBoundary--\r\n");
             
@@ -211,62 +168,6 @@ size_t MailMessage::process_mail(void *ptr, size_t size, size_t nmemb, void *use
     return retcode;
 }
 
-int MailMessage::sendMail()
-{
-    //qDebug() << this->message;
-    
-    qDebug() << "smtp_address: " << this->smtp_address.toStdString().c_str();
-    qDebug() << "smtp_user: " << this->smtp_user.toStdString().c_str();
-    //qDebug() << "smtp_password: " << this->smtp_password.toStdString().c_str();
-    qDebug() << "address_from: " << this->address_from.toStdString().c_str();
-    //qDebug() << "address_to: " << this->address_to.toStdString().c_str();
-    
-    /*
-    CURLcode res = CURLE_OK;
-    CURL *curl = curl_easy_init();
-    curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
-    curl_easy_setopt(curl, CURLOPT_UPLOAD, 1L);
-    //curl_easy_setopt(curl, CURLOPT_TIMEOUT, 1L);
-    // CURLUSESSL_ALL, CURLUSESSL_NONE, CURLUSESSL_TRY, CURLUSESSL_CONTROL
-    curl_easy_setopt(curl, CURLOPT_USE_SSL, CURLUSESSL_ALL);
-    // TODO: handle port
-    curl_easy_setopt(curl, CURLOPT_URL, this->smtp_address.toStdString().c_str());
-    curl_easy_setopt(curl, CURLOPT_USERNAME, this->smtp_user.toStdString().c_str());
-    curl_easy_setopt(curl, CURLOPT_PASSWORD, this->smtp_password.toStdString().c_str());
-    curl_easy_setopt(curl, CURLOPT_MAIL_FROM, this->address_from.toStdString().c_str());
-    
-    curl_easy_setopt(curl, CURLOPT_MAIL_RCPT, this->address_to.toStdString().c_str());
-    curl_easy_setopt(curl, CURLOPT_READFUNCTION, &process_mail);
-    curl_easy_setopt(curl, CURLOPT_READDATA, this);
-    */
-    /* Send the message */ 
-    //res = curl_easy_perform(curl);
-    //CURLM *multi_handle = curl_multi_init();
-    //curl_multi_add_handle(multi_handle, curl);
-    
-    //curl_multi_perform(multi_handle, nullptr);
-    /* Check for errors */
-    /*
-    if(res != CURLE_OK)
-    {
-        fprintf(stderr, "curl_easy_perform() failed: %s\n",
-                curl_easy_strerror(res));
-    }
-    else
-    {
-        curl_easy_getinfo(curl, CURLINFO_SPEED_UPLOAD, &upload_speed);
-        curl_easy_getinfo(curl, CURLINFO_TOTAL_TIME, &upload_time);
-        
-        qDebug() << "Speed: "+QString::number(upload_speed) + " Time: "+QString::number(upload_time);
-    }
-    */
-    //curl_slist_free_all(this->address_to.toStdString().c_str());
-    //curl_multi_cleanup(multi_handle);
-    //curl_easy_cleanup(curl);
-    
-    return 0;
-}
-
 int MailMessage::sendMailWithExternalCURL()
 {
     QDir dir = QDir::root();
@@ -284,18 +185,15 @@ int MailMessage::sendMailWithExternalCURL()
     QString args = "-v \""+this->smtp_address+":"+this->smtp_port+"\" "
                    "-u \""+ this->smtp_user+":"+this->smtp_password +"\" "
                    "--mail-from \""+this->address_from+"\" ";
-    
     foreach (QString address, this->addresses_to) {
         args.append("--mail-rcpt \""+address+"\" ");
     }
-    
     args.append(   "-T "+path+" "
                    "--ssl-reqd "
                    "--show-error");
-    QString folder = "/tmp/trinitrotoluol/";
     
-    QString args_ = "/home/samuel/Sync/scripts/alarm.sh";
-    //process->execute(program + " " + args);
+    process->execute(program + " " + args);
+    int code = process->exitCode();
     
     QString output_err(process->readAllStandardError());
     qDebug() << output_err;
@@ -303,5 +201,5 @@ int MailMessage::sendMailWithExternalCURL()
     QString output_std(process->readAllStandardOutput());
     qDebug() << output_std;
     
-    return 0;
+    return code;
 }

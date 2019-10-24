@@ -8,6 +8,9 @@ MailSend::MailSend(DbAdapter *db, qlonglong rowid, QWidget *parent)
     
     setLayout(this->grid);
     
+    this->check_agreed->setChecked(true);
+    this->check_not_agreed->setChecked(true);
+    
     addRecipientsArea();
     addControlsArea();
     addPreviewArea();
@@ -27,10 +30,37 @@ void MailSend::addRecipientsArea()
     
     this->recipients_widget->setMaximumWidth(500);
     
-    QList<QMap<QString,QVariant>> people = this->db->selectAllPersonsForMail(this->flag_mail_agreed);
+    //QList<QMap<QString,QVariant>> people = this->db->selectAllPersonsForMail(this->flag_mail_agreed);
+    
+    QString search_name = this->filter_name->text();
+    if (search_name.isEmpty())
+    {
+        search_name = "%";
+    }
+    
+    int search_agreed;
+    if (this->check_agreed->isChecked() && this->check_not_agreed->isChecked())
+    {
+        search_agreed = -1;
+    }
+    else if (this->check_agreed->isChecked())
+    {
+        search_agreed = 1;
+    }
+    else if (this->check_not_agreed->isChecked())
+    {
+        search_agreed = 0;
+    }
+    else
+    {
+        return;
+    }
+    
+    QList<QMap<QString,QVariant>> people = this->db->selectAllPersonsFiltered(-1,-1, -1, 0, search_agreed, "%", "%"+search_name+"%", "%");
     
     this->list_checkboxes.clear();
     this->list_emails.clear();
+    this->list_people_rowids.clear();
     
     for (int i=0; i < people.length(); ++i)
     {
@@ -44,11 +74,12 @@ void MailSend::addRecipientsArea()
         QCheckBox *check_send_mail = new QCheckBox;
         if (email.length() > 0)
         {
-            check_send_mail->setChecked(true);
+            check_send_mail->setChecked(false);
         }
         
         this->list_checkboxes.append(check_send_mail);
         this->list_emails.append(email);
+        this->list_people_rowids.append(person["rowid"].toLongLong());
         
         grid->addWidget(check_send_mail, i, 0);
         grid->addWidget(label_name, i, 1);
@@ -60,29 +91,35 @@ void MailSend::addControlsArea()
 {
     QVBoxLayout *layout = new QVBoxLayout;
     this->controls->setLayout(layout);
+    this->controls->setMaximumWidth(200);
     
-    QPushButton *button_show_agreed = new QPushButton("show agreed");
-    QPushButton *button_show_not_agreed = new QPushButton("show not agreed");
+    this->filter_name = new QLineEdit;
+    this->filter_name->setPlaceholderText("filter for name");
     
     QPushButton *button_select_all = new QPushButton("select all");
     QPushButton *button_deselect_all = new QPushButton("deselect all");
     
-    QPushButton *button_send_mail = new QPushButton("SEND MAIL!");
+    QPushButton *button_send_mail = new QPushButton("SEND MAIL");
+    button_send_mail->setStyleSheet("QPushButton { background-color: darkred; color: white; } ");
     
-    connect(button_show_agreed, &QPushButton::clicked, this, &MailSend::showAgreed);
-    connect(button_show_not_agreed, &QPushButton::clicked, this, &MailSend::showNotAgreed);
+    connect(this->filter_name, &QLineEdit::textChanged, this, &MailSend::filterForName);
+    
+    connect(this->check_agreed, &QCheckBox::stateChanged, this, &MailSend::filterForAgreed);
+    connect(this->check_not_agreed, &QCheckBox::stateChanged, this, &MailSend::filterForAgreed);
     
     connect(button_select_all, &QPushButton::clicked, this, &MailSend::selectAll);
     connect(button_deselect_all, &QPushButton::clicked, this, &MailSend::deselectAll);
     
     connect(button_send_mail, &QPushButton::clicked, this, &MailSend::sendMail);
     
-    layout->addWidget(button_show_agreed);
-    layout->addWidget(button_show_not_agreed);
-    layout->addWidget(new QLabel);
+    layout->addWidget(this->filter_name);
+    
+    layout->addWidget(this->check_agreed);
+    layout->addWidget(this->check_not_agreed);
+    
     layout->addWidget(button_select_all);
     layout->addWidget(button_deselect_all);
-    layout->addWidget(new QLabel);
+    
     layout->addWidget(button_send_mail);
 }
 
@@ -95,18 +132,14 @@ void MailSend::addPreviewArea()
     this->preview->updateContent(cover, content_path);
 }
 
-void MailSend::showAgreed()
+void MailSend::filterForName()
 {
-    this->flag_mail_agreed = true;
-    
     this->recipients_widget->deleteLater();
     addRecipientsArea();
 }
 
-void MailSend::showNotAgreed()
+void MailSend::filterForAgreed()
 {
-    this->flag_mail_agreed = false;
-    
     this->recipients_widget->deleteLater();
     addRecipientsArea();
 }
@@ -134,11 +167,13 @@ void MailSend::sendMail()
     {
         // gather all emails checked in the gui
         QList<QString> emails;
+        QList<qlonglong> people_rowids;
         for (int i=0; i < this->list_emails.length(); ++i)
         {
             if (this->list_checkboxes.at(i)->isChecked())
             {
                 emails.append(this->list_emails.at(i));
+                people_rowids.append(this->list_people_rowids.at(i));
             }
         }
         
@@ -163,16 +198,15 @@ void MailSend::sendMail()
         message->addAttachment(this->mail["attachment_path"].toString());
         
         message->generateMessage();
-        //message->saveMessage("/tmp/bla.eml");
         
-        message->sendMailWithExternalCURL();
+        int ret = message->sendMailWithExternalCURL();
         
-        /*
-        int error_happened = message->sendMail();
-        if (error_happened == 0)
+        if (ret == 0)
         {
-            //this->db->insertMailSent();
+            foreach (qlonglong rowid_people, people_rowids)
+            {
+                this->db->insertMailSent(this->rowid, rowid_people);
+            }
         }
-        */
     }
 }

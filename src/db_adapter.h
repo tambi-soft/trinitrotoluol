@@ -42,7 +42,7 @@ public:
     void deleteMail(qlonglong rowid);
     QMap<QString,QVariant> selectMail(qlonglong rowid);
     QList<QMap<QString,QVariant>> selectAllMails();
-    void insertMailSent(qlonglong rowid_people, qlonglong rowid_mail);
+    void insertMailSent(qlonglong rowid_mail, qlonglong rowid_people);
     
     void insertSettings(QString key, QString value);
     void insertSettings(QString key, int value);
