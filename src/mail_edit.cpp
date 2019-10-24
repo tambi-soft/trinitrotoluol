@@ -24,9 +24,13 @@ void MailEdit::initializeGUI()
     this->line_content->setEnabled(false);
     this->line_content->setPlaceholderText("select Path to a Text/HTML file");
     
-    this->line_attachment = new QLineEdit;
-    this->line_attachment->setEnabled(false);
-    this->line_attachment->setPlaceholderText("select Path to a File to be sent as attachment");
+    this->line_attachment_one = new QLineEdit;
+    this->line_attachment_one->setEnabled(false);
+    this->line_attachment_one->setPlaceholderText("select Path to a File to be sent as attachment");
+    
+    this->line_attachment_two = new QLineEdit;
+    this->line_attachment_two->setEnabled(false);
+    this->line_attachment_two->setPlaceholderText("select Path to a File to be sent as attachment");
     
     this->line_date = new QLineEdit;
     this->line_date->setReadOnly(true);
@@ -57,19 +61,26 @@ void MailEdit::initializeGUI()
     connect(button_add_content, &QPushButton::clicked, this, &MailEdit::onContentPathButton);
     this->grid->addWidget(button_add_content, 4, 2);
     
-    this->grid->addWidget(new QLabel("Attachment:"), 5, 0);
-    this->grid->addWidget(this->line_attachment, 5, 1);
+    this->grid->addWidget(new QLabel("Attachment 1:"), 5, 0);
+    this->grid->addWidget(this->line_attachment_one, 5, 1);
     
-    QPushButton *button_add_attachment = new QPushButton("select Attachment Path");
-    connect(button_add_attachment, &QPushButton::clicked, this, &MailEdit::onAttachmentPathButton);
-    this->grid->addWidget(button_add_attachment, 5, 2);
+    this->grid->addWidget(new QLabel("Attachment 2:"), 6, 0);
+    this->grid->addWidget(this->line_attachment_two, 6, 1);
     
-    this->grid->addWidget(new QLabel("Date Created:"), 6, 0);
-    this->grid->addWidget(this->line_date, 6, 1, 1, 3);
-    this->grid->addWidget(new QLabel("Date last Edit:"), 7, 0);
-    this->grid->addWidget(this->line_date_last_edit, 7, 1, 1, 3);
+    QPushButton *button_add_attachment_one = new QPushButton("select Attachment Path");
+    connect(button_add_attachment_one, &QPushButton::clicked, this, &MailEdit::onAttachmentOnePathButton);
+    this->grid->addWidget(button_add_attachment_one, 5, 2);
     
-    this->grid->addWidget(this->preview, 8, 0, 1, 3);
+    QPushButton *button_add_attachment_two = new QPushButton("select Attachment Path");
+    connect(button_add_attachment_two, &QPushButton::clicked, this, &MailEdit::onAttachmentTwoPathButton);
+    this->grid->addWidget(button_add_attachment_two, 6, 2);
+    
+    this->grid->addWidget(new QLabel("Date Created:"), 7, 0);
+    this->grid->addWidget(this->line_date, 7, 1, 1, 3);
+    this->grid->addWidget(new QLabel("Date last Edit:"), 8, 0);
+    this->grid->addWidget(this->line_date_last_edit, 8, 1, 1, 3);
+    
+    this->grid->addWidget(this->preview, 9, 0, 1, 3);
     //this->preview->setReadOnly(true);
 }
 
@@ -83,7 +94,8 @@ void MailEdit::loadData()
     this->line_alternative->setPlainText(data["alternative_text"].toString());
     this->line_cover->setPlainText(data["cover"].toString());
     this->line_content->setText(data["content_path"].toString());
-    this->line_attachment->setText(data["attachment_path"].toString());
+    this->line_attachment_one->setText(data["attachment_path_one"].toString());
+    this->line_attachment_two->setText(data["attachment_path_two"].toString());
     this->line_date->setText(data["date"].toString());
     this->line_date_last_edit->setText(data["date_last_edit"].toString());
 }
@@ -95,11 +107,11 @@ void MailEdit::addEditListeners()
     connect(this->line_alternative, &QPlainTextEdit::textChanged, this, &MailEdit::saveData);
     connect(this->line_cover, &QPlainTextEdit::textChanged, this, &MailEdit::saveData);
     connect(this->line_content, &QLineEdit::textChanged, this, &MailEdit::saveData);
-    connect(this->line_attachment, &QLineEdit::textChanged, this, &MailEdit::saveData);
+    connect(this->line_attachment_one, &QLineEdit::textChanged, this, &MailEdit::saveData);
+    connect(this->line_attachment_two, &QLineEdit::textChanged, this, &MailEdit::saveData);
     
     connect(this->line_cover, &QPlainTextEdit::textChanged, this, &MailEdit::updatePreview);
     connect(this->line_content, &QLineEdit::textChanged, this, &MailEdit::updatePreview);
-    connect(this->line_attachment, &QLineEdit::textChanged, this, &MailEdit::updatePreview);
 }
 
 void MailEdit::saveData()
@@ -110,7 +122,8 @@ void MailEdit::saveData()
     data["alternative_text"] = this->line_alternative->toPlainText();
     data["cover"] = this->line_cover->toPlainText();
     data["content_path"] = this->line_content->text();
-    data["attachment_path"] = this->line_attachment->text();
+    data["attachment_path_one"] = this->line_attachment_one->text();
+    data["attachment_path_two"] = this->line_attachment_two->text();
     
     this->db->updateMail(this->rowid, data);
 }
@@ -126,13 +139,24 @@ void MailEdit::onContentPathButton()
     this->db->insertSettings("last_mail_path", last_mail_path);
 }
 
-void MailEdit::onAttachmentPathButton()
+void MailEdit::onAttachmentOnePathButton()
 {
     QString last_mail_path = this->db->selectSettings("last_mail_path");
     last_mail_path = QFileDialog::getOpenFileName(this, tr("Select Directory"),
             last_mail_path);
     
-    this->line_attachment->setText(last_mail_path);
+    this->line_attachment_one->setText(last_mail_path);
+    
+    this->db->insertSettings("last_mail_path", last_mail_path);
+}
+
+void MailEdit::onAttachmentTwoPathButton()
+{
+    QString last_mail_path = this->db->selectSettings("last_mail_path");
+    last_mail_path = QFileDialog::getOpenFileName(this, tr("Select Directory"),
+            last_mail_path);
+    
+    this->line_attachment_two->setText(last_mail_path);
     
     this->db->insertSettings("last_mail_path", last_mail_path);
 }

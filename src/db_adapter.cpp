@@ -124,6 +124,8 @@ void DbAdapter::initializeTables()
         "alternative_text TEXT, "
         "cover TEXT, "
         "content_path TEXT, "
+        "attachment_path_one TEXT, "
+        "attachment_path_two TEXT, "
         "date TEXT, "
         "date_last_edit TEXT)", this->db);
     
@@ -384,13 +386,14 @@ qlonglong DbAdapter::insertNewMail()
 void DbAdapter::updateMail(qlonglong rowid, QMap<QString,QVariant> data)
 {
     QSqlQuery query(this->db);
-    query.prepare("UPDATE mail SET number=:number, subject=:subject, alternative_text=:alternative_text, cover=:cover, content_path=:content_path, attachment_path=:attachment_path, date_last_edit=CURRENT_TIMESTAMP WHERE rowid=:rowid");
+    query.prepare("UPDATE mail SET number=:number, subject=:subject, alternative_text=:alternative_text, cover=:cover, content_path=:content_path, attachment_path_one=:attachment_path_one, attachment_path_two=:attachment_path_two, date_last_edit=CURRENT_TIMESTAMP WHERE rowid=:rowid");
     query.bindValue(":number", data["number"].toString());
     query.bindValue(":subject", data["subject"].toString());
     query.bindValue(":alternative_text", data["alternative_text"].toString());
     query.bindValue(":cover", data["cover"].toString());
     query.bindValue(":content_path", data["content_path"].toString());
-    query.bindValue(":attachment_path", data["attachment_path"].toString());
+    query.bindValue(":attachment_path_one", data["attachment_path_one"].toString());
+    query.bindValue(":attachment_path_two", data["attachment_path_two"].toString());
     query.bindValue(":rowid", rowid);
     query.exec();
     
@@ -408,7 +411,7 @@ void DbAdapter::deleteMail(qlonglong rowid)
 QMap<QString,QVariant> DbAdapter::selectMail(qlonglong rowid)
 {
     QSqlQuery query(this->db);
-    query.prepare("SELECT number, subject, alternative_text, cover, content_path, attachment_path, date, date_last_edit "
+    query.prepare("SELECT number, subject, alternative_text, cover, content_path, attachment_path_one, attachment_path_two, date, date_last_edit "
                   "FROM mail "
                   "WHERE rowid=:rowid");
     query.bindValue(":rowid", rowid);
@@ -419,7 +422,7 @@ QMap<QString,QVariant> DbAdapter::selectMail(qlonglong rowid)
 
 QList<QMap<QString,QVariant>> DbAdapter::selectAllMails()
 {
-    QSqlQuery query("SELECT rowid, number, subject, cover, content_path, attachment_path, date, date_last_edit FROM mail ORDER BY number", this->db);
+    QSqlQuery query("SELECT rowid, number, subject, cover, content_path, date, date_last_edit FROM mail ORDER BY number", this->db);
     
     return dbIteratorToMapList(query);
 }

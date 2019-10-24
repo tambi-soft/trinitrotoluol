@@ -196,7 +196,8 @@ void MailSend::sendMail()
         
         message->setAlternativeText(this->mail["alternative_text"].toString());
         message->setHTML(this->preview->html);
-        message->addAttachment(this->mail["attachment_path"].toString());
+        message->addAttachment(this->mail["attachment_path_one"].toString());
+        message->addAttachment(this->mail["attachment_path_two"].toString());
         
         message->generateMessage();
         

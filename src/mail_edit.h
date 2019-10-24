@@ -38,7 +38,8 @@ private:
     QPlainTextEdit *line_alternative = new QPlainTextEdit;
     QPlainTextEdit* line_cover = new QPlainTextEdit;
     QLineEdit* line_content;
-    QLineEdit* line_attachment;
+    QLineEdit* line_attachment_one;
+    QLineEdit* line_attachment_two;
     QLineEdit* line_date;
     QLineEdit* line_date_last_edit;
     //QWebEngineView* preview = new QWebEngineView;
@@ -53,7 +54,8 @@ signals:
 public slots:
     void saveData();
     void onContentPathButton();
-    void onAttachmentPathButton();
+    void onAttachmentOnePathButton();
+    void onAttachmentTwoPathButton();
     void updatePreview();
 };
 
