@@ -151,7 +151,6 @@ size_t MailMessage::process_mail(void *ptr, size_t size, size_t nmemb, void *use
 {
     size_t retcode = 0;
     
-    
     MailMessage *self = reinterpret_cast<MailMessage*>(userprocess);
     
     if (strlen(self->message_char) == 0)
@@ -193,7 +192,8 @@ int MailMessage::sendMailWithExternalCURL()
                    "--show-error");
     
     process->execute(program + " " + args);
-    int code = process->exitCode();
+    int code = 0;
+    code = process->exitCode();
     
     QString output_err(process->readAllStandardError());
     qDebug() << output_err;

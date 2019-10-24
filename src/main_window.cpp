@@ -30,7 +30,7 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
     
     addStatsTab();
     addPeopleTab();
-    addMailListTab();
+    //addMailListTab();
     
     deactivateCloseButtons();
 }
