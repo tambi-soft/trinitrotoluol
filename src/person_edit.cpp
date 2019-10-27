@@ -3,8 +3,8 @@
 PersonEdit::PersonEdit(DbAdapter *db, qlonglong rowid, QWidget *parent)
     : QWidget(parent)
 {
-    this->layout = new QGridLayout;
-    setLayout(this->layout);
+    this->grid = new QGridLayout;
+    setLayout(this->grid);
     
     this->rowid = rowid;
     this->db = db;
@@ -14,60 +14,54 @@ PersonEdit::PersonEdit(DbAdapter *db, qlonglong rowid, QWidget *parent)
 
 void PersonEdit::drawGUI()
 {
-    this->layout->addWidget(check_todo, 0, 1);
-    this->layout->addWidget(check_waiting, 1, 1);
+    this->grid->addWidget(check_todo, 0, 1);
+    this->grid->addWidget(check_waiting, 1, 1);
     
-    this->layout->addWidget(edit_tnt_id, 2, 1);
-    this->layout->addWidget(edit_name, 3, 1);
-    this->layout->addWidget(edit_email, 4, 1);
-    this->layout->addWidget(edit_address, 5, 1);
-    this->layout->addWidget(edit_phone, 6, 1);
+    this->grid->addWidget(edit_tnt_id, 2, 1, 1, 2);
+    this->grid->addWidget(edit_name, 3, 1, 1, 2);
+    this->grid->addWidget(edit_email, 4, 1, 1, 2);
+    this->grid->addWidget(edit_address, 5, 1, 1, 2);
+    this->grid->addWidget(edit_phone, 6, 1, 1, 2);
     
-    QWidget *widget_groups = new QWidget;
-    QHBoxLayout *layout_groups = new QHBoxLayout;
-    layout_groups->setMargin(0);
     QPushButton *button_edit_groups = new QPushButton("Edit Groups");
     connect(button_edit_groups, &QPushButton::clicked, this, &PersonEdit::onAddNewGroupButton);
-    layout_groups->addWidget(combo_group);
-    layout_groups->addWidget(button_edit_groups);
-    widget_groups->setLayout(layout_groups);
-    this->layout->addWidget(widget_groups, 7, 1);
+    this->grid->addWidget(combo_group, 7, 1);
+    this->grid->addWidget(button_edit_groups, 7, 2);
     
-    this->layout->addWidget(check_agreed_mail, 8, 1);
-    this->layout->addWidget(check_agreed_prayer, 9, 1);
+    this->grid->addWidget(check_agreed_mail, 8, 1);
+    this->grid->addWidget(check_agreed_prayer, 9, 1);
     
-    this->layout->addWidget(edit_agreement, 10, 1);
-    this->layout->addWidget(edit_donations_monthly, 11, 1);
-    this->layout->addWidget(edit_donations_monthly_promised, 12, 1);
+    this->grid->addWidget(edit_agreement, 10, 1);
+    QPushButton *button_agreement_today = new QPushButton("insert today");
+    connect(button_agreement_today, &QPushButton::clicked, this, &PersonEdit::onInsertAgreementDateButton);
+    this->grid->addWidget(button_agreement_today, 10, 2);
+    this->edit_agreement->setToolTip("probably you want to store the date of the according email from this supporter, or the name of a scanned file, or some other hint to find the actual agreement easily");
     
-    QWidget *widget_spouse = new QWidget;
-    QHBoxLayout *layout_spouse = new QHBoxLayout;
-    layout_spouse->setMargin(0);
+    this->grid->addWidget(edit_donations_monthly, 11, 1, 1, 2);
+    this->grid->addWidget(edit_donations_monthly_promised, 12, 1, 1, 2);
+    
     QPushButton *button_select_spouse = new QPushButton("Select Spouse");
     connect(button_select_spouse, &QPushButton::clicked, this, &PersonEdit::onSelectSpouseButton);
-    layout_spouse->addWidget(edit_spouse);
-    layout_spouse->addWidget(button_select_spouse);
-    widget_spouse->setLayout(layout_spouse);
-    this->layout->addWidget(widget_spouse, 13, 1);
-    //this->layout->addWidget(edit_spouse, 11, 1);
+    this->grid->addWidget(edit_spouse, 13, 1);
+    this->grid->addWidget(button_select_spouse, 13, 2);
     
-    this->layout->addWidget(edit_notes, 14, 1);
+    this->grid->addWidget(edit_notes, 14, 1, 1, 2);
     
-    this->layout->addWidget(new QLabel("ToDo"), 0, 0);
-    this->layout->addWidget(new QLabel("Waiting"), 1, 0);
-    this->layout->addWidget(new QLabel("TNT-Number"), 2, 0);
-    this->layout->addWidget(new QLabel("Name"), 3, 0);
-    this->layout->addWidget(new QLabel("Email"), 4, 0);
-    this->layout->addWidget(new QLabel("Address"), 5, 0);
-    this->layout->addWidget(new QLabel("Phone"), 6, 0);
-    this->layout->addWidget(new QLabel("Group"), 7, 0);
-    this->layout->addWidget(new QLabel("agreed mail"), 8, 0);
-    this->layout->addWidget(new QLabel("agreed prayer"), 9, 0);
-    this->layout->addWidget(new QLabel("agreement"), 10, 0);
-    this->layout->addWidget(new QLabel("donations monthly"), 11, 0);
-    this->layout->addWidget(new QLabel("donations promised"), 12, 0);
-    this->layout->addWidget(new QLabel("Spouse"), 13, 0);
-    this->layout->addWidget(new QLabel("Notes"), 14, 0);
+    this->grid->addWidget(new QLabel("ToDo"), 0, 0);
+    this->grid->addWidget(new QLabel("Waiting"), 1, 0);
+    this->grid->addWidget(new QLabel("TNT-Number"), 2, 0);
+    this->grid->addWidget(new QLabel("Name"), 3, 0);
+    this->grid->addWidget(new QLabel("Email"), 4, 0);
+    this->grid->addWidget(new QLabel("Address"), 5, 0);
+    this->grid->addWidget(new QLabel("Phone"), 6, 0);
+    this->grid->addWidget(new QLabel("Group"), 7, 0);
+    this->grid->addWidget(new QLabel("agreed mail"), 8, 0);
+    this->grid->addWidget(new QLabel("agreed prayer"), 9, 0);
+    this->grid->addWidget(new QLabel("agreement"), 10, 0);
+    this->grid->addWidget(new QLabel("donations monthly"), 11, 0);
+    this->grid->addWidget(new QLabel("donations promised"), 12, 0);
+    this->grid->addWidget(new QLabel("Spouse"), 13, 0);
+    this->grid->addWidget(new QLabel("Notes"), 14, 0);
     
     loadGroupsComboData();
     loadData();
@@ -88,7 +82,7 @@ void PersonEdit::drawGUI()
     connect(combo_group, qOverload<int>(&QComboBox::currentIndexChanged), this, &PersonEdit::saveDataWithInt);
     connect(edit_notes, &QTextEdit::textChanged, this, &PersonEdit::saveData);
                                
-    //this->layout->setRowStretch(14, 100);
+    //this->grid->setRowStretch(14, 100);
 }
 
 void PersonEdit::loadData()
@@ -174,6 +168,11 @@ QMap<QString,QVariant> PersonEdit::collectSaveData()
 void PersonEdit::onAddNewGroupButton()
 {
     
+}
+
+void PersonEdit::onInsertAgreementDateButton()
+{
+    this->edit_agreement->setText(QDate::currentDate().toString("yyyy-MM-dd"));
 }
 
 void PersonEdit::onSelectSpouseButton()

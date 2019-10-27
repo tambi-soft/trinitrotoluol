@@ -11,6 +11,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QDialog>
+#include <QDate>
 
 #include "db_adapter.h"
 #include "people_selector.h"
@@ -28,7 +29,7 @@ public:
     QMap<QString,QVariant> collectSaveData();
     
 private:
-    QGridLayout *layout;
+    QGridLayout *grid;
     qlonglong rowid = -1;
     DbAdapter *db;
     QList<QMap<QString,QVariant>> group_data;
@@ -59,6 +60,7 @@ private:
     
 private slots:
     void onAddNewGroupButton();
+    void onInsertAgreementDateButton();
     void onSelectSpouseButton();
     void onSpouseSelected(qlonglong rowid, QString name);
     void saveDataWithInt(int /* param just for compat */);
