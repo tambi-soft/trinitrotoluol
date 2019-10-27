@@ -25,12 +25,14 @@ void MailEdit::initializeGUI()
     this->line_content->setPlaceholderText("select Path to a Text/HTML file");
     
     this->line_attachment_one = new QLineEdit;
-    this->line_attachment_one->setEnabled(false);
+    //this->line_attachment_one->setEnabled(false);
     this->line_attachment_one->setPlaceholderText("select Path to a File to be sent as attachment");
+    this->line_attachment_one->setClearButtonEnabled(true);
     
     this->line_attachment_two = new QLineEdit;
-    this->line_attachment_two->setEnabled(false);
+    //this->line_attachment_two->setEnabled(false);
     this->line_attachment_two->setPlaceholderText("select Path to a File to be sent as attachment");
+    this->line_attachment_two->setClearButtonEnabled(true);
     
     this->line_date = new QLineEdit;
     this->line_date->setReadOnly(true);
@@ -163,31 +165,6 @@ void MailEdit::onAttachmentTwoPathButton()
 
 void MailEdit::updatePreview()
 {
+    qDebug() << "update";
     this->preview->updateContent(this->line_cover->toPlainText(), this->line_content->text());
-    /*
-    QFile file(this->line_content->text());
-    if(!file.open(QIODevice::ReadOnly)) {
-        //QMessageBox::information(nullptr, "error", file.errorString());
-    }
-    
-    QTextStream in(&file);
-    
-    QString html;
-    while(!in.atEnd()) {
-        QString line = in.readLine();
-        
-        if (line.trimmed() == "<!-- INCLUDE COVER -->")
-        {
-            html.append(this->line_cover->toPlainText());
-        }
-        else
-        {
-            html.append(line);
-        }
-    }
-    
-    file.close();
-    
-    this->preview->setHtml(html);
-    */
 }

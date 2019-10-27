@@ -303,10 +303,11 @@ void PeopleList::onShowDonationsButtonClicked(qlonglong rowid)
 
 void PeopleList::onDeletePersonButtonClicked(qlonglong rowid, QString name)
 {
-    int reply = QMessageBox::question(this, "Delete "+name, "Really delete \""+name+"\"?", QMessageBox::Yes, QMessageBox::No);
+    int reply = QMessageBox::question(this, "Deactivate "+name, "Really deactivate \""+name+"\"?", QMessageBox::Yes, QMessageBox::No);
     if (reply == QMessageBox::Yes)
     {
-        this->db->deletePerson(rowid);
+        //this->db->deletePerson(rowid);
+        this->db->deactivatePerson(rowid);
         
         this->table_widget->clear();
         showPeople();
