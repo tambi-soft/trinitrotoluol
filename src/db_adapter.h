@@ -25,6 +25,7 @@ public:
     //qlonglong insertNewPerson(QMap<QString, QVariant> data);
     void updatePerson(qlonglong rowid, QMap<QString,QVariant> data);
     void deletePerson(qlonglong rowid);
+    void deactivatePerson(qlonglong rowid);
     QMap<QString, QVariant> selectPerson(qlonglong rowid);
     void linkSpouses(qlonglong rowid_a, qlonglong rowid_b);
     void unlinkSpouses(qlonglong rowid_a, qlonglong rowid_b);
@@ -64,6 +65,8 @@ public:
     qlonglong insertTicket(qlonglong rowid_journey);
     void updateTicket(qlonglong rowid, QString name, double cost, bool flag_settled, QString notes);
     void deleteTicket(qlonglong rowid);
+    
+    QList<QMap<QString, QVariant> > selectExpenses();
     
 private:
     QSqlDatabase db;

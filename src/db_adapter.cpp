@@ -180,6 +180,13 @@ void DbAdapter::deletePerson(qlonglong rowid)
     query.bindValue(":rowid", rowid);
     query.exec();
 }
+void DbAdapter::deactivatePerson(qlonglong rowid)
+{
+    QSqlQuery query(this->db);
+    query.prepare("UPDATE people SET flag_deactivated=1 WHERE rowid=:rowid");
+    query.bindValue(":rowid", rowid);
+    query.exec();
+}
 
 void DbAdapter::linkSpouses(qlonglong rowid_a, qlonglong rowid_b)
 {
@@ -626,4 +633,15 @@ void DbAdapter::deleteTicket(qlonglong rowid)
     query.prepare("DELETE FROM journey_tickets WHERE rowid=:rowid");
     query.bindValue(":rowid", rowid);
     query.exec();
+}
+
+QList<QMap<QString,QVariant>> DbAdapter::selectExpenses()
+{
+    QSqlQuery query(this->db);
+    query.prepare("SELECT expenses.rowid, name, amount, cost_one, currencies.code AS currency_code, date, expenses.notes, flag_settled "
+                  "FROM expenses "
+                  "JOIN currencies ON rowid_currency=currencies.rowid");
+    query.exec();
+    
+    return dbIteratorToMapList(query);
 }
