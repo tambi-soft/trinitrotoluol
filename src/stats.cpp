@@ -76,6 +76,11 @@ void Stats::addMoneyStats()
     int donations_average = money["donations_average"].toInt();
     grid_money->addWidget(new QLabel(QString::number(donations_average)), 4, 2);
     
+    QString needed_money = this->db->selectSettings("money_target");
+    double current_percentage = (monthly_sum + monthly_sum_promised) / needed_money.toDouble() * 100;
+    
+    grid_money->addWidget(new QLabel("<b>Percentage</b>"), 5, 1);
+    grid_money->addWidget(new QLabel(QString::number(current_percentage) + "%"), 6, 1);
     
 }
 
