@@ -21,7 +21,7 @@ void MailEdit::initializeGUI()
     this->line_cover->setMaximumHeight(200);
     
     this->line_content = new QLineEdit;
-    this->line_content->setEnabled(false);
+    this->line_content->setClearButtonEnabled(true);
     this->line_content->setPlaceholderText("select Path to a Text/HTML file");
     
     this->line_attachment_one = new QLineEdit;

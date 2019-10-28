@@ -1,16 +1,5 @@
 #include "journey_edit.h"
 
-/*
-JourneyEdit::JourneyEdit(DbAdapter *db, QWidget *parent)
-    : QWidget(parent)
-    , layout (new QVBoxLayout)
-{
-    this->db = db;
-    
-    setLayout(this->layout);
-}
-*/
-
 JourneyEdit::JourneyEdit(qlonglong rowid, DbAdapter *db, QWidget *parent)
     : QWidget(parent)
     , layout (new QVBoxLayout)

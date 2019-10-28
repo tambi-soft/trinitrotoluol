@@ -66,7 +66,11 @@ public:
     void updateTicket(qlonglong rowid, QString name, double cost, bool flag_settled, QString notes);
     void deleteTicket(qlonglong rowid);
     
-    QList<QMap<QString, QVariant> > selectExpenses();
+    QList<QMap<QString,QVariant>> selectExpenses();
+    QMap<QString,QVariant> selectExpense(qlonglong rowid);
+    qlonglong insertExpense();
+    void updateExpense(qlonglong rowid, qlonglong rowid_currency, QMap<QString,QString> data);
+    void deleteExpense(qlonglong rowid);
     
 private:
     QSqlDatabase db;

@@ -34,6 +34,7 @@ void JourneyList::showJourneys()
         
         qlonglong rowid = journey["rowid"].toLongLong();
         QString name = journey["name"].toString();
+        
         QPushButton *button_edit = new QPushButton();
         button_edit->setIcon(QIcon::fromTheme("document-properties"));
         button_edit->setMaximumWidth(40);

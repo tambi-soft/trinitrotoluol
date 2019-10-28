@@ -162,7 +162,7 @@ void DbAdapter::initializeTables()
     
     QSqlQuery query_people_donations("CREATE TABLE IF NOT EXISTS people_donations (rowid_people INTEGER PRIMARY KEY, amount INTEGER, date TEXT)", this->db);
     
-    QSqlQuery query_expenses("CREATE TABLE IF NOT EXISTS expenses (rowid INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, amount INTEGER, cost_one INTEGER, rowid_currency INTEGER, date TEXT, notes TEXT, flag_settled INTEGER)", this->db);
+    QSqlQuery query_expenses("CREATE TABLE IF NOT EXISTS expenses (rowid INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, amount INTEGER, cost_one INTEGER, rowid_currency INTEGER, date TEXT DEFAULT CURRENT_TIMESTAMP, notes TEXT, flag_settled INTEGER)", this->db);
     
     //qDebug() << this->db.lastError();
     //qDebug() << query_sent_mail.lastQuery();
@@ -640,8 +640,51 @@ QList<QMap<QString,QVariant>> DbAdapter::selectExpenses()
     QSqlQuery query(this->db);
     query.prepare("SELECT expenses.rowid, name, amount, cost_one, currencies.code AS currency_code, date, expenses.notes, flag_settled "
                   "FROM expenses "
-                  "JOIN currencies ON rowid_currency=currencies.rowid");
+                  "LEFT JOIN currencies ON rowid_currency=currencies.rowid");
     query.exec();
     
     return dbIteratorToMapList(query);
+}
+
+QMap<QString,QVariant> DbAdapter::selectExpense(qlonglong rowid)
+{
+    QSqlQuery query(this->db);
+    query.prepare("SELECT name, amount, cost_one, rowid_currency, date, notes, flag_settled FROM expenses WHERE rowid=:rowid");
+    query.bindValue(":rowid", rowid);
+    query.exec();
+    
+    return dbIteratorToMap(query);
+}
+
+qlonglong DbAdapter::insertExpense()
+{
+    QSqlQuery query(this->db);
+    query.prepare("INSERT INTO expenses DEFAULT VALUES");
+    query.exec();
+    
+    this->db.commit();
+    return query.lastInsertId().toLongLong();
+}
+
+void DbAdapter::updateExpense(qlonglong rowid, qlonglong rowid_currency, QMap<QString, QString> data)
+{
+    QSqlQuery query(this->db);
+    query.prepare("UPDATE expenses SET name=:name, amount=:amount, cost_one=:cost_one, rowid_currency=:rowid_currency, date=:date, notes=:notes, flag_settled=:flag_settled WHERE rowid=:rowid");
+    query.bindValue(":name", data["name"]);
+    query.bindValue(":amount", data["amount"]);
+    query.bindValue(":cost_one", data["cost_one"]);
+    query.bindValue(":date", data["date"]);
+    query.bindValue(":notes", data["notes"]);
+    query.bindValue(":flag_settled", data["flag_settled"]);
+    query.bindValue(":rowid", rowid);
+    query.bindValue(":rowid_currency", rowid_currency);
+    query.exec();
+}
+
+void DbAdapter::deleteExpense(qlonglong rowid)
+{
+    QSqlQuery query(this->db);
+    query.prepare("DELETE FROM expenses WHERE rowid=:rowid");
+    query.bindValue(":rowid", rowid);
+    query.exec();
 }
