@@ -30,10 +30,12 @@ private:
     DbAdapter *db;
     QVBoxLayout *layout;
     
+    void addGeneralSettingsArea();
     void addDatabasePathSettingsArea();
     void addEmailSettingsArea();
     
     void showFolderSelectDialog();
+    QLineEdit *edit_name;
     QLineEdit *edit_path;
     
     void loadEmailParams();
@@ -47,6 +49,7 @@ private:
     QLineEdit *edit_email_reply;
     
 private slots:
+    void saveGeneralParams();
     void saveEmailParams();
     void savePort(int just_for_compatibility);
 };

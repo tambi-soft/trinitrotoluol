@@ -9,10 +9,26 @@ SettingsWidget::SettingsWidget(Config *config, DbAdapter *db, QWidget *parent)
     
     setLayout(this->layout);
     
+    addGeneralSettingsArea();
     addDatabasePathSettingsArea();
     addEmailSettingsArea();
     
     this->layout->addStretch();
+}
+
+void SettingsWidget::addGeneralSettingsArea()
+{
+    QGroupBox *group = new QGroupBox("General");
+    QVBoxLayout *layout = new QVBoxLayout;
+    group->setLayout(layout);
+    this->layout->addWidget(group);
+    
+    this->edit_name = new QLineEdit;
+    this->edit_name->setText(this->db->selectSettings("username"));
+    connect(this->edit_name, &QLineEdit::textChanged, this, &SettingsWidget::saveGeneralParams);
+    
+    layout->addWidget(new QLabel("Your Name (will be shown on bills / emails)"));
+    layout->addWidget(this->edit_name);
 }
 
 void SettingsWidget::addDatabasePathSettingsArea()
@@ -54,6 +70,8 @@ void SettingsWidget::addEmailSettingsArea()
 {
     QGroupBox *group = new QGroupBox("Email Settings");
     QVBoxLayout *layout = new QVBoxLayout;
+    group->setLayout(layout);
+    this->layout->addWidget(group);
     
     layout->addWidget(new QLabel("SMTP Server Name"));
     this->edit_email_address = new QLineEdit;
@@ -107,8 +125,7 @@ void SettingsWidget::addEmailSettingsArea()
     
     connect(this->edit_email_reply, &QLineEdit::textChanged, this, &SettingsWidget::saveEmailParams);
     
-    group->setLayout(layout);
-    this->layout->addWidget(group);
+    
 }
 
 void SettingsWidget::showFolderSelectDialog()
@@ -178,4 +195,11 @@ void SettingsWidget::loadEmailParams()
     this->edit_email_password->setText(email_pw_dec);
     
     this->edit_email_reply->setText(email_reply);
+}
+
+void SettingsWidget::saveGeneralParams()
+{
+    QString username = this->edit_name->text();
+    
+    this->db->insertSettings("username", username);
 }
