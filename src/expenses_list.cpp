@@ -130,6 +130,7 @@ ExpensesEdit::ExpensesEdit(qlonglong rowid, DbAdapter *db, QWidget *parent) : QW
     this->edit_amount->setText(data["amount"].toString());
     this->edit_cost_one->setText(data["cost_one"].toString());
     
+    this->edit_date->setCalendarPopup(true);
     this->edit_date->setDate(QDate::fromString(data["date"].toString(), "yyyy-MM-dd"));
     
     if (data["flag_settled"].toInt() > 0)
