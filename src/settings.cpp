@@ -38,12 +38,6 @@ void SettingsWidget::addDatabasePathSettingsArea()
     QHBoxLayout *layout = new QHBoxLayout();
     
     this->edit_path = new QLineEdit;
-    this->edit_path->setReadOnly(true);
-    
-    QPalette *palette = new QPalette();
-    palette->setColor(QPalette::Base, Qt::lightGray);
-    palette->setColor(QPalette::Text, Qt::darkGray);
-    edit_path->setPalette(*palette);
     
     layout->addWidget(this->edit_path);
     
@@ -55,7 +49,6 @@ void SettingsWidget::addDatabasePathSettingsArea()
     
     QWidget *edit_and_button_widget = new QWidget;
     layout->setMargin(0);
-    layout->setSpacing(0);
     edit_and_button_widget->setLayout(layout);
     
     QLabel *hint = new QLabel("<b>Hint:</b> You have to restart <i>trinitrotoluol</i> for a changed path to take effect!");
