@@ -189,8 +189,9 @@ void MailSend::sendMail()
         QString email_pw_dec = processSimpleCrypt.decryptToString(this->db->selectSettings("email_password"));
         message->setSMTPPassword(email_pw_dec);
         
-        message->addTo(emails);
-        message->setFrom(this->db->selectSettings("email_username"));
+        message->setFromName(this->db->selectSettings("username"));
+        message->setFromAddress(this->db->selectSettings("email_from_address"));
+        //message->setFrom(email_from_address);
         message->setReplyTo(this->db->selectSettings("email_reply"));
         message->setSubject(this->mail["subject"].toString());
         

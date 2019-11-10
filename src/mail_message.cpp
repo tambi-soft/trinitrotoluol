@@ -37,7 +37,12 @@ void MailMessage::addTo(QStringList address_to)
     this->addresses_to.append(address_to);
 }
 
-void MailMessage::setFrom(QString address_from)
+void MailMessage::setFromName(QString name)
+{
+    this->username = name;
+}
+
+void MailMessage::setFromAddress(QString address_from)
 {
     this->address_from = address_from;
 }
@@ -93,6 +98,7 @@ void MailMessage::addAttachment(QString attachment_path)
 void MailMessage::generateMessage()
 {
     this->message = //"To: "+ this->address_to +"\r\n"
+            //"From: "+ this->username + " <" + this->address_from +">\r\n";
             "From: "+ this->address_from +"\r\n";
     
     if (this->address_reply.contains("@"))

@@ -39,14 +39,16 @@ private:
     QLineEdit *edit_path;
     
     void loadEmailParams();
-    QLineEdit *edit_email_address;
+    
+    QLineEdit *edit_email_from_address;
+    QLineEdit *edit_email_reply;
+    QLineEdit *edit_email_server_address;
     QSpinBox *edit_email_port;
     QComboBox *combo_connection_security;
     QComboBox *combo_authentication_method;
     QLineEdit *edit_email_username;
     QLineEdit *edit_email_password;
     quint64 KEY = 95839583;
-    QLineEdit *edit_email_reply;
     
 private slots:
     void saveGeneralParams();

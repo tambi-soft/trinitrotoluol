@@ -73,9 +73,19 @@ void SettingsWidget::addEmailSettingsArea()
     group->setLayout(layout);
     this->layout->addWidget(group);
     
-    layout->addWidget(new QLabel("SMTP Server Name"));
-    this->edit_email_address = new QLineEdit;
-    layout->addWidget(this->edit_email_address);
+    layout->addWidget(new QLabel("From-Address"));
+    this->edit_email_from_address = new QLineEdit;
+    this->edit_email_from_address->setPlaceholderText("more often than not, this has to be the same as the \"Username\"");
+    layout->addWidget(this->edit_email_from_address);
+    
+    layout->addWidget(new QLabel("Reply-To"));
+    this->edit_email_reply = new QLineEdit;
+    this->edit_email_reply->setPlaceholderText("The Reply-To address. Leave empty for none");
+    layout->addWidget(this->edit_email_reply);
+    
+    layout->addWidget(new QLabel("SMTP Server Address"));
+    this->edit_email_server_address = new QLineEdit;
+    layout->addWidget(this->edit_email_server_address);
     
     layout->addWidget(new QLabel("SMTP Port"));
     this->edit_email_port = new QSpinBox;
@@ -106,14 +116,13 @@ void SettingsWidget::addEmailSettingsArea()
     this->edit_email_password->setEchoMode(QLineEdit::Password);
     layout->addWidget(this->edit_email_password);
     
-    layout->addWidget(new QLabel("Reply-To"));
-    this->edit_email_reply = new QLineEdit;
-    this->edit_email_reply->setPlaceholderText("The Reply-To address. Leave empty for none");
-    layout->addWidget(this->edit_email_reply);
-    
     loadEmailParams();
     
-    connect(this->edit_email_address, &QLineEdit::textChanged, this, &SettingsWidget::saveEmailParams);
+    connect(this->edit_email_from_address, &QLineEdit::textChanged, this, &SettingsWidget::saveEmailParams);
+    
+    connect(this->edit_email_server_address, &QLineEdit::textChanged, this, &SettingsWidget::saveEmailParams);
+    
+    connect(this->edit_email_reply, &QLineEdit::textChanged, this, &SettingsWidget::saveEmailParams);
     
     connect(this->edit_email_port, qOverload<int>(&QSpinBox::valueChanged), this, &SettingsWidget::savePort);
     
@@ -122,10 +131,6 @@ void SettingsWidget::addEmailSettingsArea()
     
     connect(this->combo_connection_security, &QComboBox::currentTextChanged, this, &SettingsWidget::saveEmailParams);
     connect(this->combo_authentication_method, &QComboBox::currentTextChanged, this, &SettingsWidget::saveEmailParams);
-    
-    connect(this->edit_email_reply, &QLineEdit::textChanged, this, &SettingsWidget::saveEmailParams);
-    
-    
 }
 
 void SettingsWidget::showFolderSelectDialog()
@@ -151,13 +156,14 @@ void SettingsWidget::savePort(int /*just_for_compatibility*/)
 
 void SettingsWidget::saveEmailParams()
 {
-    QString email_server = this->edit_email_address->text();
+    QString email_from_address = this->edit_email_from_address->text();
+    QString email_reply = this->edit_email_reply->text();
+    QString email_server = this->edit_email_server_address->text();
     int email_port = this->edit_email_port->value();
     QString email_security = this->combo_connection_security->currentText();
     QString email_auth = this->combo_authentication_method->currentText();
     QString email_username = this->edit_email_username->text();
     QString email_password = this->edit_email_password->text();
-    QString email_reply = this->edit_email_reply->text();
     
     //SimpleCrypt crypto(Q_UINT64_C(0xbe890cb92bce0900)); //some random number
     //QString encryptToString(const QString& plaintext);
@@ -165,6 +171,7 @@ void SettingsWidget::saveEmailParams()
     SimpleCrypt processSimpleCrypt(KEY);
     QString email_pw_enc = processSimpleCrypt.encryptToString(email_password);
     
+    this->db->insertSettings("email_from_address", email_from_address);
     this->db->insertSettings("email_server", email_server);
     this->db->insertSettings("email_port", email_port);
     this->db->insertSettings("email_security", email_security);
@@ -176,15 +183,18 @@ void SettingsWidget::saveEmailParams()
 
 void SettingsWidget::loadEmailParams()
 {
+    QString email_from_address = this->db->selectSettings("email_from_address");
+    QString email_reply = this->db->selectSettings("email_reply");
     QString email_server = this->db->selectSettings("email_server");
     int email_port = this->db->selectSettings("email_port").toInt();
     QString email_security = this->db->selectSettings("email_security");
     QString email_auth = this->db->selectSettings("email_auth");
     QString email_username = this->db->selectSettings("email_username");
     QString email_password = this->db->selectSettings("email_password");
-    QString email_reply = this->db->selectSettings("email_reply");
     
-    this->edit_email_address->setText(email_server);
+    this->edit_email_from_address->setText(email_from_address);
+    this->edit_email_reply->setText(email_reply);
+    this->edit_email_server_address->setText(email_server);
     this->edit_email_port->setValue(email_port);
     this->combo_connection_security->setCurrentText(email_security);
     this->combo_authentication_method->setCurrentText(email_auth);
@@ -193,8 +203,6 @@ void SettingsWidget::loadEmailParams()
     SimpleCrypt processSimpleCrypt(KEY);
     QString email_pw_dec = processSimpleCrypt.decryptToString(email_password);
     this->edit_email_password->setText(email_pw_dec);
-    
-    this->edit_email_reply->setText(email_reply);
 }
 
 void SettingsWidget::saveGeneralParams()
