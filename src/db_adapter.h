@@ -69,8 +69,10 @@ public:
     QList<QMap<QString,QVariant>> selectExpenses();
     QMap<QString,QVariant> selectExpense(qlonglong rowid);
     qlonglong insertExpense();
-    void updateExpense(qlonglong rowid, qlonglong rowid_currency, QMap<QString,QString> data);
+    void updateExpense(qlonglong rowid, qlonglong rowid_currency, QMap<QString, QVariant> data);
     void deleteExpense(qlonglong rowid);
+    
+    QList<QMap<QString,QVariant>> selectCurrencies();
     
 private:
     QSqlDatabase db;

@@ -51,14 +51,17 @@ public:
     
 private:
     qlonglong rowid;
+    qlonglong rowid_currency;
     DbAdapter *db;
     QVBoxLayout *layout = new QVBoxLayout;
+    
+    QList<QMap<QString,QVariant>> currencies;
     
     QLineEdit *edit_name = new QLineEdit;
     QLineEdit *edit_amount = new QLineEdit;
     QLineEdit *edit_cost_one = new QLineEdit;
     QComboBox *combo_currency = new QComboBox;
-    QDateTimeEdit *edit_date = new QDateTimeEdit;
+    QDateTimeEdit *edit_date = new QDateEdit;
     QPlainTextEdit *edit_notes = new QPlainTextEdit;
     QCheckBox *check_settled = new QCheckBox;
     

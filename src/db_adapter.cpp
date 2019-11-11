@@ -666,16 +666,16 @@ qlonglong DbAdapter::insertExpense()
     return query.lastInsertId().toLongLong();
 }
 
-void DbAdapter::updateExpense(qlonglong rowid, qlonglong rowid_currency, QMap<QString, QString> data)
+void DbAdapter::updateExpense(qlonglong rowid, qlonglong rowid_currency, QMap<QString,QVariant> data)
 {
     QSqlQuery query(this->db);
     query.prepare("UPDATE expenses SET name=:name, amount=:amount, cost_one=:cost_one, rowid_currency=:rowid_currency, date=:date, notes=:notes, flag_settled=:flag_settled WHERE rowid=:rowid");
-    query.bindValue(":name", data["name"]);
-    query.bindValue(":amount", data["amount"]);
-    query.bindValue(":cost_one", data["cost_one"]);
-    query.bindValue(":date", data["date"]);
-    query.bindValue(":notes", data["notes"]);
-    query.bindValue(":flag_settled", data["flag_settled"]);
+    query.bindValue(":name", data["name"].toString());
+    query.bindValue(":amount", data["amount"].toDouble());
+    query.bindValue(":cost_one", data["cost_one"].toDouble());
+    query.bindValue(":date", data["date"].toString());
+    query.bindValue(":notes", data["notes"].toString());
+    query.bindValue(":flag_settled", data["flag_settled"].toInt());
     query.bindValue(":rowid", rowid);
     query.bindValue(":rowid_currency", rowid_currency);
     query.exec();
@@ -687,4 +687,11 @@ void DbAdapter::deleteExpense(qlonglong rowid)
     query.prepare("DELETE FROM expenses WHERE rowid=:rowid");
     query.bindValue(":rowid", rowid);
     query.exec();
+}
+
+QList<QMap<QString,QVariant>> DbAdapter::selectCurrencies()
+{
+    QSqlQuery query("SELECT rowid, code FROM currencies", this->db);
+    
+    return dbIteratorToMapList(query);
 }

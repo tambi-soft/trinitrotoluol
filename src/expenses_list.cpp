@@ -125,10 +125,27 @@ ExpensesEdit::ExpensesEdit(qlonglong rowid, DbAdapter *db, QWidget *parent) : QW
     this->layout->addWidget(this->edit_notes);
     
     QMap<QString,QVariant> data = this->db->selectExpense(this->rowid);
+    this->rowid_currency = data["rowid_currencoy"].toLongLong();
+    this->currencies = this->db->selectCurrencies();
     
     this->edit_name->setText(data["name"].toString());
     this->edit_amount->setText(data["amount"].toString());
     this->edit_cost_one->setText(data["cost_one"].toString());
+    
+    QString currency_code;
+    QStringList currency_codes;
+    for (int i=0; i < this->currencies.length(); ++i)
+    {
+        QMap<QString,QVariant> current_currency = this->currencies.at(i);
+        currency_codes.append(current_currency["code"].toString());
+        
+        if (data["rowid_currency"].toLongLong() == current_currency["rowid"].toLongLong())
+        {
+            currency_code = current_currency["code"].toString();
+        }
+    }
+    this->combo_currency->addItems(currency_codes);
+    this->combo_currency->setCurrentText(currency_code);
     
     this->edit_date->setCalendarPopup(true);
     this->edit_date->setDate(QDate::fromString(data["date"].toString(), "yyyy-MM-dd"));
@@ -138,11 +155,28 @@ ExpensesEdit::ExpensesEdit(qlonglong rowid, DbAdapter *db, QWidget *parent) : QW
         this->check_settled->setChecked(true);
     }
     this->edit_notes->setPlainText(data["notes"].toString());
+    
+    connect(this->edit_name, &QLineEdit::textChanged, this, &ExpensesEdit::saveData);
+    connect(this->edit_amount, &QLineEdit::textChanged, this, &ExpensesEdit::saveData);
+    connect(this->edit_cost_one, &QLineEdit::textChanged, this, &ExpensesEdit::saveData);
+    connect(this->combo_currency, &QComboBox::currentTextChanged, this, &ExpensesEdit::saveData);
+    connect(this->edit_date, &QDateEdit::dateChanged, this, &ExpensesEdit::saveData);
+    connect(this->check_settled, &QCheckBox::stateChanged, this, &ExpensesEdit::saveData);
+    connect(this->edit_notes, &QPlainTextEdit::textChanged, this, &ExpensesEdit::saveData);
 }
 
 void ExpensesEdit::saveData()
 {
+    QMap<QString,QVariant> data;
+    data["name"] = this->edit_name->text();
+    data["amount"] = this->edit_amount->text();
+    data["cost_one"] = this->edit_cost_one->text();
+    data["date"] = this->edit_date->date().toString("yyyy-MM-dd");
+    data["flag_settled"] = this->check_settled->isChecked();
+    data["notes"] = this->edit_notes->toPlainText();
     
+    this->rowid_currency = this->currencies.at(this->combo_currency->currentIndex())["rowid"].toLongLong();
+    this->db->updateExpense(this->rowid, this->rowid_currency, data);
     
     emit signalUpdate();
 }
