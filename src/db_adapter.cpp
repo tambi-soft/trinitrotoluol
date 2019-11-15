@@ -691,7 +691,7 @@ void DbAdapter::deleteExpense(qlonglong rowid)
 
 QList<QMap<QString,QVariant>> DbAdapter::selectCurrencies()
 {
-    QSqlQuery query("SELECT rowid, code FROM currencies", this->db);
+    QSqlQuery query("SELECT rowid, code, exchange_rate, notes FROM currencies", this->db);
     
     return dbIteratorToMapList(query);
 }

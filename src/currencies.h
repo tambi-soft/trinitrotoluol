@@ -20,6 +20,8 @@ class Currencies : public QWidget
 public:
     explicit Currencies(DbAdapter *db, QWidget *parent = nullptr);
     
+    void showData();
+    
 private:
     DbAdapter *db;
     QVBoxLayout *layout;
