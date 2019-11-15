@@ -63,6 +63,9 @@ void PersonEdit::drawGUI()
     this->grid->addWidget(new QLabel("Spouse"), 13, 0);
     this->grid->addWidget(new QLabel("Notes"), 14, 0);
     
+    this->grid->addWidget(new PersonVisits(this->db, this->rowid), 15, 0);
+    this->grid->addWidget(new PersonMails(this->db, this->rowid), 15, 1);
+    
     loadGroupsComboData();
     loadData();
     
@@ -208,4 +211,81 @@ void PersonEdit::saveData()
     this->db->updatePerson(this->rowid, data);
     
     emit dataChanged();
+}
+
+
+
+PersonVisits::PersonVisits(DbAdapter *db, qlonglong rowid, QWidget *parent)
+    : QWidget(parent)
+{
+    this->db = db;
+    this->rowid_person = rowid;
+    setLayout(this->layout);
+    this->layout->setMargin(0);
+    
+    this->layout->addWidget(this->table);
+    QPushButton *button_new = new QPushButton("add new visit/meeting");
+    this->layout->addWidget(button_new);
+    
+    showData();
+}
+
+void PersonVisits::showData()
+{
+    QList<QMap<QString,QVariant>> data = this->db->selectVisitsForPerson(this->rowid_person);
+    
+    QStringList headers;
+    headers << "journey_name" << "date" << "notes";
+    
+    this->table->setColumnCount(headers.length());
+    this->table->setRowCount(data.length());
+    this->table->setHorizontalHeaderLabels(headers);
+    
+    for (int i=0; i < data.length(); ++i)
+    {
+        QMap<QString,QVariant> visit = data.at(i);
+        
+        this->table->setItem(i, 0, new QTableWidgetItem(visit["journey_name"].toString()));
+        this->table->setItem(i, 1, new QTableWidgetItem(visit["date"].toString()));
+        this->table->setItem(i, 2, new QTableWidgetItem(visit["notes"].toString()));
+    }
+    
+    this->table->resizeRowsToContents();
+}
+
+
+
+PersonMails::PersonMails(DbAdapter *db, qlonglong rowid, QWidget *parent)
+    : QWidget(parent)
+{
+    this->db = db;
+    this->rowid_person = rowid;
+    setLayout(this->layout);
+    this->layout->setMargin(0);
+    
+    this->layout->addWidget(this->table);
+    
+    showData();
+}
+
+void PersonMails::showData()
+{
+    QList<QMap<QString,QVariant>> data = this->db->selectMailsForPerson(this->rowid_person);
+    
+    QStringList headers;
+    headers << "number" << "date";
+    
+    this->table->setColumnCount(headers.length());
+    this->table->setRowCount(data.length());
+    this->table->setHorizontalHeaderLabels(headers);
+    
+    for (int i=0; i < data.length(); ++i)
+    {
+        QMap<QString,QVariant> mail = data.at(i);
+        
+        this->table->setItem(i, 0, new QTableWidgetItem(mail["number"].toString()));
+        this->table->setItem(i, 1, new QTableWidgetItem(mail["date"].toString()));
+    }
+    
+    this->table->resizeRowsToContents();
 }

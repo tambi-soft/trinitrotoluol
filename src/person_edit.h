@@ -71,4 +71,37 @@ signals:
     void dataChanged();
 };
 
+#include <QTableWidget>
+#include <QTableWidgetItem>
+
+class PersonVisits : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit PersonVisits(DbAdapter *db, qlonglong rowid, QWidget *parent = nullptr);
+
+private:
+    DbAdapter *db;
+    qlonglong rowid_person;
+    QVBoxLayout *layout = new QVBoxLayout;
+    QTableWidget *table = new QTableWidget;
+    
+    void showData();
+};
+
+class PersonMails : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit PersonMails(DbAdapter *db, qlonglong rowid, QWidget *parent = nullptr);
+    
+private:
+    DbAdapter *db;
+    qlonglong rowid_person;
+    QVBoxLayout *layout = new QVBoxLayout;
+    QTableWidget *table = new QTableWidget;
+    
+    void showData();
+};
+
 #endif // PERSON_EDIT_H

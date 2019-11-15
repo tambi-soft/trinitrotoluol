@@ -361,6 +361,33 @@ QList<QMap<QString,QVariant>> DbAdapter::selectAllPersonsForMail(bool agreed_mai
     return dbIteratorToMapList(query);
 }
 
+QList<QMap<QString,QVariant>> DbAdapter::selectVisitsForPerson(qlonglong rowid_person)
+{
+    QSqlQuery query(this->db);
+    query.prepare("SELECT people_visits.rowid, rowid_journeys, people_visits.date, people_visits.notes, journeys.name AS journey_name "
+                  "FROM people_visits "
+                  "JOIN journeys ON journeys.rowid=rowid_journeys "
+                  "WHERE rowid_people=:rowid_people "
+                  "ORDER BY people_visits.date DESC");
+    query.bindValue(":rowid_people", rowid_person);
+    query.exec();
+    
+    return dbIteratorToMapList(query);
+}
+
+QList<QMap<QString,QVariant>> DbAdapter::selectMailsForPerson(qlonglong rowid_person)
+{
+    QSqlQuery query(this->db);
+    query.prepare("SELECT mail_sent.date, mail.number "
+                  "FROM mail_sent "
+                  "JOIN mail ON mail.rowid=rowid_mail "
+                  "WHERE mail_sent.rowid_people=:rowid_people");
+    query.bindValue(":rowid_people", rowid_person);
+    query.exec();
+    
+    return dbIteratorToMapList(query);
+}
+
 QList<QMap<QString,QVariant>> DbAdapter::selectGroups()
 {
     QSqlQuery query("SELECT rowid, name FROM people_groups", this->db);
