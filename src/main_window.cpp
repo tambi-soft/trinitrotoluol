@@ -127,9 +127,8 @@ void QTNTMainWindow::addExpensesListTab()
 
 void QTNTMainWindow::addPersonEditTab(qlonglong rowid, QString name)
 {
-    PersonEdit *person = new PersonEdit(this->db, rowid);
-    connect(person, &PersonEdit::closeCurrentTabSignal, this, &QTNTMainWindow::closeCurrentTab);
-    connect(person, &PersonEdit::dataChanged, this, &QTNTMainWindow::onPeopleDataChanged);
+    PersonDetails *person = new PersonDetails(this->db, rowid);
+    connect(person, &PersonDetails::dataChanged, this, &QTNTMainWindow::onPeopleDataChanged);
     
     createSingleTab("Edit: "+name, person);
 }

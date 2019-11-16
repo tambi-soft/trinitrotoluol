@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QWidget>
 #include <QGridLayout>
+#include <QGroupBox>
 #include <QLineEdit>
 #include <QTextEdit>
 #include <QCheckBox>
@@ -15,6 +16,19 @@
 
 #include "db_adapter.h"
 #include "people_selector.h"
+
+class PersonDetails : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit PersonDetails(DbAdapter *db, qlonglong rowid, QWidget *parent = nullptr);
+    
+private slots:
+    void onDataChanged();
+    
+signals:
+    void dataChanged();
+};
 
 class PersonEdit : public QWidget
 {
@@ -67,7 +81,6 @@ private slots:
     void saveData();
     
 signals:
-    void closeCurrentTabSignal();
     void dataChanged();
 };
 

@@ -1,10 +1,45 @@
 #include "person_edit.h"
 
+PersonDetails::PersonDetails(DbAdapter *db, qlonglong rowid, QWidget *parent) : QWidget(parent)
+{
+    QGridLayout *grid = new QGridLayout;
+    setLayout(grid);
+    
+    PersonEdit *edit = new PersonEdit(db, rowid);
+    connect(edit, &PersonEdit::dataChanged, this, &PersonDetails::onDataChanged);
+    PersonVisits *visits = new PersonVisits(db, rowid);
+    PersonMails *mails = new PersonMails(db, rowid);
+    
+    QGroupBox *group_visits = new QGroupBox("visits");
+    QGroupBox *group_mails = new QGroupBox("mails");
+    
+    QVBoxLayout *layout_visits = new QVBoxLayout;
+    QVBoxLayout *layout_mails = new QVBoxLayout;
+    
+    group_visits->setLayout(layout_visits);
+    group_mails->setLayout(layout_mails);
+    
+    layout_visits->addWidget(visits);
+    layout_mails->addWidget(mails);
+    
+    grid->addWidget(edit, 0, 0, 2, 1);
+    grid->addWidget(group_visits, 0, 1);
+    grid->addWidget(group_mails, 1, 1);
+}
+
+void PersonDetails::onDataChanged()
+{
+    emit dataChanged();
+}
+
+
+
 PersonEdit::PersonEdit(DbAdapter *db, qlonglong rowid, QWidget *parent)
     : QWidget(parent)
 {
     this->grid = new QGridLayout;
     setLayout(this->grid);
+    this->grid->setMargin(0);
     
     this->rowid = rowid;
     this->db = db;
@@ -62,9 +97,6 @@ void PersonEdit::drawGUI()
     this->grid->addWidget(new QLabel("donations promised"), 12, 0);
     this->grid->addWidget(new QLabel("Spouse"), 13, 0);
     this->grid->addWidget(new QLabel("Notes"), 14, 0);
-    
-    this->grid->addWidget(new PersonVisits(this->db, this->rowid), 15, 0);
-    this->grid->addWidget(new PersonMails(this->db, this->rowid), 15, 1);
     
     loadGroupsComboData();
     loadData();
@@ -224,8 +256,6 @@ PersonVisits::PersonVisits(DbAdapter *db, qlonglong rowid, QWidget *parent)
     this->layout->setMargin(0);
     
     this->layout->addWidget(this->table);
-    QPushButton *button_new = new QPushButton("add new visit/meeting");
-    this->layout->addWidget(button_new);
     
     showData();
 }
