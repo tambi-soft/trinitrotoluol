@@ -610,7 +610,7 @@ QList<QMap<QString,QVariant>> DbAdapter::selectTicketsForJourney(qlonglong rowid
     QSqlQuery query(this->db);
     query.prepare("SELECT journey_tickets.rowid, name, printf('%.2f', cost) AS cost, currencies.code AS currency_code, flag_settled, journey_tickets.notes "
                   "FROM journey_tickets "
-                  "JOIN currencies ON rowid_currency=currencies.rowid "
+                  "LEFT JOIN currencies ON rowid_currency=currencies.rowid "
                   "WHERE rowid_journeys=:rowid_journeys");
     query.bindValue(":rowid_journeys", rowid_journey);
     query.exec();

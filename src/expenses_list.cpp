@@ -109,6 +109,8 @@ ExpensesEdit::ExpensesEdit(qlonglong rowid, DbAdapter *db, QWidget *parent) : QW
     this->db = db;
     setLayout(this->layout);
     
+    this->combo_currency = new ComboCurrencies(db);
+    
     this->layout->addWidget(new QLabel("name"));
     this->layout->addWidget(this->edit_name);
     this->layout->addWidget(new QLabel("amount"));
@@ -126,26 +128,13 @@ ExpensesEdit::ExpensesEdit(qlonglong rowid, DbAdapter *db, QWidget *parent) : QW
     
     QMap<QString,QVariant> data = this->db->selectExpense(this->rowid);
     this->rowid_currency = data["rowid_currencoy"].toLongLong();
-    this->currencies = this->db->selectCurrencies();
+    
     
     this->edit_name->setText(data["name"].toString());
     this->edit_amount->setText(data["amount"].toString());
     this->edit_cost_one->setText(data["cost_one"].toString());
     
-    QString currency_code;
-    QStringList currency_codes;
-    for (int i=0; i < this->currencies.length(); ++i)
-    {
-        QMap<QString,QVariant> current_currency = this->currencies.at(i);
-        currency_codes.append(current_currency["code"].toString());
-        
-        if (data["rowid_currency"].toLongLong() == current_currency["rowid"].toLongLong())
-        {
-            currency_code = current_currency["code"].toString();
-        }
-    }
-    this->combo_currency->addItems(currency_codes);
-    this->combo_currency->setCurrentText(currency_code);
+    this->combo_currency->setCurrentCurrencyRowid(data["rowid_currency"].toLongLong());
     
     this->edit_date->setCalendarPopup(true);
     this->edit_date->setDate(QDate::fromString(data["date"].toString(), "yyyy-MM-dd"));
@@ -175,7 +164,8 @@ void ExpensesEdit::saveData()
     data["flag_settled"] = this->check_settled->isChecked();
     data["notes"] = this->edit_notes->toPlainText();
     
-    this->rowid_currency = this->currencies.at(this->combo_currency->currentIndex())["rowid"].toLongLong();
+    this->rowid_currency = this->combo_currency->currentCurrencyRowid();
+    //this->rowid_currency =  this->currencies.at(this->combo_currency->currentIndex())["rowid"].toLongLong();
     this->db->updateExpense(this->rowid, this->rowid_currency, data);
     
     emit signalUpdate();

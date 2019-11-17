@@ -19,6 +19,7 @@
 #include <QLabel>
 
 #include "db_adapter.h"
+#include "combo_currencies.h"
 
 class ExpensesList : public QWidget
 {
@@ -55,12 +56,10 @@ private:
     DbAdapter *db;
     QVBoxLayout *layout = new QVBoxLayout;
     
-    QList<QMap<QString,QVariant>> currencies;
-    
     QLineEdit *edit_name = new QLineEdit;
     QLineEdit *edit_amount = new QLineEdit;
     QLineEdit *edit_cost_one = new QLineEdit;
-    QComboBox *combo_currency = new QComboBox;
+    ComboCurrencies *combo_currency;
     QDateTimeEdit *edit_date = new QDateEdit;
     QPlainTextEdit *edit_notes = new QPlainTextEdit;
     QCheckBox *check_settled = new QCheckBox;

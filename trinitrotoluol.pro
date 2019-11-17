@@ -40,6 +40,7 @@ QT += widgets \
 
 # Input
 HEADERS += \
+    src/combo_currencies.h \
     src/currencies.h \
     src/expenses_list.h \
     src/journey_edit.h \
@@ -66,6 +67,7 @@ HEADERS += \
     src/tnt_adapter.h
     
 SOURCES += \
+    src/combo_currencies.cpp \
     src/currencies.cpp \
     src/expenses_list.cpp \
     src/journey_edit.cpp \
