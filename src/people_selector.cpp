@@ -10,6 +10,10 @@ PeopleSelector::PeopleSelector(DbAdapter *db, QWidget *parent)
     
     setLayout(this->layout);
     
+    this->layout->addWidget(filter_name);
+    this->filter_name->setPlaceholderText("filter for name");
+    connect(this->filter_name, &QLineEdit::textChanged, this, &PeopleSelector::filterChanged);
+    
     drawData();
 }
 
@@ -17,16 +21,16 @@ void PeopleSelector::drawData()
 {
     
     QVBoxLayout *scroll_layout = new QVBoxLayout;
-    QScrollArea *scroll_area = new QScrollArea;
+    this->scroll_area = new QScrollArea;
     QWidget *scroll_widget = new QWidget;
     scroll_widget->setLayout(scroll_layout);
-    scroll_area->setWidgetResizable(true);
-    scroll_area->setWidget(scroll_widget);
+    this->scroll_area->setWidgetResizable(true);
+    this->scroll_area->setWidget(scroll_widget);
     
     this->layout->addWidget(scroll_area);
     
     QString group = "%";
-    QString name = "%";
+    QString name = "%"+this->filter_name->text()+"%";
     QString mail = "%";
     QList<QMap<QString,QVariant>> data = this->db->selectAllPersonsFiltered(-1, -1, -1, 0, -1, group, name, mail);
     
@@ -42,6 +46,17 @@ void PeopleSelector::drawData()
         
         scroll_layout->addWidget(button_person);
     }
+}
+
+void PeopleSelector::clearData()
+{
+    this->scroll_area->deleteLater();
+}
+
+void PeopleSelector::filterChanged()
+{
+    clearData();
+    drawData();
 }
 
 void PeopleSelector::personButtonClicked(qlonglong rowid, QString name)

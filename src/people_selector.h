@@ -25,8 +25,11 @@ private:
     QVBoxLayout *layout;
     QComboBox *filter_group;
     QLineEdit *filter_name;
+    QScrollArea *scroll_area;
     
     void drawData();
+    void clearData();
+    void filterChanged();
     
 signals:
     void personSelected(qlonglong rowid, QString name);
