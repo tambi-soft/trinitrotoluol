@@ -24,6 +24,7 @@
 #include <QDate>
 
 #include "db_adapter.h"
+#include "combo_currencies.h"
 
 class JourneyTickets : public QWidget
 {
@@ -63,6 +64,7 @@ private:
     
     QLineEdit *edit_name;
     QDoubleSpinBox *edit_cost;
+    ComboCurrencies *combo_currencies;
     QCheckBox *edit_flag_settled;
     QTextEdit *edit_notes;
     
@@ -72,6 +74,7 @@ signals:
 private slots:
     void saveData();
     void saveDataArg(double /* just for compat */);
+    void saveDataInt(int /* just for compat */);
 };
 
 #endif // JOURNEYTICKETS_H

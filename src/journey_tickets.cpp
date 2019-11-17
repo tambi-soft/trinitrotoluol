@@ -134,10 +134,14 @@ JourneyTicketsEdit::JourneyTicketsEdit(qlonglong rowid, DbAdapter *db, QWidget *
     edit_cost->setMinimum(0);
     edit_cost->setMaximum(1000000);
     
+    this->combo_currencies = new ComboCurrencies(this->db);
+    
     this->layout->addWidget(new QLabel("name"));
     this->layout->addWidget(edit_name);
     this->layout->addWidget(new QLabel("cost"));
     this->layout->addWidget(edit_cost);
+    this->layout->addWidget(new QLabel("currency"));
+    this->layout->addWidget(this->combo_currencies);
     this->layout->addWidget(new QLabel("settled?"));
     this->layout->addWidget(edit_flag_settled);
     this->layout->addWidget(new QLabel("notes"));
@@ -147,6 +151,7 @@ JourneyTicketsEdit::JourneyTicketsEdit(qlonglong rowid, DbAdapter *db, QWidget *
     
     edit_name->setText(data["name"].toString());
     edit_cost->setValue(data["cost"].toDouble());
+    combo_currencies->setCurrentCurrencyRowid(data["rowid_currency"].toLongLong());
     if (data["flag_settled"].toInt() == 1)
     {
         edit_flag_settled->setChecked(true);
@@ -155,6 +160,9 @@ JourneyTicketsEdit::JourneyTicketsEdit(qlonglong rowid, DbAdapter *db, QWidget *
     
     connect(edit_name, &QLineEdit::textChanged, this, &JourneyTicketsEdit::saveData);
     connect(edit_cost, qOverload<double>(&QDoubleSpinBox::valueChanged), this, &JourneyTicketsEdit::saveDataArg);
+    //connect(combo_currencies, qOverload<int>(&ComboCurrencies::currentIndexChanged), this, &JourneyTicketsEdit::saveDataInt);
+    connect(combo_currencies, &QComboBox::currentTextChanged, this, &JourneyTicketsEdit::saveData);
+    
     connect(edit_flag_settled, &QCheckBox::stateChanged, this, &JourneyTicketsEdit::saveData);
     connect(edit_notes, &QTextEdit::textChanged, this, &JourneyTicketsEdit::saveData);
 }
@@ -163,15 +171,21 @@ void JourneyTicketsEdit::saveData()
 {
     QString name = this->edit_name->text();
     double cost = this->edit_cost->value();
+    qlonglong rowid_currency = this->combo_currencies->currentCurrencyRowid();
     bool flag_settled = this->edit_flag_settled->isChecked();
     QString notes = this->edit_notes->toPlainText();
     
-    this->db->updateTicket(this->rowid, name, cost, flag_settled, notes);
+    this->db->updateTicket(this->rowid, name, cost, rowid_currency, flag_settled, notes);
     
     emit dataSaved();
 }
 
 void JourneyTicketsEdit::saveDataArg(double /* just for compat */)
+{
+    saveData();
+}
+
+void JourneyTicketsEdit::saveDataInt(int /* just for compat */)
 {
     saveData();
 }

@@ -642,12 +642,13 @@ qlonglong DbAdapter::insertTicket(qlonglong rowid_journey)
     return query.lastInsertId().toLongLong();
 }
 
-void DbAdapter::updateTicket(qlonglong rowid, QString name, double cost, bool flag_settled, QString notes)
+void DbAdapter::updateTicket(qlonglong rowid, QString name, double cost, qlonglong rowid_currency, bool flag_settled, QString notes)
 {
     QSqlQuery query(this->db);
-    query.prepare("UPDATE journey_tickets SET name=:name, cost=:cost, flag_settled=:flag_settled, notes=:notes WHERE rowid=:rowid");
+    query.prepare("UPDATE journey_tickets SET name=:name, cost=:cost, rowid_currency=:rowid_currency, flag_settled=:flag_settled, notes=:notes WHERE rowid=:rowid");
     query.bindValue(":name", name);
     query.bindValue(":cost", cost);
+    query.bindValue(":rowid_currency", rowid_currency);
     query.bindValue(":flag_settled", flag_settled);
     query.bindValue(":notes", notes);
     query.bindValue(":rowid", rowid);

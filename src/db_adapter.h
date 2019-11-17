@@ -65,7 +65,7 @@ public:
     QList<QMap<QString,QVariant>> selectTicketsForJourney(qlonglong rowid_journey);
     QMap<QString,QVariant> selectTicket(qlonglong rowid);
     qlonglong insertTicket(qlonglong rowid_journey);
-    void updateTicket(qlonglong rowid, QString name, double cost, bool flag_settled, QString notes);
+    void updateTicket(qlonglong rowid, QString name, double cost, qlonglong rowid_currency, bool flag_settled, QString notes);
     void deleteTicket(qlonglong rowid);
     
     QList<QMap<QString,QVariant>> selectExpenses();
