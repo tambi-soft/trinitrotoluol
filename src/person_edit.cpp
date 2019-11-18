@@ -280,7 +280,8 @@ void PersonVisits::showData()
         this->table->setItem(i, 2, new QTableWidgetItem(visit["notes"].toString()));
     }
     
-    this->table->resizeRowsToContents();
+    //this->table->resizeRowsToContents();
+    this->table->resizeColumnsToContents();
 }
 
 
@@ -317,5 +318,6 @@ void PersonMails::showData()
         this->table->setItem(i, 1, new QTableWidgetItem(mail["date"].toString()));
     }
     
-    this->table->resizeRowsToContents();
+    //this->table->resizeRowsToContents();
+    this->table->resizeColumnsToContents();
 }

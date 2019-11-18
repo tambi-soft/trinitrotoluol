@@ -37,6 +37,11 @@ void MailMessage::addTo(QStringList address_to)
     this->addresses_to.append(address_to);
 }
 
+void MailMessage::setToAddress(QString address_to)
+{
+    this->header_address_to = address_to;
+}
+
 void MailMessage::setFromName(QString name)
 {
     this->username = name;
@@ -66,8 +71,8 @@ void MailMessage::setHTML(QString html)
 {
     // RFC 2045: lines must not be longer than ~1000 chars
     QString base = html.toUtf8().toBase64();
-    int step = 100;
-    for (int i = step; i <= base.size(); i+=step+1)
+    int step = 78;
+    for (int i = step-1; i <= base.size(); i+=step+1)
             base.insert(i, "\r\n");
     
     this->payload_html = base;
@@ -87,8 +92,8 @@ void MailMessage::addAttachment(QString attachment_path)
     QByteArray blob = file.readAll().toBase64();
     QString blob_str(blob);
     
-    int step = 100;
-    for (int i = step; i <= blob_str.size(); i+=step+1)
+    int step = 78;
+    for (int i = step-1; i <= blob_str.size(); i+=step+1)
             blob_str.insert(i, "\r\n");
     
     this->attachments_base64.append(blob_str);
@@ -97,9 +102,9 @@ void MailMessage::addAttachment(QString attachment_path)
 
 void MailMessage::generateMessage()
 {
-    this->message = //"To: "+ this->address_to +"\r\n"
-            //"From: "+ this->username + " <" + this->address_from +">\r\n";
-            "From: "+ this->address_from +"\r\n";
+    this->message = "To: "+ this->header_address_to +"\r\n"
+            "From: "+ this->username + " <" + this->address_from +">\r\n";
+            //"From: "+ this->address_from +"\r\n";
     
     if (this->address_reply.contains("@"))
     {

@@ -28,6 +28,7 @@ public:
     void setSMTPPassword(QString smtp_password);
     
     void addTo(QStringList address_to);
+    void setToAddress(QString address_to);
     void setFromName(QString name);
     void setFromAddress(QString address_from);
     void setReplyTo(QString address_reply);
@@ -54,6 +55,7 @@ public:
     //QStringList addresses_to;
     QStringList addresses_to;
     QString username;
+    QString header_address_to;
     QString address_from;
     QString address_reply;
     QString subject;

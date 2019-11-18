@@ -173,7 +173,7 @@ void MailSend::sendMail()
         {
             if (this->list_checkboxes.at(i)->isChecked())
             {
-                emails.append(this->list_emails.at(i));
+                emails.append(this->list_emails.at(i).trimmed());
                 people_rowids.append(this->list_people_rowids.at(i));
             }
         }
@@ -189,6 +189,7 @@ void MailSend::sendMail()
         QString email_pw_dec = processSimpleCrypt.decryptToString(this->db->selectSettings("email_password"));
         message->setSMTPPassword(email_pw_dec);
         
+        message->setToAddress(this->db->selectSettings("email_reply"));
         message->setFromName(this->db->selectSettings("username"));
         message->setFromAddress(this->db->selectSettings("email_from_address"));
         //message->setFrom(email_from_address);
@@ -199,6 +200,8 @@ void MailSend::sendMail()
         message->setHTML(this->preview->html);
         message->addAttachment(this->mail["attachment_path_one"].toString());
         message->addAttachment(this->mail["attachment_path_two"].toString());
+        
+        message->addTo(emails);
         
         message->generateMessage();
         
