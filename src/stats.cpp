@@ -82,11 +82,11 @@ void Stats::addMoneyStats()
     // spacer
     grid_money->addWidget(new QLabel(), 5, 0);
     // round the percentage value to two decimal values
-    current_percentage = roundf(current_percentage * 100) / 100;
-    QLabel *percentage = new QLabel(QString::number(current_percentage) + "%");
+    QString percentage_display = QString::number(round(current_percentage * 100) / 100);
+    QLabel *percentage = new QLabel(percentage_display + "%");
     grid_money->addWidget(new QLabel("<b>Percentage</b>"), 6, 1);
     grid_money->addWidget(percentage, 7, 1);
-    percentage->setToolTip("monthly_sum / needed_moned *100");
+    percentage->setToolTip("monthly_sum / needed_moned * 100");
     
 }
 
