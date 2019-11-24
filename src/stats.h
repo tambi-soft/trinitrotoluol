@@ -23,6 +23,8 @@
 
 #include "db_adapter.h"
 
+#include "math.h"
+
 class Stats : public QWidget
 {
     Q_OBJECT

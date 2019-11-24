@@ -82,7 +82,7 @@ void Stats::addMoneyStats()
     // spacer
     grid_money->addWidget(new QLabel(), 5, 0);
     // round the percentage value to two decimal values
-    current_percentage = roundf(current_percentage * 100) / 100;
+    QString percentage_display = QString::number(current_percentage);
     QLabel *percentage = new QLabel(QString::number(current_percentage) + "%");
     grid_money->addWidget(new QLabel("<b>Percentage</b>"), 6, 1);
     grid_money->addWidget(percentage, 7, 1);

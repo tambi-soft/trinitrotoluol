@@ -10,19 +10,24 @@ PersonDetails::PersonDetails(DbAdapter *db, qlonglong rowid, QWidget *parent) : 
     PersonVisits *visits = new PersonVisits(db, rowid);
     PersonMails *mails = new PersonMails(db, rowid);
     
-    QGroupBox *group_visits = new QGroupBox("visits");
-    QGroupBox *group_mails = new QGroupBox("mails");
+    QGroupBox *group_data = new QGroupBox("Data");
+    QGroupBox *group_visits = new QGroupBox("Visits");
+    QGroupBox *group_mails = new QGroupBox("Mails");
     
+    QVBoxLayout *layout_data = new QVBoxLayout;
     QVBoxLayout *layout_visits = new QVBoxLayout;
     QVBoxLayout *layout_mails = new QVBoxLayout;
     
+    group_data->setLayout(layout_data);
     group_visits->setLayout(layout_visits);
     group_mails->setLayout(layout_mails);
     
+    layout_data->addWidget(edit);
     layout_visits->addWidget(visits);
     layout_mails->addWidget(mails);
     
-    grid->addWidget(edit, 0, 0, 2, 1);
+    //grid->addWidget(edit, 0, 0, 2, 1);
+    grid->addWidget(group_data, 0, 0, 2, 1);
     grid->addWidget(group_visits, 0, 1);
     grid->addWidget(group_mails, 1, 1);
 }
