@@ -86,7 +86,7 @@ void Stats::addMoneyStats()
     QLabel *percentage = new QLabel(percentage_display + "%");
     grid_money->addWidget(new QLabel("<b>Percentage</b>"), 6, 1);
     grid_money->addWidget(percentage, 7, 1);
-    percentage->setToolTip("monthly_sum / needed_moned * 100");
+    percentage->setToolTip("monthly_sum / needed_money * 100");
     
 }
 
