@@ -1,8 +1,9 @@
-#ifndef CURRENCIES_H
-#define CURRENCIES_H
+#ifndef CURRENCIES_LIST_H
+#define CURRENCIES_LIST_H
 
 #include <QObject>
 #include <QWidget>
+#include <QDialog>
 
 #include <QVBoxLayout>
 #include <QTableWidget>
@@ -14,11 +15,11 @@
 
 #include "db_adapter.h"
 
-class Currencies : public QWidget
+class CurrenciesList : public QWidget
 {
     Q_OBJECT
 public:
-    explicit Currencies(DbAdapter *db, QWidget *parent = nullptr);
+    explicit CurrenciesList(DbAdapter *db, QWidget *parent = nullptr);
     
     void showData();
     
@@ -31,6 +32,35 @@ private:
 signals:
     
 public slots:
+    void onEditButtonClicked(qlonglong rowid);
+    void onNewButtonClicked();
+    void updateView();
 };
 
-#endif // CURRENCIES_H
+
+#include <QLineEdit>
+#include <QTextEdit>
+class CurrenciesEdit : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit CurrenciesEdit(qlonglong rowid, DbAdapter *db, QWidget *parent = nullptr);
+    
+private:
+    qlonglong rowid;
+    DbAdapter *db;
+    QVBoxLayout *layout = new QVBoxLayout;
+    
+    QLineEdit *edit_code = new QLineEdit;
+    QLineEdit *edit_exchange = new QLineEdit;
+    QTextEdit *edit_notes = new QTextEdit;
+    
+signals:
+    void signalUpdate();
+    
+public slots:
+    void saveData();
+    
+};
+
+#endif // CURRENCIES_LIST_H

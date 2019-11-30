@@ -723,3 +723,28 @@ QList<QMap<QString,QVariant>> DbAdapter::selectCurrencies()
     
     return dbIteratorToMapList(query);
 }
+
+QMap<QString,QVariant> DbAdapter::selectCurrency(qlonglong rowid)
+{
+    QSqlQuery query(this->db);
+    query.prepare("SELECT code, exchange_rate, notes FROM currencies WHERE rowid=:rowid");
+    query.bindValue(":rowid", rowid);
+    query.exec();
+    
+    return dbIteratorToMap(query);
+}
+
+qlonglong DbAdapter::insertCurrency()
+{
+    QSqlQuery query(this->db);
+    query.prepare("INSERT INTO currencies DEFAULT VALUES");
+    query.exec();
+    
+    this->db.commit();
+    return query.lastInsertId().toLongLong();
+}
+
+void DbAdapter::updateCurrency(qlonglong rowid, QString code, QString exchange_rate, QString notes)
+{
+    
+}

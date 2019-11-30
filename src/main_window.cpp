@@ -200,7 +200,7 @@ void QTNTMainWindow::addMailSendTab(qlonglong rowid, QString number)
 
 void QTNTMainWindow::addCurrenciesTab()
 {
-    Currencies *currencies = new Currencies(this->db);
+    CurrenciesList *currencies = new CurrenciesList(this->db);
     
     QIcon *icon = new QIcon(":icon_currencies");
     
