@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QWidget>
 #include <QDialog>
+#include <QMessageBox>
 
 #include <QVBoxLayout>
 #include <QTableWidget>
@@ -34,6 +35,7 @@ signals:
 public slots:
     void onEditButtonClicked(qlonglong rowid);
     void onNewButtonClicked();
+    void onDeleteButtonClicked(qlonglong rowid, QString code);
     void updateView();
 };
 

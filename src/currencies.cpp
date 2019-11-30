@@ -11,7 +11,7 @@ CurrenciesList::CurrenciesList(DbAdapter *db, QWidget *parent)
     setLayout(this->layout);
     
     QPushButton *button_new_currency = new QPushButton("add new Currency");
-    //connect(button_new_currency, &QPushButton::clicked, this, &CurrenciesList::onEditButtonClicked);
+    connect(button_new_currency, &QPushButton::clicked, this, &CurrenciesList::onNewButtonClicked);
     
     //this->layout->addWidget(new QLabel("default Currency"));
     //this->layout->addWidget(this->combo_default_currency);
@@ -32,7 +32,7 @@ void CurrenciesList::showData()
     QList<QMap<QString,QVariant>> data = this->db->selectCurrencies();
     
     QStringList headers;
-    headers << "" << "iso-4217 code" << "exchange rate" << "notes";
+    headers << "" << "" << "iso-4217 code" << "exchange rate" << "notes";
     this->table->setColumnCount(headers.length());
     this->table->setHorizontalHeaderLabels(headers);
     this->table->setRowCount(data.length());
@@ -41,16 +41,21 @@ void CurrenciesList::showData()
     {
         QMap<QString,QVariant> cur = data.at(i);
         qlonglong rowid = cur["rowid"].toLongLong();
+        QString code = cur["code"].toString();
         
         QPushButton *button_edit = new QPushButton();
         button_edit->setIcon(QIcon::fromTheme("document-properties"));
-        button_edit->setMaximumWidth(40);
         connect(button_edit, &QPushButton::clicked, this, [this, rowid]{ CurrenciesList::onEditButtonClicked(rowid); });
         
+        QPushButton *button_delete = new QPushButton();
+        button_delete->setIcon(QIcon::fromTheme("edit-delete"));
+        connect(button_delete, &QPushButton::clicked, this, [this, rowid, code]{ CurrenciesList::onDeleteButtonClicked(rowid, code); });
+        
         this->table->setCellWidget(i, 0, button_edit);
-        this->table->setItem(i, 1, new QTableWidgetItem(cur["code"].toString()));
-        this->table->setItem(i, 2, new QTableWidgetItem(cur["exchange_rate"].toString()));
-        this->table->setItem(i, 3, new QTableWidgetItem(cur["notes"].toString()));
+        this->table->setCellWidget(i, 1, button_delete);
+        this->table->setItem(i, 2, new QTableWidgetItem(code));
+        this->table->setItem(i, 3, new QTableWidgetItem(cur["exchange_rate"].toString()));
+        this->table->setItem(i, 4, new QTableWidgetItem(cur["notes"].toString()));
     }
     
     this->table->resizeColumnsToContents();
@@ -73,9 +78,19 @@ void CurrenciesList::onEditButtonClicked(qlonglong rowid)
 void CurrenciesList::onNewButtonClicked()
 {
     qlonglong rowid = this->db->insertCurrency();
-    onEditButtonClicked(rowid);
-    
     updateView();
+    onEditButtonClicked(rowid);
+}
+
+void CurrenciesList::onDeleteButtonClicked(qlonglong rowid, QString code)
+{
+    int reply = QMessageBox::question(this, "Delete "+code, "Really delete \""+code+"\"?", QMessageBox::Yes, QMessageBox::No);
+    if (reply == QMessageBox::Yes)
+    {
+        this->db->deleteCurrency(rowid);
+        
+        updateView();
+    }
 }
 
 void CurrenciesList::updateView()

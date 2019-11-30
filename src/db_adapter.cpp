@@ -746,5 +746,19 @@ qlonglong DbAdapter::insertCurrency()
 
 void DbAdapter::updateCurrency(qlonglong rowid, QString code, QString exchange_rate, QString notes)
 {
-    
+    QSqlQuery query(this->db);
+    query.prepare("UPDATE currencies SET code=:code, exchange_rate=:exchange_rate, notes=:notes WHERE rowid=:rowid");
+    query.bindValue(":code", code);
+    query.bindValue(":exchange_rate", exchange_rate);
+    query.bindValue(":notes", notes);
+    query.bindValue(":rowid", rowid);
+    query.exec();
+}
+
+void DbAdapter::deleteCurrency(qlonglong rowid)
+{
+    QSqlQuery query(this->db);
+    query.prepare("DELETE FROM currencies WHERE rowid=:rowid");
+    query.bindValue(":rowid", rowid);
+    query.exec();
 }

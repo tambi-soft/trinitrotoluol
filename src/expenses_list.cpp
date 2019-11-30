@@ -86,9 +86,8 @@ void ExpensesList::onEditButtonClicked(qlonglong rowid)
 void ExpensesList::onNewButtonClicked()
 {
     qlonglong rowid = this->db->insertExpense();
-    onEditButtonClicked(rowid);
-    
     updateView();
+    onEditButtonClicked(rowid);
 }
 
 void ExpensesList::updateView()

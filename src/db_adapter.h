@@ -78,6 +78,7 @@ public:
     QMap<QString,QVariant> selectCurrency(qlonglong rowid);
     qlonglong insertCurrency();
     void updateCurrency(qlonglong rowid, QString code, QString exchange_rate, QString notes);
+    void deleteCurrency(qlonglong rowid);
     
 private:
     QSqlDatabase db;
