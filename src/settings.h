@@ -34,7 +34,7 @@ private:
     void addDatabasePathSettingsArea();
     void addEmailSettingsArea();
     
-    void showFolderSelectDialog();
+    void showFileSelectDialog();
     QLineEdit *edit_name;
     QLineEdit *edit_path;
     

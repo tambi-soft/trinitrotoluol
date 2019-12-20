@@ -45,7 +45,7 @@ void SettingsWidget::addDatabasePathSettingsArea()
     
     QPushButton *button = new QPushButton("select Folder");
     layout->addWidget(button);
-    connect(button, &QPushButton::clicked, this, &SettingsWidget::showFolderSelectDialog);
+    connect(button, &QPushButton::clicked, this, &SettingsWidget::showFileSelectDialog);
     
     QWidget *edit_and_button_widget = new QWidget;
     layout->setMargin(0);
@@ -126,12 +126,10 @@ void SettingsWidget::addEmailSettingsArea()
     connect(this->combo_authentication_method, &QComboBox::currentTextChanged, this, &SettingsWidget::saveEmailParams);
 }
 
-void SettingsWidget::showFolderSelectDialog()
+void SettingsWidget::showFileSelectDialog()
 {
     QString dir_old = this->edit_path->text();
-    QString dir_new = QFileDialog::getExistingDirectory(this, tr("Select Directory"),
-        dir_old,
-        QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+    QString dir_new = QFileDialog::getOpenFileName(this, tr("Select Directory"), dir_old);
     
     //qDebug() << "DIR:" << dir_new;
     // if the user hit "cancel", we have an empty string here
