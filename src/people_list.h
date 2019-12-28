@@ -5,10 +5,10 @@
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
-#include <QTableWidget>
-#include <QTableWidgetItem>
-#include <QHeaderView>
-#include <QAbstractItemView>
+#include <QGridLayout>
+#include <QScrollArea>
+
+#include <QFrame>
 #include <QPushButton>
 #include <QIcon>
 #include <QComboBox>
@@ -27,14 +27,18 @@ public:
     explicit PeopleList(DbAdapter *db, QWidget *parent = nullptr);
     void showGroupsFilterCombo();
     void showPeople();
-    void clear();
+    void refresh();
     // signal to this widget that it should rebuild the view because of the database has changed
     void dataChanged();
     
 private:
     QVBoxLayout *layout;
-    QTableWidget *table_widget = new QTableWidget();
     DbAdapter *db;
+
+    QGridLayout *grid; // inner layout containing the qscrollarea
+    QScrollArea *scroll_area = new QScrollArea;
+    QWidget *scroll_widget = nullptr;
+    int scrollbar_pos;
     
     QComboBox *combo_groups;
     QCheckBox *check_todo;
@@ -62,8 +66,11 @@ public slots:
     void onEditPersonButtonClicked(qlonglong rowid, QString name);
     void onShowDonationsButtonClicked(qlonglong rowid);
     void onDeletePersonButtonClicked(qlonglong rowid, QString name);
-    
+
     void showEvent(QShowEvent */*event*/);
+
+private slots:
+    void scrollBarRangeChanged(int /*min*/, int max);
 };
 
 #endif // PEOPLE_LIST_H

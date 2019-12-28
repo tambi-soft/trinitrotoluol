@@ -2,7 +2,6 @@
 
 PeopleList::PeopleList(DbAdapter *db, QWidget *parent)
     : QWidget(parent)
-    , table_widget (new QTableWidget)
     , combo_groups (new QComboBox)
     , check_todo (new QCheckBox)
     , check_waiting (new QCheckBox)
@@ -16,6 +15,9 @@ PeopleList::PeopleList(DbAdapter *db, QWidget *parent)
     
     this->layout = new QVBoxLayout;
     setLayout(this->layout);
+
+    this->scroll_area->setWidgetResizable(true);
+    connect(this->scroll_area->verticalScrollBar(), &QScrollBar::rangeChanged, this, &PeopleList::scrollBarRangeChanged);
     
     this->check_todo->setTristate(true);
     this->check_todo->setCheckState(Qt::PartiallyChecked);
@@ -41,30 +43,44 @@ PeopleList::PeopleList(DbAdapter *db, QWidget *parent)
     this->line_mail_filter->setPlaceholderText("type a MAIL address here to search");
     connect(this->line_mail_filter, &QLineEdit::textChanged, this, &PeopleList::onNameFilterChanged);
     
+    // we want to have the initialization of the separator-lines structured in a bit more compact way
+    QList<QFrame*> lines;
+    for (int i=0; i<5; i++)
+    {
+        QFrame *line = new QFrame;
+        line->setFrameShape(QFrame::VLine);
+
+        lines.append(line);
+    }
+
     // build together the filter controls
     QHBoxLayout *hbox_filters = new QHBoxLayout();
     hbox_filters->setMargin(0);
     hbox_filters->addWidget(new QLabel("ToDo:"));
     hbox_filters->addWidget(this->check_todo);
+    hbox_filters->addWidget(lines.takeFirst());
     hbox_filters->addWidget(new QLabel("Waiting:"));
     hbox_filters->addWidget(this->check_waiting);
+    hbox_filters->addWidget(lines.takeFirst());
+    hbox_filters->addWidget(new QLabel("Mail:"));
+    hbox_filters->addWidget(this->check_mail);
+    hbox_filters->addWidget(lines.takeFirst());
     hbox_filters->addWidget(new QLabel("Donating:"));
     hbox_filters->addWidget(this->check_donating);
+    hbox_filters->addWidget(lines.takeFirst());
     hbox_filters->addWidget(new QLabel("Deactivated:"));
     hbox_filters->addWidget(this->check_deactivated);
+    hbox_filters->addWidget(lines.takeFirst());
     
     hbox_filters->addWidget(this->line_name_filter);
     hbox_filters->addWidget(this->line_mail_filter);
-    
-    hbox_filters->addWidget(new QLabel("Mail:"));
-    hbox_filters->addWidget(this->check_mail);
     
     hbox_filters->addWidget(this->combo_groups);
     QWidget *widget_filters = new QWidget();
     widget_filters->setLayout(hbox_filters);
     
     this->layout->addWidget(widget_filters);
-    this->layout->addWidget(this->table_widget);
+    this->layout->addWidget(this->scroll_area);
     
     QPushButton *button_add_new_person = new QPushButton("add new person");
     layout->addWidget(button_add_new_person);
@@ -73,9 +89,6 @@ PeopleList::PeopleList(DbAdapter *db, QWidget *parent)
     connect(button_add_new_person, &QPushButton::clicked, this, &PeopleList::onNewPersonButtonClicked);
     
     showGroupsFilterCombo();
-    //showPeople();
-    
-    //this->db->insertNewPerson("name", "group", "email", "add", "phone");
 }
 
 void PeopleList::showGroupsFilterCombo()
@@ -96,6 +109,11 @@ void PeopleList::showGroupsFilterCombo()
 
 void PeopleList::showPeople()
 {
+    this->grid = new QGridLayout;
+    this->scroll_widget = new QWidget;
+    this->scroll_widget->setLayout(this->grid);
+    this->scroll_area->setWidget(this->scroll_widget);
+
     // -1 is the value for partially checked
     int filter_todo = -1;
     if (this->check_todo->checkState() == Qt::Checked)
@@ -162,6 +180,7 @@ void PeopleList::showPeople()
     {
         str_filter_mail = "%";
     }
+
     QList<QMap<QString,QVariant>> people = this->db->selectAllPersonsFiltered(filter_todo,
          filter_waiting,
          filter_donating,
@@ -171,45 +190,9 @@ void PeopleList::showPeople()
          "%"+str_filter_name+"%",
          "%"+str_filter_mail+"%");
     
-    this->table_widget->setRowCount(people.length());
-    if (people.length() > 0)
-    {
-        this->table_widget->setColumnCount(people.at(0).keys().length()+1);
-    }
-    
     for (int i=0; i < people.length(); ++i)
     {
         QMap<QString,QVariant> person = people.at(i);
-        
-        QTableWidgetItem *flag_todo = new QTableWidgetItem();
-        QTableWidgetItem *flag_waiting = new QTableWidgetItem();
-        if (person["flag_todo"] == 1)
-        {
-            flag_todo->setBackgroundColor(Qt::black);
-        }
-        
-        if (person["flag_waiting"] == 1)
-        {
-            flag_waiting->setBackgroundColor(Qt::black);
-        }
-        
-        QTableWidgetItem *flag_donations = new QTableWidgetItem();
-        if (person["donations_monthly"] > 0 || person["donations_monthly_promised"] > 0)
-        {
-            flag_donations->setBackgroundColor(Qt::black);
-        }
-        
-        QTableWidgetItem *mail = new QTableWidgetItem();
-        QTableWidgetItem *prayer = new QTableWidgetItem();
-        if (person["agreed_mail"] == 1)
-        {
-            mail->setBackgroundColor(Qt::black);
-        }
-        
-        if (person["agreed_prayer"] == 1)
-        {
-            prayer->setBackgroundColor(Qt::black);
-        }
         
         qlonglong rowid = person["rowid"].toLongLong();
         QString name = person["name"].toString();
@@ -229,6 +212,46 @@ void PeopleList::showPeople()
         button_donations->setMaximumWidth(90);
         connect(button_donations, &QPushButton::clicked, this, []{  });
         
+        QLabel *label_agreed = new QLabel("[mail]");
+        label_agreed->setStyleSheet("QLabel { color : green; }");
+
+        QLabel *label_prayer = new QLabel("[prayer]");
+        label_prayer->setStyleSheet("QLabel { color: darkgreen; }");
+
+        QLabel *label_donating = new QLabel("[donating]");
+        label_donating->setStyleSheet("QLabel { color : blue; }");
+
+        QLabel *label_todo = new QLabel("[todo]");
+        label_todo->setStyleSheet("QLabel { color : red; }");
+
+        QLabel *label_waiting = new QLabel("[waiting]");
+        label_waiting->setStyleSheet("QLabel { color: orange; }");
+
+        this->grid->addWidget(button_delete, i, 0);
+        this->grid->addWidget(button_edit, i, 1);
+        if (person["flag_todo"] == 1)
+        {
+            this->grid->addWidget(label_todo, i, 2);
+        }
+        if (person["flag_waiting"] == 1)
+        {
+            this->grid->addWidget(label_waiting, i, 3);
+        }
+        if (person["agreed_mail"] == 1)
+        {
+            this->grid->addWidget(label_agreed, i, 4);
+        }
+        if (person["agreed_prayer"] == 1)
+        {
+            this->grid->addWidget(label_prayer, i, 5);
+        }
+        if (person["donations_monthly"] > 0 || person["donations_monthly_promised"] > 0)
+        {
+            this->grid->addWidget(label_donating, i, 6);
+        }
+        this->grid->addWidget(new QLabel(person["name"].toString()), i, 7);
+        this->grid->addWidget(new QLabel(person["group"].toString()), i, 8);
+        /*
         this->table_widget->setCellWidget(i, 0, button_delete);
         this->table_widget->setCellWidget(i, 1, button_edit);
         this->table_widget->setCellWidget(i, 2, button_donations);
@@ -241,33 +264,33 @@ void PeopleList::showPeople()
         this->table_widget->setItem(i, 9, mail);
         this->table_widget->setItem(i, 10, prayer);
         this->table_widget->setItem(i, 11, new QTableWidgetItem(person["agreement"].toString()));
+        */
     }
-    
-    QStringList labels;
-    labels << "" << "" << "" << "t" << "w" << "d" << "name" << "group" << "email" << "m" << "p" << "agreement";
-    this->table_widget->setHorizontalHeaderLabels(labels);
-    this->table_widget->resizeColumnsToContents();
-    this->table_widget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    
-    //this->table_widget->verticalHeader()->setVisible(false);
+    // push all columns to the left for getting the table a bit more compact
+    this->grid->setColumnStretch(100, 100);
+    // push everything up
+    this->grid->setRowStretch(people.length(), 100);
 }
 
-void PeopleList::clear()
+void PeopleList::refresh()
 {
-    this->combo_groups->clear();
-    this->table_widget->clear();
+    //this->combo_groups->clear();
+
+    // store the scrollbar position first to be restored in scrollBarRangeChanged afterwards
+    this->scrollbar_pos = this->scroll_area->verticalScrollBar()->sliderPosition();
+
+    this->scroll_widget->deleteLater();
+    showPeople();
 }
 
 void PeopleList::onFilterChanged()
 {
-    this->table_widget->clear();
-    showPeople();
+    refresh();
 }
 
 void PeopleList::onNameFilterChanged()
 {
-    this->table_widget->clear();
-    showPeople();
+    refresh();
 }
 
 void PeopleList::onGroupsFilterChanged()
@@ -279,8 +302,7 @@ void PeopleList::onGroupsFilterChanged()
     this->combo_groups->blockSignals(false);
     */
     
-    this->table_widget->clear();
-    showPeople();
+    refresh();
 }
 
 void PeopleList::onNewPersonButtonClicked()
@@ -309,8 +331,15 @@ void PeopleList::onDeletePersonButtonClicked(qlonglong rowid, QString name)
         //this->db->deletePerson(rowid);
         this->db->deactivatePerson(rowid);
         
-        this->table_widget->clear();
-        showPeople();
+        refresh();
+    }
+}
+
+void PeopleList::scrollBarRangeChanged(int /*min*/, int max)
+{
+    if (this->scrollbar_pos <= max)
+    {
+        this->scroll_area->verticalScrollBar()->setSliderPosition(this->scrollbar_pos);
     }
 }
 
@@ -323,16 +352,7 @@ void PeopleList::showEvent(QShowEvent */*event*/)
 {
     if (this->data_changed)
     {
-        // store the current scroll position
-        QScrollBar *vert = this->table_widget->verticalScrollBar();
-        int vert_val = vert->value();
-        
-        // clear and rebuild table_widget eventually with new/updated data
-        this->table_widget->clear();
-        showPeople();
-        
-        // restore previous scroll position
-        vert->setValue(vert_val);
+        refresh();
     }
     this->data_changed = false;
 }
