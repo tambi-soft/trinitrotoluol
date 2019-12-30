@@ -207,7 +207,6 @@ QMap<QString,QVariant> PersonEdit::collectSaveData()
 
 void PersonEdit::onAddNewGroupButton()
 {
-    //CurrenciesEdit *edit = new CurrenciesEdit(rowid, this->db);
     GroupsEdit *edit = new GroupsEdit(this->db);
     //connect(edit, &CurrenciesEdit::signalUpdate, this, &CurrenciesList::updateView);
 
@@ -354,6 +353,12 @@ GroupsEdit::GroupsEdit(DbAdapter *db, QWidget *parent) : QWidget(parent)
     showData();
 }
 
+void GroupsEdit::reloadData()
+{
+    this->scroll_widget->deleteLater();
+    showData();
+}
+
 void GroupsEdit::showData()
 {
     this->grid = new QGridLayout;
@@ -379,11 +384,34 @@ void GroupsEdit::showData()
 
 void GroupsEdit::onDeleteButtonClicked(qlonglong group_id)
 {
+    // TODO: what to do with people already assigned to this group?
     qDebug() << "we want to delete group " << group_id;
 }
 
 void GroupsEdit::onNewGroupButtonClicked()
 {
-    qDebug() << "adding new groups not implemented yet";
+    this->rowid_new_group = this->db->insertNewGroup();
+
+    // put together dialog content
+    QWidget *edit = new QWidget();
+    QVBoxLayout *layout = new QVBoxLayout;
+    edit->setLayout(layout);
+    QLineEdit *line = new QLineEdit();
+    layout->addWidget(line);
+    connect(line, &QLineEdit::textChanged, this, &GroupsEdit::onGroupNameChanged);
+    connect(line, &QLineEdit::textChanged, this, &GroupsEdit::reloadData);
+
+    // put together the dialog itself and show
+    QDialog *dialog = new QDialog();
+    QVBoxLayout *layout_dialog = new QVBoxLayout;
+    layout_dialog->setMargin(0);
+    dialog->setLayout(layout_dialog);
+    layout_dialog->addWidget(edit);
+
+    dialog->exec();
 }
 
+void GroupsEdit::onGroupNameChanged(QString name)
+{
+    this->db->updateGroup(this->rowid_new_group, name);
+}

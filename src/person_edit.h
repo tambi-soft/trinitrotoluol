@@ -122,8 +122,10 @@ class GroupsEdit : public QWidget
     Q_OBJECT
 public:
     explicit GroupsEdit(DbAdapter *db, QWidget *parent = nullptr);
+    void reloadData();
     void onDeleteButtonClicked(qlonglong group_id);
     void onNewGroupButtonClicked();
+    void onGroupNameChanged(QString name);
 
 private:
     DbAdapter *db;
@@ -131,6 +133,8 @@ private:
     QGridLayout *grid; // inner layout containing the qscrollarea
     QScrollArea *scroll_area = new QScrollArea;
     QWidget *scroll_widget = nullptr;
+
+    qlonglong rowid_new_group;
 
     void showData();
 };

@@ -37,6 +37,9 @@ public:
     QList<QMap<QString, QVariant>> selectMailsForPerson(qlonglong rowid_person);
     
     QList<QMap<QString, QVariant>> selectGroups();
+    qlonglong insertNewGroup();
+    void updateGroup(qlonglong rowid, QString name);
+
     QMap<QString, QVariant> selectMoneyStats();
     QMap<QString, QVariant> selectPeopleStats();
     

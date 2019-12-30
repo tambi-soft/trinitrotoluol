@@ -398,6 +398,23 @@ QList<QMap<QString,QVariant>> DbAdapter::selectGroups()
     return dbIteratorToMapList(query);
 }
 
+qlonglong DbAdapter::insertNewGroup()
+{
+    QSqlQuery query("INSERT INTO people_groups DEFAULT VALUES", this->db);
+
+    this->db.commit();
+    return query.lastInsertId().toLongLong();
+}
+
+void DbAdapter::updateGroup(qlonglong rowid, QString name)
+{
+    QSqlQuery query(this->db);
+    query.prepare("UPDATE people_groups SET name=:name WHERE rowid=:rowid");
+    query.bindValue(":name", name);
+    query.bindValue(":rowid", rowid);
+    query.exec();
+}
+
 QMap<QString,QVariant> DbAdapter::selectMoneyStats()
 {
     QSqlQuery query("SELECT monthly_sum, monthly_sum_promised, donations_min, donations_max, donations_average FROM donations_monthly", this->db);
