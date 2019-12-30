@@ -64,7 +64,8 @@ HEADERS += \
     src/sqlite_editor_widget.h \
     src/sqlite_sync.h \
     src/stats.h \
-    src/tnt_adapter.h
+    src/tnt_adapter.h \
+    src/help_about_widget.h
     
 SOURCES += \
     src/combo_currencies.cpp \
@@ -92,7 +93,8 @@ SOURCES += \
     src/trinitrotoluol.cpp \
     src/main_window.cpp \
     src/config.cpp \
-    src/db_adapter.cpp
+    src/db_adapter.cpp \
+    src/help_about_widget.cpp
 
 RESOURCES += \
     resources.qrc

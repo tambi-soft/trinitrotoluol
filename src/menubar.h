@@ -37,6 +37,7 @@ signals:
     void signalJourneyList();
     void signalExpensesList();
     void signalCurrencies();
+    void signalAbout();
     
 public slots:
     void mailList();

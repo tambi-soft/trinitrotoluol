@@ -24,6 +24,7 @@
 #include "journey_list.h"
 #include "currencies.h"
 #include "expenses_list.h"
+#include "help_about_widget.h"
 
 class QTNTMainWindow : public QMainWindow
 {
@@ -69,4 +70,6 @@ private slots:
     void addMailSendTab(qlonglong rowid, QString number);
     
     void addCurrenciesTab();
+    
+    void addHelpAboutTab();
 };

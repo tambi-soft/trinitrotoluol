@@ -20,6 +20,7 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
     connect(this->menu_bar, &MenuBar::signalJourneyList, this, &QTNTMainWindow::addJourneyListTab);
     connect(this->menu_bar, &MenuBar::signalExpensesList, this, &QTNTMainWindow::addExpensesListTab);
     connect(this->menu_bar, &MenuBar::signalCurrencies, this, &QTNTMainWindow::addCurrenciesTab);
+    connect(this->menu_bar, &MenuBar::signalAbout, this, &QTNTMainWindow::addHelpAboutTab);
     
     setCentralWidget(this->tab_widget);
     tab_widget->setTabsClosable(true);
@@ -205,6 +206,15 @@ void QTNTMainWindow::addCurrenciesTab()
     QIcon *icon = new QIcon(":icon_currencies");
     
     createSingleTab("Currencies", currencies, icon);
+}
+
+void QTNTMainWindow::addHelpAboutTab()
+{
+    HelpAboutWidget *widget = new HelpAboutWidget();
+    
+    QIcon *icon = new QIcon(":logo");
+    
+    createSingleTab("About", widget, icon);
 }
 
 void QTNTMainWindow::createSingleTab(QString tab_name, QWidget *widget, QIcon *icon)

@@ -68,9 +68,11 @@ void MenuBar::addToolsMenu()
 
 void MenuBar::addHelpMenu()
 {
-    
+    QAction *aboutAction = new QAction(QIcon(":logo"), "About Trinitrotoluol");
+    connect(aboutAction, &QAction::triggered, this, &MenuBar::signalAbout);
     
     QMenu *menu = addMenu("&Help");
+    menu->addAction(aboutAction);
 }
 
 void MenuBar::quitApplication()
