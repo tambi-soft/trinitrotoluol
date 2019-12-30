@@ -290,7 +290,11 @@ void PeopleList::onFilterChanged()
 
 void PeopleList::onNameFilterChanged()
 {
-    refresh();
+    // only start to search, if search pattern at least 3 chars long
+    if (this->line_name_filter->text().length() >= 3 || this->line_mail_filter->text().length() >= 3)
+    {
+        refresh();
+    }
 }
 
 void PeopleList::onGroupsFilterChanged()
