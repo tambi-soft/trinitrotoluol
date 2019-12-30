@@ -164,6 +164,9 @@ void DbAdapter::initializeTables()
     
     QSqlQuery query_expenses("CREATE TABLE IF NOT EXISTS expenses (rowid INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, amount INTEGER, cost_one INTEGER, rowid_currency INTEGER, date TEXT DEFAULT CURRENT_TIMESTAMP, notes TEXT, flag_settled INTEGER)", this->db);
     
+    QSqlQuery query_people_relatives("CREATE TABLE IF NOT EXISTS people_relatives (rowid_people_a INTEGER PRIMARY KEY, rowid_people_b INTEGER KEY, rowid_people_relatives_labels)", this->db);
+    QSqlQuery query_people_relatives_labels("CREATE TABLE IF NOT EXISTS people_relatives_labels (rowid INTEGER PRIMARY KEY AUTOINCREMENT, label TEXT UNIQUE, translation TEXT)", this->db);
+
     //qDebug() << this->db.lastError();
     //qDebug() << query_sent_mail.lastQuery();
 }

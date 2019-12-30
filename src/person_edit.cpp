@@ -207,7 +207,17 @@ QMap<QString,QVariant> PersonEdit::collectSaveData()
 
 void PersonEdit::onAddNewGroupButton()
 {
-    
+    //CurrenciesEdit *edit = new CurrenciesEdit(rowid, this->db);
+    GroupsEdit *edit = new GroupsEdit(this->db);
+    //connect(edit, &CurrenciesEdit::signalUpdate, this, &CurrenciesList::updateView);
+
+    QDialog *dialog = new QDialog();
+    QVBoxLayout *layout_dialog = new QVBoxLayout;
+    layout_dialog->setMargin(0);
+    dialog->setLayout(layout_dialog);
+    layout_dialog->addWidget(edit);
+
+    dialog->exec();
 }
 
 void PersonEdit::onInsertAgreementDateButton()
@@ -326,3 +336,54 @@ void PersonMails::showData()
     //this->table->resizeRowsToContents();
     this->table->resizeColumnsToContents();
 }
+
+
+
+GroupsEdit::GroupsEdit(DbAdapter *db, QWidget *parent) : QWidget(parent)
+{
+    this->db = db;
+    setLayout(this->layout);
+
+    QPushButton *button_new = new QPushButton("add new group");
+    connect(button_new, &QPushButton::clicked, this, &GroupsEdit::onNewGroupButtonClicked);
+
+    this->scroll_area->setWidgetResizable(true);
+    this->layout->addWidget(this->scroll_area);
+    this->layout->addWidget(button_new);
+
+    showData();
+}
+
+void GroupsEdit::showData()
+{
+    this->grid = new QGridLayout;
+    this->scroll_widget = new QWidget;
+    this->scroll_widget->setLayout(this->grid);
+    this->scroll_area->setWidget(this->scroll_widget);
+
+    QList<QMap<QString,QVariant>> groups = this->db->selectGroups();
+
+    for (int i=0; i < groups.length(); i++)
+    {
+        qlonglong rowid = groups.at(i)["rowid"].toLongLong();
+        QPushButton *button_delete = new QPushButton();
+        button_delete->setIcon(QIcon::fromTheme("edit-delete"));
+        button_delete->setToolTip("delete this group");
+        button_delete->setMaximumWidth(25);
+        connect(button_delete, &QPushButton::clicked, this, [this, rowid]{ GroupsEdit::onDeleteButtonClicked(rowid); });
+
+        this->grid->addWidget(button_delete, i, 0);
+        this->grid->addWidget(new QLabel(groups.at(i)["name"].toString()), i, 1);
+    }
+}
+
+void GroupsEdit::onDeleteButtonClicked(qlonglong group_id)
+{
+    qDebug() << "we want to delete group " << group_id;
+}
+
+void GroupsEdit::onNewGroupButtonClicked()
+{
+    qDebug() << "adding new groups not implemented yet";
+}
+

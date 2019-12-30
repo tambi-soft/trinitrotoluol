@@ -117,4 +117,22 @@ private:
     void showData();
 };
 
+class GroupsEdit : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit GroupsEdit(DbAdapter *db, QWidget *parent = nullptr);
+    void onDeleteButtonClicked(qlonglong group_id);
+    void onNewGroupButtonClicked();
+
+private:
+    DbAdapter *db;
+    QVBoxLayout *layout = new QVBoxLayout;
+    QGridLayout *grid; // inner layout containing the qscrollarea
+    QScrollArea *scroll_area = new QScrollArea;
+    QWidget *scroll_widget = nullptr;
+
+    void showData();
+};
+
 #endif // PERSON_EDIT_H
