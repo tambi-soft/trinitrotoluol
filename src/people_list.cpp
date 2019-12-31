@@ -13,7 +13,7 @@ PeopleList::PeopleList(DbAdapter *db, QWidget *parent)
 {
     this->db = db;
     
-    this->layout = new QVBoxLayout;
+    this->layout = new QVBoxLayout(this);
     setLayout(this->layout);
 
     this->scroll_area->setWidgetResizable(true);
@@ -109,8 +109,10 @@ void PeopleList::showGroupsFilterCombo()
 
 void PeopleList::showPeople()
 {
-    this->grid = new QGridLayout;
-    this->scroll_widget = new QWidget;
+    setUpdatesEnabled(false);
+    
+    this->grid = new QGridLayout(this);
+    this->scroll_widget = new QWidget(this);
     this->scroll_widget->setLayout(this->grid);
     this->scroll_area->setWidget(this->scroll_widget);
 
@@ -190,6 +192,8 @@ void PeopleList::showPeople()
          "%"+str_filter_name+"%",
          "%"+str_filter_mail+"%");
     
+    QIcon icon_delete = QIcon::fromTheme("edit-delete");
+    QIcon icon_edit = QIcon::fromTheme("document-properties");
     for (int i=0; i < people.length(); ++i)
     {
         QMap<QString,QVariant> person = people.at(i);
@@ -197,38 +201,41 @@ void PeopleList::showPeople()
         qlonglong rowid = person["rowid"].toLongLong();
         QString name = person["name"].toString();
         
-        QPushButton *button_delete = new QPushButton();
-        button_delete->setIcon(QIcon::fromTheme("edit-delete"));
+        QPushButton *button_delete = new QPushButton(this);
+        button_delete->setIcon(icon_delete);
         button_delete->setMaximumWidth(40);
         connect(button_delete, &QPushButton::clicked, this, [this, rowid, name]{ PeopleList::onDeletePersonButtonClicked(rowid, name); });
         
-        QPushButton *button_edit = new QPushButton();
-        button_edit->setIcon(QIcon::fromTheme("document-properties"));
+        QPushButton *button_edit = new QPushButton(this);
+        button_edit->setIcon(icon_edit);
         button_edit->setMaximumWidth(40);
         connect(button_edit, &QPushButton::clicked, this, [this, rowid, name]{ PeopleList::onEditPersonButtonClicked(rowid, name); });
         
+        /*
         QPushButton *button_donations = new QPushButton();
         button_donations->setIcon(QIcon(":money_receive"));
         button_donations->setMaximumWidth(90);
         connect(button_donations, &QPushButton::clicked, this, []{  });
+        */
         
-        QLabel *label_agreed = new QLabel("[mail]");
+        QLabel *label_agreed = new QLabel("[mail]", this);
         label_agreed->setStyleSheet("QLabel { color : green; }");
 
-        QLabel *label_prayer = new QLabel("[prayer]");
+        QLabel *label_prayer = new QLabel("[prayer]", this);
         label_prayer->setStyleSheet("QLabel { color: darkgreen; }");
 
-        QLabel *label_donating = new QLabel("[donating]");
+        QLabel *label_donating = new QLabel("[donating]", this);
         label_donating->setStyleSheet("QLabel { color : blue; }");
 
-        QLabel *label_todo = new QLabel("[todo]");
+        QLabel *label_todo = new QLabel("[todo]", this);
         label_todo->setStyleSheet("QLabel { color : red; }");
 
-        QLabel *label_waiting = new QLabel("[waiting]");
+        QLabel *label_waiting = new QLabel("[waiting]", this);
         label_waiting->setStyleSheet("QLabel { color: orange; }");
-
+        
         this->grid->addWidget(button_delete, i, 0);
         this->grid->addWidget(button_edit, i, 1);
+        
         if (person["flag_todo"] == 1)
         {
             this->grid->addWidget(label_todo, i, 2);
@@ -249,8 +256,10 @@ void PeopleList::showPeople()
         {
             this->grid->addWidget(label_donating, i, 6);
         }
-        this->grid->addWidget(new QLabel(person["name"].toString()), i, 7);
-        this->grid->addWidget(new QLabel(person["group"].toString()), i, 8);
+        
+        this->grid->addWidget(new QLabel(person["name"].toString(), this), i, 7);
+        this->grid->addWidget(new QLabel(person["group"].toString(), this), i, 8);
+        
         /*
         this->table_widget->setCellWidget(i, 0, button_delete);
         this->table_widget->setCellWidget(i, 1, button_edit);
@@ -270,6 +279,8 @@ void PeopleList::showPeople()
     this->grid->setColumnStretch(100, 100);
     // push everything up
     this->grid->setRowStretch(people.length(), 100);
+    
+    setUpdatesEnabled(true);
 }
 
 void PeopleList::refresh()
@@ -280,6 +291,7 @@ void PeopleList::refresh()
     this->scrollbar_pos = this->scroll_area->verticalScrollBar()->sliderPosition();
 
     this->scroll_widget->deleteLater();
+    this->grid = nullptr;
     showPeople();
 }
 

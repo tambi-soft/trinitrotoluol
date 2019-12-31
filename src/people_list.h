@@ -36,7 +36,7 @@ private:
     DbAdapter *db;
 
     QGridLayout *grid; // inner layout containing the qscrollarea
-    QScrollArea *scroll_area = new QScrollArea;
+    QScrollArea *scroll_area = new QScrollArea(this);
     QWidget *scroll_widget = nullptr;
     int scrollbar_pos;
     
