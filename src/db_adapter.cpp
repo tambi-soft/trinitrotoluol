@@ -569,6 +569,19 @@ QMap<QString,QVariant> DbAdapter::selectJourney(qlonglong rowid)
     return dbIteratorToMap(query);
 }
 
+void DbAdapter::deleteJourney(qlonglong rowid)
+{
+    QSqlQuery query_delete_journey(this->db);
+    query_delete_journey.prepare("DELETE FROM journeys WHERE rowid=:rowid");
+    query_delete_journey.bindValue(":rowid", rowid);
+    query_delete_journey.exec();
+    
+    QSqlQuery query_delete_visit_markers(this->db);
+    query_delete_visit_markers.prepare("DELETE FROM people_visits WHERE rowid_journeys=:rowid");
+    query_delete_visit_markers.bindValue(":rowid", rowid);
+    query_delete_visit_markers.exec();
+}
+
 QList<QMap<QString,QVariant>> DbAdapter::selectVisitsForJourney(qlonglong rowid_journey)
 {
     QSqlQuery query(this->db);
@@ -609,7 +622,7 @@ QMap<QString,QVariant> DbAdapter::selectVisit(qlonglong rowid)
     QSqlQuery query(this->db);
     query.prepare("SELECT rowid_people, people.name, people_visits.date, people_visits.notes "
                   "FROM people_visits "
-                  "JOIN people ON rowid_people=people.rowid "
+                  "LEFT JOIN people ON rowid_people=people.rowid "
                   "WHERE people_visits.rowid=:rowid");
     query.bindValue(":rowid", rowid);
     query.exec();

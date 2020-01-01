@@ -39,6 +39,8 @@ private:
     QDateEdit *edit_date_to;
     QTextEdit *edit_notes;
     
+    JourneyVisits *visits;
+    
     void drawGUI();
     void loadData();
     void saveData();

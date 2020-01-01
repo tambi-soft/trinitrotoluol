@@ -4,9 +4,10 @@
 #include <QObject>
 #include <QWidget>
 #include <QVBoxLayout>
-#include <QTableWidget>
-#include <QTableWidgetItem>
-#include <QAbstractItemView>
+#include <QGridLayout>
+#include <QScrollArea>
+#include <QScrollBar>
+#include <QMessageBox>
 #include <QPushButton>
 
 #include <QStringList>
@@ -28,9 +29,14 @@ public:
 private:
     DbAdapter *db;
     QVBoxLayout *layout;
-    QTableWidget *table;
+    
+    QGridLayout *grid; // inner layout containing the qscrollarea
+    QScrollArea *scroll_area = new QScrollArea(this);
+    QWidget *scroll_widget = nullptr;
+    int scrollbar_pos;
     
     void showJourneys();
+    void refresh();
     
 signals:
     void signalJourneyNew();
@@ -39,6 +45,7 @@ signals:
 public slots:
     void journeyNew();
     void journeyEdit(qlonglong rowid, QString name);
+    void journeyDelete(qlonglong rowid, QString name);
     void showEvent(QShowEvent */*event*/);
 };
 

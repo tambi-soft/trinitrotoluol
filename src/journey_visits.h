@@ -28,13 +28,16 @@ class JourneyVisits : public QWidget
 {
     Q_OBJECT
 public:
-    explicit JourneyVisits(qlonglong rowid_journey, DbAdapter *db, QWidget *parent = nullptr);
+    explicit JourneyVisits(qlonglong rowid_journey, DbAdapter *db, QString date_hint, QWidget *parent = nullptr);
+    void setDateHint(QString date);
     
 private:
     qlonglong rowid_journey;
     DbAdapter *db;
     QTableWidget *table;
     QVBoxLayout *layout;
+    
+    QString date_hint;
     
     void loadData();
     void reloadData();
@@ -53,7 +56,7 @@ class JourneyVisitsEdit : public QWidget
 {
     Q_OBJECT
 public:
-    explicit JourneyVisitsEdit(qlonglong rowid_visits, DbAdapter *db, QWidget *parent = nullptr);
+    explicit JourneyVisitsEdit(qlonglong rowid_visits, DbAdapter *db, QString date_hint, QWidget *parent = nullptr);
     
 private:
     qlonglong rowid_visits;

@@ -50,7 +50,7 @@ void JourneyEdit::drawGUI()
     QGroupBox *group_visits = new QGroupBox("Visited People");
     QGroupBox *group_tickets = new QGroupBox("Tickets");
     
-    JourneyVisits *visits = new JourneyVisits(this->rowid, this->db);
+    this->visits = new JourneyVisits(this->rowid, this->db, this->edit_date_from->date().toString("yyyy-MM-dd"));
     QVBoxLayout *layout_visits = new QVBoxLayout();
     layout_visits->setMargin(0);
     layout_visits->addWidget(visits);
@@ -79,6 +79,8 @@ void JourneyEdit::loadData()
     
     this->edit_notes->setText(data["notes"].toString());
     
+    this->visits->setDateHint(this->edit_date_from->date().toString("yyyy-MM-dd"));
+    
 }
 
 void JourneyEdit::saveData()
@@ -89,4 +91,6 @@ void JourneyEdit::saveData()
     QString notes = this->edit_notes->toPlainText();
     
     this->db->updateJourney(this->rowid, name, date_from, date_to, notes);
+    
+    this->visits->setDateHint(this->edit_date_from->date().toString("yyyy-MM-dd"));
 }

@@ -1,12 +1,14 @@
 #include "journey_visits.h"
 
-JourneyVisits::JourneyVisits(qlonglong rowid_journey, DbAdapter *db, QWidget *parent)
+JourneyVisits::JourneyVisits(qlonglong rowid_journey, DbAdapter *db, QString date_hint, QWidget *parent)
     : QWidget(parent)
     , table (new QTableWidget)
     , layout (new QVBoxLayout)
 {
     this->rowid_journey = rowid_journey;
     this->db = db;
+    
+    this->date_hint = date_hint;
     
     setLayout(this->layout);
     
@@ -17,6 +19,11 @@ JourneyVisits::JourneyVisits(qlonglong rowid_journey, DbAdapter *db, QWidget *pa
     this->layout->addWidget(button_new_visit);
     
     loadData();
+}
+
+void JourneyVisits::setDateHint(QString date)
+{
+    this->date_hint = date;
 }
 
 void JourneyVisits::loadData()
@@ -73,7 +80,7 @@ void JourneyVisits::addNewVisit()
 
 void JourneyVisits::editVisit(qlonglong rowid_visits)
 {
-    JourneyVisitsEdit *edit = new JourneyVisitsEdit(rowid_visits, this->db);
+    JourneyVisitsEdit *edit = new JourneyVisitsEdit(rowid_visits, this->db, this->date_hint);
     connect(edit, &JourneyVisitsEdit::signalReload, this, &JourneyVisits::reloadData);
     
     QDialog *dialog = new QDialog();
@@ -100,7 +107,7 @@ void JourneyVisits::deleteVisit(qlonglong rowid, QString name)
 
 
 
-JourneyVisitsEdit::JourneyVisitsEdit(qlonglong rowid_visits, DbAdapter *db, QWidget *parent)
+JourneyVisitsEdit::JourneyVisitsEdit(qlonglong rowid_visits, DbAdapter *db, QString date_hint, QWidget *parent)
     : QWidget(parent)
     , layout (new QVBoxLayout)
     , button_name (new QPushButton)
@@ -126,7 +133,14 @@ JourneyVisitsEdit::JourneyVisitsEdit(qlonglong rowid_visits, DbAdapter *db, QWid
     this->rowid_person = data["rowid_people"].toLongLong();
     
     this->button_name->setText(data["name"].toString());
-    this->edit_date->setDate(QDate::fromString(data["date"].toString(), "yyyy-MM-dd"));
+    if (data["date"].toString().length() > 0)
+    {
+        this->edit_date->setDate(QDate::fromString(data["date"].toString(), "yyyy-MM-dd"));
+    }
+    else
+    {
+        this->edit_date->setDate(QDate::fromString(date_hint, "yyyy-MM-dd"));
+    }
     this->edit_notes->setText(data["notes"].toString());
     
     connect(this->button_name, &QPushButton::clicked, this, &JourneyVisitsEdit::selectPerson);
