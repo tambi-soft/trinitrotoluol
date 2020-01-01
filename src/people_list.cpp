@@ -341,11 +341,25 @@ void PeopleList::onShowDonationsButtonClicked(qlonglong rowid)
 
 void PeopleList::onDeletePersonButtonClicked(qlonglong rowid, QString name)
 {
-    int reply = QMessageBox::question(this, "Deactivate "+name, "Really deactivate \""+name+"\"?", QMessageBox::Yes, QMessageBox::No);
+    int reply;
+    if (this->check_deactivated->checkState() == Qt::Checked)
+    {
+        reply = QMessageBox::question(this, "Delete "+name, "Really delete \""+name+"\"?\nThis action can not be undone!", QMessageBox::Yes, QMessageBox::No);
+    }
+    else
+    {
+        reply = QMessageBox::question(this, "Deactivate "+name, "Really deactivate \""+name+"\"?", QMessageBox::Yes, QMessageBox::No);
+    }
     if (reply == QMessageBox::Yes)
     {
-        //this->db->deletePerson(rowid);
-        this->db->deactivatePerson(rowid);
+        if (this->check_deactivated->checkState() == Qt::Checked)
+        {
+            this->db->deletePerson(rowid);
+        }
+        else
+        {
+            this->db->deactivatePerson(rowid);
+        }
         
         refresh();
     }
