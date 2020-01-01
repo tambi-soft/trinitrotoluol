@@ -4,8 +4,9 @@
 #include <QObject>
 #include <QWidget>
 
-#include <QVBoxLayout>
+#include <QGridLayout>
 #include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <QGroupBox>
 
 #include <QLineEdit>
@@ -32,7 +33,7 @@ public:
 private:
     qlonglong rowid;
     DbAdapter *db;
-    QVBoxLayout *layout;
+    QGridLayout *layout;
     
     QLineEdit *edit_name;
     QDateEdit *edit_date_from;

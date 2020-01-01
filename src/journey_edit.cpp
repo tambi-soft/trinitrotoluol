@@ -2,7 +2,7 @@
 
 JourneyEdit::JourneyEdit(qlonglong rowid, DbAdapter *db, QWidget *parent)
     : QWidget(parent)
-    , layout (new QVBoxLayout)
+    , layout (new QGridLayout)
 {
     this->rowid = rowid;
     this->db = db;
@@ -26,14 +26,14 @@ void JourneyEdit::drawGUI()
     this->edit_date_from->setCalendarPopup(true);
     this->edit_date_to->setCalendarPopup(true);
     
-    this->layout->addWidget(new QLabel("name of the journey"));
-    this->layout->addWidget(edit_name);
-    this->layout->addWidget(new QLabel("date start"));
-    this->layout->addWidget(edit_date_from);
-    this->layout->addWidget(new QLabel("date end"));
-    this->layout->addWidget(edit_date_to);
-    this->layout->addWidget(new QLabel("notes"));
-    this->layout->addWidget(edit_notes);
+    this->layout->addWidget(new QLabel("name of the journey"), 0, 0);
+    this->layout->addWidget(edit_name, 1, 0);
+    this->layout->addWidget(new QLabel("date start"), 2, 0);
+    this->layout->addWidget(edit_date_from, 3, 0);
+    this->layout->addWidget(new QLabel("date end"), 4, 0);
+    this->layout->addWidget(edit_date_to, 5, 0);
+    this->layout->addWidget(new QLabel("notes"), 6, 0);
+    this->layout->addWidget(edit_notes, 7, 0);
     
     connect(this->edit_name, &QLineEdit::textChanged, this, &JourneyEdit::saveData);
     connect(this->edit_date_from, &QDateEdit::dateChanged, this, &JourneyEdit::saveData);
@@ -42,10 +42,10 @@ void JourneyEdit::drawGUI()
     
     // BEGIN: groups for visits and tickets areas
     QWidget *widget_groups = new QWidget;
-    QHBoxLayout *layout_groups = new QHBoxLayout;
+    QVBoxLayout *layout_groups = new QVBoxLayout;
     widget_groups->setLayout(layout_groups);
     layout_groups->setMargin(0);
-    this->layout->addWidget(widget_groups);
+    this->layout->addWidget(widget_groups, 0, 1, 8, 1);
     
     QGroupBox *group_visits = new QGroupBox("Visited People");
     QGroupBox *group_tickets = new QGroupBox("Tickets");
