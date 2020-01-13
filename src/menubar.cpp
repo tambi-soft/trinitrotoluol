@@ -65,6 +65,9 @@ void MenuBar::addToolsMenu()
     //connect(currenciesAction, &QAction::triggered, this, &MenuBar::currencies);
     connect(currenciesAction, &QAction::triggered, this, &MenuBar::signalCurrencies);
     
+    QAction *donationsAction = new QAction(QIcon(":money_receive"), "Donations");
+    connect(donationsAction, &QAction::triggered, this, &MenuBar::signalDonations);
+    
     QAction *settingsAction = new QAction(QIcon::fromTheme("applications-system"), "&Settings");
     connect(settingsAction, &QAction::triggered, this, &MenuBar::signalSettings);
     
@@ -74,6 +77,7 @@ void MenuBar::addToolsMenu()
     menu->addAction(expensesListAction);
     menu->addAction(sqlEditorAction);
     menu->addAction(currenciesAction);
+    menu->addAction(donationsAction);
     menu->addAction(settingsAction);
 }
 

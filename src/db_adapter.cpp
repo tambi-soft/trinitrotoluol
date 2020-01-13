@@ -823,26 +823,35 @@ void DbAdapter::deleteCurrency(qlonglong rowid)
 }
 
 
-void DbAdapter::donationsSelect()
+QList<QMap<QString,QVariant>> DbAdapter::donationsSelect()
 {
+    QSqlQuery query(this->db);
+    query.prepare("SELECT rowid, rowid_people, amount, rowid_currencies INTEGER, date FROM people_donations");
     
+    return dbIteratorToMapList(query);
 }
 
-void DbAdapter::donationsSelectForPerson(qlonglong rowid_person)
+QMap<QString, QVariant> DbAdapter::donationsSelectForPerson(qlonglong rowid_person)
 {
     
 }
 
 void DbAdapter::donationInsert(QMap<QString, QVariant> data)
 {
-    
+    QSqlQuery query(this->db);
+    query.prepare("INSERT INTO people_donations (rowid_people, amount, rowid_currencies, date) VALUES (:rowid_people, :amount, :rowid_currencies, :date)");
+    query.bindValue(":rowid_people", data["rowid_people"].toString());
+    query.bindValue(":amount", data["amount"].toString());
+    query.bindValue(":rowid_currencies", data["rowid_currencies"].toString());
+    query.bindValue(":date", data["date"].toString());
+    query.exec();
 }
-
+/*
 void DbAdapter::donationsInsert(QList<QMap<QString, QVariant> > data)
 {
     
 }
-
+*/
 void DbAdapter::donationDelete(qlonglong rowid_donation)
 {
     

@@ -31,6 +31,7 @@ private:
     void quitApplication();
     
 signals:
+    void signalDonations();
     void signalImportDonations();
     void signalMailList();
     void signalSettings();

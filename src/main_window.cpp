@@ -14,7 +14,8 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
     
     this->menu_bar = new MenuBar();
     setMenuBar(this->menu_bar);
-    connect(this->menu_bar, &MenuBar::signalImportDonations, this, &QTNTMainWindow::addImportDonationsTab);
+    connect(this->menu_bar, &MenuBar::signalDonations, this, &QTNTMainWindow::addDonationsListTab);
+    connect(this->menu_bar, &MenuBar::signalImportDonations, this, &QTNTMainWindow::addDonationsImportTab);
     connect(this->menu_bar, &MenuBar::signalMailList, this, &QTNTMainWindow::addMailListTab);
     connect(this->menu_bar, &MenuBar::signalSettings, this, &QTNTMainWindow::addSettingsTab);
     connect(this->menu_bar, &MenuBar::signalSQLEditor, this, &QTNTMainWindow::addSQLEditorTab);
@@ -176,7 +177,14 @@ void QTNTMainWindow::onPeopleDataChanged()
     this->people_list->dataChanged();
 }
 
-void QTNTMainWindow::addImportDonationsTab()
+void QTNTMainWindow::addDonationsListTab()
+{
+    DonationsList *don = new DonationsList(this->db);
+    QIcon *icon = new QIcon(":money_receive");
+    createSingleTab("Donations", don, icon);
+}
+
+void QTNTMainWindow::addDonationsImportTab()
 {
     DonationsImport *don = new DonationsImport(this->db);
     QIcon *icon = new QIcon(QIcon::fromTheme("emblem-downloads"));
