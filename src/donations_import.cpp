@@ -17,7 +17,11 @@ QWidget *DonationsImport::stackSelectSourceFormat()
 {
     QWidget *widget = new QWidget;
     
+    QVBoxLayout *lay = new QVBoxLayout;
+    widget->setLayout(lay);
     
+    // multiple file open dialog with filter "csv"
+    // (more formats maybe later)
     
     return widget;
 }

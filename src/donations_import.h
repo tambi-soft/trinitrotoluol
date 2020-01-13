@@ -6,6 +6,7 @@
 #include <QStackedWidget>
 #include <QStackedLayout>
 #include <QVBoxLayout>
+#include <QPushButton>
 
 #include "db_adapter.h"
 
