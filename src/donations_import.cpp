@@ -30,7 +30,8 @@ QWidget *DonationsImport::stackAssignmentMatrix()
 {
     QWidget *widget = new QWidget;
     
-    
+    QVBoxLayout *lay = new QVBoxLayout;
+    widget->setLayout(lay);
     
     return widget;
 }
@@ -39,7 +40,15 @@ QWidget *DonationsImport::stackImportProgress()
 {
     QWidget *widget = new QWidget;
     
+    QVBoxLayout *lay = new QVBoxLayout;
+    widget->setLayout(lay);
     
+    QProgressBar *progress = new QProgressBar;
+    
+    QTextEdit *edit_log = new QTextEdit;
+    
+    lay->addWidget(progress);
+    lay->addWidget(edit_log);
     
     return widget;
 }

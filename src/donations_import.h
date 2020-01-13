@@ -7,6 +7,8 @@
 #include <QStackedLayout>
 #include <QVBoxLayout>
 #include <QPushButton>
+#include <QTextEdit>
+#include <QProgressBar>
 
 #include "db_adapter.h"
 
