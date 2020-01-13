@@ -180,6 +180,8 @@ void QTNTMainWindow::onPeopleDataChanged()
 void QTNTMainWindow::addDonationsListTab()
 {
     DonationsList *don = new DonationsList(this->db);
+    connect(don, &DonationsList::signalImportDonations, this, &QTNTMainWindow::addDonationsImportTab);
+    
     QIcon *icon = new QIcon(":money_receive");
     createSingleTab("Donations", don, icon);
 }
