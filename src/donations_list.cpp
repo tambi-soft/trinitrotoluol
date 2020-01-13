@@ -5,6 +5,7 @@ DonationsList::DonationsList(DbAdapter *db, QWidget *parent) : QWidget(parent)
     this->db = db;
     
     setLayout(this->layout);
+    this->scroll_area->setWidgetResizable(true);
     
     QPushButton *button_import = new QPushButton("import donations");
     connect(button_import, &QPushButton::clicked, this, &DonationsList::signalImportDonations);
@@ -32,7 +33,10 @@ void DonationsList::showData()
     {
         QMap<QString,QVariant> donation = data.at(i);
         
-        
+        this->grid->addWidget(new QLabel(donation["name"].toString()), i, 0);
+        this->grid->addWidget(new QLabel(donation["amount"].toString()), i, 1);
+        this->grid->addWidget(new QLabel(donation["code"].toString()), i, 2);
+        this->grid->addWidget(new QLabel(donation["date"].toString()), i, 3);
     }
     
     this->grid->setColumnStretch(100, 100);

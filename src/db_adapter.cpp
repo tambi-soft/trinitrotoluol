@@ -825,8 +825,10 @@ void DbAdapter::deleteCurrency(qlonglong rowid)
 
 QList<QMap<QString,QVariant>> DbAdapter::donationsSelect()
 {
-    QSqlQuery query(this->db);
-    query.prepare("SELECT rowid, rowid_people, amount, rowid_currencies INTEGER, date FROM people_donations");
+    QSqlQuery query("SELECT name, people_donations.rowid, rowid_people, amount, currencies.code, rowid_currencies, people_donations.date "
+                  "FROM people_donations "
+                  "LEFT JOIN people ON rowid_people=people.rowid "
+                  "LEFT JOIN currencies ON rowid_currencies=currencies.rowid", this->db);
     
     return dbIteratorToMapList(query);
 }

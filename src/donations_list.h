@@ -6,6 +6,7 @@
 #include <QGridLayout>
 #include <QScrollArea>
 #include <QPushButton>
+#include <QLabel>
 
 #include "db_adapter.h"
 
