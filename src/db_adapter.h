@@ -84,6 +84,12 @@ public:
     void updateCurrency(qlonglong rowid, QString code, QString exchange_rate, QString notes);
     void deleteCurrency(qlonglong rowid);
     
+    void donationsSelect();
+    void donationsSelectForPerson(qlonglong rowid_person);
+    void donationInsert(QMap<QString,QVariant> data);
+    void donationsInsert(QList<QMap<QString,QVariant>> data);
+    void donationDelete(qlonglong rowid_donation);
+    
 private:
     QSqlDatabase db;
     

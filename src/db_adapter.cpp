@@ -156,16 +156,42 @@ void DbAdapter::initializeTables()
         "FROM people "
         "WHERE flag_deactivated < 1", this->db);
     
-    QSqlQuery query_settings("CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT)", this->db);
+    QSqlQuery query_settings("CREATE TABLE IF NOT EXISTS settings ("
+                             "key TEXT PRIMARY KEY,"
+                             " value TEXT)", this->db);
     
-    QSqlQuery query_currencies("CREATE TABLE IF NOT EXISTS currencies (rowid INTEGER PRIMARY KEY AUTOINCREMENT, code TEXT, exchange_rate INTEGER, flag_default INTEGER UNIQUE, notes TEXT)", this->db);
+    QSqlQuery query_currencies("CREATE TABLE IF NOT EXISTS currencies ("
+                               "rowid INTEGER PRIMARY KEY AUTOINCREMENT,"
+                               " code TEXT,"
+                               " exchange_rate INTEGER,"
+                               " flag_default INTEGER UNIQUE,"
+                               " notes TEXT)", this->db);
     
-    QSqlQuery query_people_donations("CREATE TABLE IF NOT EXISTS people_donations (rowid_people INTEGER PRIMARY KEY, amount INTEGER, rowid_currencies INTEGER, date TEXT)", this->db);
+    QSqlQuery query_people_donations("CREATE TABLE IF NOT EXISTS people_donations ("
+                                     "rowid INTEGER KEY,"
+                                     " rowid_people INTEGER PRIMARY KEY,"
+                                     " amount INTEGER,"
+                                     " rowid_currencies INTEGER,"
+                                     " date TEXT)", this->db);
     
-    QSqlQuery query_expenses("CREATE TABLE IF NOT EXISTS expenses (rowid INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, amount INTEGER, cost_one INTEGER, rowid_currency INTEGER, date TEXT DEFAULT CURRENT_TIMESTAMP, notes TEXT, flag_settled INTEGER)", this->db);
+    QSqlQuery query_expenses("CREATE TABLE IF NOT EXISTS expenses ("
+                             "rowid INTEGER PRIMARY KEY AUTOINCREMENT,"
+                             " name TEXT,"
+                             " amount INTEGER,"
+                             " cost_one INTEGER,"
+                             " rowid_currency INTEGER,"
+                             " date TEXT DEFAULT CURRENT_TIMESTAMP,"
+                             " notes TEXT,"
+                             " flag_settled INTEGER)", this->db);
     
-    QSqlQuery query_people_relatives("CREATE TABLE IF NOT EXISTS people_relatives (rowid_people_a INTEGER PRIMARY KEY, rowid_people_b INTEGER KEY, rowid_people_relatives_labels)", this->db);
-    QSqlQuery query_people_relatives_labels("CREATE TABLE IF NOT EXISTS people_relatives_labels (rowid INTEGER PRIMARY KEY AUTOINCREMENT, label TEXT UNIQUE, translation TEXT)", this->db);
+    QSqlQuery query_people_relatives("CREATE TABLE IF NOT EXISTS people_relatives ("
+                                     "rowid_people_a INTEGER PRIMARY KEY,"
+                                     " rowid_people_b INTEGER KEY,"
+                                     " rowid_people_relatives_labels)", this->db);
+    QSqlQuery query_people_relatives_labels("CREATE TABLE IF NOT EXISTS people_relatives_labels ("
+                                            "rowid INTEGER PRIMARY KEY AUTOINCREMENT,"
+                                            " label TEXT UNIQUE,"
+                                            " translation TEXT)", this->db);
 
     //qDebug() << this->db.lastError();
     //qDebug() << query_sent_mail.lastQuery();
@@ -794,4 +820,30 @@ void DbAdapter::deleteCurrency(qlonglong rowid)
     query.prepare("DELETE FROM currencies WHERE rowid=:rowid");
     query.bindValue(":rowid", rowid);
     query.exec();
+}
+
+
+void DbAdapter::donationsSelect()
+{
+    
+}
+
+void DbAdapter::donationsSelectForPerson(qlonglong rowid_person)
+{
+    
+}
+
+void DbAdapter::donationInsert(QMap<QString, QVariant> data)
+{
+    
+}
+
+void DbAdapter::donationsInsert(QList<QMap<QString, QVariant> > data)
+{
+    
+}
+
+void DbAdapter::donationDelete(qlonglong rowid_donation)
+{
+    
 }
