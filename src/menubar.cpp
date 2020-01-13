@@ -4,26 +4,32 @@ MenuBar::MenuBar(QMenuBar *parent) : QMenuBar(parent)
 {
     addFileMenu();
     //addJourneysMenu();
-    addTNTMenu();
+    //addTNTMenu();
     addToolsMenu();
     addHelpMenu();
 }
 
 void MenuBar::addFileMenu()
 {
+    QAction *importDonationsAction = new QAction(QIcon::fromTheme("emblem-downloads"), "&Import Donations");
+    importDonationsAction->setStatusTip("Import a CSV-File from TNT Connect");
+    connect(importDonationsAction, &QAction::triggered, this, &MenuBar::signalImportDonations);
+    
     QAction *exitAction = new QAction(QIcon::fromTheme("application-exit"), "&Exit");
     exitAction->setShortcut(QKeySequence::fromString("Ctrl+Q"));
     exitAction->setStatusTip("Exit Application");
     connect(exitAction, &QAction::triggered, this, &MenuBar::quitApplication);
     
     QMenu *menu = addMenu("&File");
+    menu->addAction(importDonationsAction);
     menu->addAction(exitAction);
 }
 
 void MenuBar::addJourneysMenu()
 {
     QAction *journeyListAction = new QAction("Journey List");
-    connect(journeyListAction, &QAction::triggered, this, &MenuBar::journeyList);
+    //connect(journeyListAction, &QAction::triggered, this, &MenuBar::journeyList);
+    connect(journeyListAction, &QAction::triggered, this, &MenuBar::signalJourneyList);
     
     QMenu *menu = addMenu("&Journeys");
     menu->addAction(journeyListAction);
@@ -40,19 +46,24 @@ void MenuBar::addTNTMenu()
 void MenuBar::addToolsMenu()
 {
     QAction *mailListAction = new QAction(QIcon::fromTheme("mail-send"), "Mailings");
-    connect(mailListAction, &QAction::triggered, this, &MenuBar::mailList);
+    //connect(mailListAction, &QAction::triggered, this, &MenuBar::mailList);
+    connect(mailListAction, &QAction::triggered, this, &MenuBar::signalMailList);
     
     QAction *journeyListAction = new QAction(QIcon(":icon_journey"), "Journeys");
-    connect(journeyListAction, &QAction::triggered, this, &MenuBar::journeyList);
+    //connect(journeyListAction, &QAction::triggered, this, &MenuBar::journeyList);
+    connect(journeyListAction, &QAction::triggered, this, &MenuBar::signalJourneyList);
     
     QAction *expensesListAction = new QAction(QIcon(":icon_expenses"), "Expenses");
-    connect(expensesListAction, &QAction::triggered, this, &MenuBar::expensesList);
+    //connect(expensesListAction, &QAction::triggered, this, &MenuBar::expensesList);
+    connect(expensesListAction, &QAction::triggered, this, &MenuBar::signalExpensesList);
     
     QAction *sqlEditorAction = new QAction(QIcon(":sqlite-logo"), "SQL-Editor");
-    connect(sqlEditorAction, &QAction::triggered, this, &MenuBar::showSQLEditor);
+    //connect(sqlEditorAction, &QAction::triggered, this, &MenuBar::showSQLEditor);
+    connect(sqlEditorAction, &QAction::triggered, this, &MenuBar::signalSQLEditor);
     
     QAction *currenciesAction = new QAction(QIcon(":icon_currencies"), "Currencies");
-    connect(currenciesAction, &QAction::triggered, this, &MenuBar::currencies);
+    //connect(currenciesAction, &QAction::triggered, this, &MenuBar::currencies);
+    connect(currenciesAction, &QAction::triggered, this, &MenuBar::signalCurrencies);
     
     QAction *settingsAction = new QAction(QIcon::fromTheme("applications-system"), "&Settings");
     connect(settingsAction, &QAction::triggered, this, &MenuBar::signalSettings);
@@ -79,28 +90,33 @@ void MenuBar::quitApplication()
 {
     QApplication::quit();
 }
-
+/*
 void MenuBar::mailList()
 {
     emit signalMailList();
 }
-
+*/
+/*
 void MenuBar::showSQLEditor()
 {
     emit signalSQLEditor();
 }
-
+*/
+/*
 void MenuBar::journeyList()
 {
     emit signalJourneyList();
 }
-
+*/
+/*
 void MenuBar::expensesList()
 {
     emit signalExpensesList();
 }
-
+*/
+/*
 void MenuBar::currencies()
 {
     emit signalCurrencies();
 }
+*/

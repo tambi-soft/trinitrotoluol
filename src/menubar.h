@@ -31,6 +31,7 @@ private:
     void quitApplication();
     
 signals:
+    void signalImportDonations();
     void signalMailList();
     void signalSettings();
     void signalSQLEditor();
@@ -40,11 +41,11 @@ signals:
     void signalAbout();
     
 public slots:
-    void mailList();
-    void showSQLEditor();
-    void journeyList();
-    void expensesList();
-    void currencies();
+    //void mailList();
+    //void showSQLEditor();
+    //void journeyList();
+    //void expensesList();
+    //void currencies();
 };
 
 #endif // MENUBAR_H

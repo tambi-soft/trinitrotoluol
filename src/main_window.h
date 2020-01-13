@@ -25,6 +25,7 @@
 #include "currencies.h"
 #include "expenses_list.h"
 #include "help_about_widget.h"
+#include "donations_import.h"
 
 class QTNTMainWindow : public QMainWindow
 {
@@ -65,6 +66,7 @@ private slots:
     void addPeopleTab();
     void onPeopleDataChanged();
     
+    void addImportDonationsTab();
     void addMailListTab();
     void addMailEditTab(qlonglong rowid);
     void addMailSendTab(qlonglong rowid, QString number);

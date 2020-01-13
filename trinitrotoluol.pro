@@ -42,6 +42,7 @@ QT += widgets \
 HEADERS += \
     src/combo_currencies.h \
     src/currencies.h \
+    src/donations_import.h \
     src/expenses_list.h \
     src/journey_edit.h \
     src/journey_list.h \
@@ -70,6 +71,7 @@ HEADERS += \
 SOURCES += \
     src/combo_currencies.cpp \
     src/currencies.cpp \
+    src/donations_import.cpp \
     src/expenses_list.cpp \
     src/journey_edit.cpp \
     src/journey_list.cpp \
