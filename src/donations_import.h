@@ -11,6 +11,9 @@
 #include <QProgressBar>
 #include <QFileDialog>
 
+#include <QMap>
+#include <QList>
+
 #include "db_adapter.h"
 
 class DonationsImport : public QWidget
