@@ -9,6 +9,7 @@
 #include <QPushButton>
 #include <QTextEdit>
 #include <QProgressBar>
+#include <QFileDialog>
 
 #include "db_adapter.h"
 
@@ -24,8 +25,16 @@ private:
     QStackedWidget *stack = new QStackedWidget;
     
     QWidget *stackSelectSourceFormat();
-    QWidget *stackAssignmentMatrix();
+    QWidget *stackAssignmentMatrixCSV();
     QWidget *stackImportProgress();
+    
+    void showCSVFileDialog();
+    
+    QWidget *stack_select_source;
+    QWidget *stack_assignment_matrix_csv;
+    QWidget *stack_import_progress;
+    
+    QString filepath;
     
 signals:
     
