@@ -15,6 +15,7 @@
 #include <QList>
 
 #include "db_adapter.h"
+#include "donations_import_matrix.h"
 
 class DonationsImport : public QWidget
 {
@@ -28,14 +29,14 @@ private:
     QStackedWidget *stack = new QStackedWidget;
     
     QWidget *stackSelectSourceFormat();
-    QWidget *stackAssignmentMatrixCSV();
+    void stackAssignmentMatrix(QString url_csv);
     QWidget *stackImportProgress();
     
     void showCSVFileDialog();
     
-    QWidget *stack_select_source;
-    QWidget *stack_assignment_matrix_csv;
-    QWidget *stack_import_progress;
+    QWidget *stack_select_source = nullptr;
+    QWidget *stack_assignment_matrix = nullptr;
+    QWidget *stack_import_progress = nullptr;
     
     QString filepath;
     
