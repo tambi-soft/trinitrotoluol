@@ -11,6 +11,8 @@
 
 #include <QDebug>
 
+#include "parse_csv.h"
+
 class DonationsImportMatrix : public QWidget
 {
     Q_OBJECT
@@ -20,8 +22,7 @@ public:
 private:
     QGridLayout *layout = new QGridLayout;
     
-    void processCSVFile(QString importfile_path);
-    QStringList processCSVLine(QString line_input);
+    
     
 signals:
     
