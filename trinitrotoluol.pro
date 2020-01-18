@@ -44,6 +44,7 @@ HEADERS += \
     src/currencies.h \
     src/donations_import.h \
     src/donations_import_matrix.h \
+    src/donations_import_progress.h \
     src/donations_list.h \
     src/expenses_list.h \
     src/journey_edit.h \
@@ -76,6 +77,7 @@ SOURCES += \
     src/currencies.cpp \
     src/donations_import.cpp \
     src/donations_import_matrix.cpp \
+    src/donations_import_progress.cpp \
     src/donations_list.cpp \
     src/expenses_list.cpp \
     src/journey_edit.cpp \

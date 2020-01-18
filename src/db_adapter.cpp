@@ -523,6 +523,8 @@ void DbAdapter::insertSettings(QString key, QString value)
     query.bindValue(":key", key);
     query.bindValue(":value", value);
     query.exec();
+    
+    this->db.commit();
 }
 
 void DbAdapter::insertSettings(QString key, int value)

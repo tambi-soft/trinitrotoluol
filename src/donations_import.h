@@ -16,6 +16,8 @@
 
 #include "db_adapter.h"
 #include "donations_import_matrix.h"
+#include "donations_import_progress.h"
+#include "parse_csv.h"
 
 class DonationsImport : public QWidget
 {
@@ -29,8 +31,6 @@ private:
     QStackedWidget *stack = new QStackedWidget;
     
     QWidget *stackSelectSourceFormat();
-    void stackAssignmentMatrix(QString url_csv);
-    QWidget *stackImportProgress();
     
     void showCSVFileDialog();
     

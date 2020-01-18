@@ -4,10 +4,6 @@ DonationsImportMatrix::DonationsImportMatrix(QString importfile_path, QWidget *p
 {
     setLayout(this->layout);
     
-    if (importfile_path.toLower().endsWith(".csv"))
-    {
-        ParseCSV *parser = new ParseCSV;
-        QList<QMap<QString,QString>> data = parser->processCSVFile(importfile_path);
-    }
+    
 }
 
