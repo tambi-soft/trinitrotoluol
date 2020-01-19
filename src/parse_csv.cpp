@@ -65,34 +65,46 @@ QStringList ParseCSV::processCSVLine(QString line_input)
             if (! in_quotation)
             {
                 // we have just flipped from true to false
-                if (line.length() > 0)
-                {
+                //if (line.length() > 0)
+                //{
                     splitted.append(line);
-                }
+                    //qDebug() << line;
+                //}
                 line = "";
             }
         }
         
         if (in_quotation)
         {
-            line.append(line_input.at(i));
+            if (line_input.at(i) != "\"")
+            {
+                line.append(line_input.at(i));
+            }
         }
+        /*
         else
         {
             if (line_input.at(i) == ",")
             {
                 if (line.length() > 0)
                 {
+                    // this seems never to happen
                     splitted.append(line);
+                    //qDebug() << line;
                 }
                 line = "";
             }
         }
+        */
     }
+    /*
     if (line.length() > 0)
     {
+        // this seems never to happen
         splitted.append(line);
+        //qDebug() << line;
     }
+    */
     
     return splitted;
 }

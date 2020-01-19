@@ -5,8 +5,11 @@
 #include <QWidget>
 
 #include <QGridLayout>
+#include <QVBoxLayout>
 
 #include <QTextEdit>
+#include <QProgressBar>
+#include <QLabel>
 
 #include "db_adapter.h"
 
@@ -18,7 +21,8 @@ public:
     
 private:
     DbAdapter *db;
-    QGridLayout *layout = new QGridLayout;
+    //QGridLayout *layout = new QGridLayout;
+    QVBoxLayout *layout = new QVBoxLayout;
     
     QTextEdit *edit_log = new QTextEdit;
     

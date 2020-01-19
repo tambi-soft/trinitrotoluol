@@ -27,6 +27,7 @@ public:
     void deletePerson(qlonglong rowid);
     void deactivatePerson(qlonglong rowid);
     QMap<QString, QVariant> selectPerson(qlonglong rowid);
+    qlonglong personRowidForTNTCode(QString code);
     void linkSpouses(qlonglong rowid_a, qlonglong rowid_b);
     void unlinkSpouses(qlonglong rowid_a, qlonglong rowid_b);
     //QList<QMap<QString, QVariant>> selectAllPersons();
@@ -83,6 +84,7 @@ public:
     qlonglong insertCurrency();
     void updateCurrency(qlonglong rowid, QString code, QString exchange_rate, QString notes);
     void deleteCurrency(qlonglong rowid);
+    qlonglong currencyROWIDForCode(QString code);
     
     QList<QMap<QString, QVariant> > donationsSelect();
     QMap<QString, QVariant> donationsSelectForPerson(qlonglong rowid_person);

@@ -168,11 +168,13 @@ void DbAdapter::initializeTables()
                                " notes TEXT)", this->db);
     
     QSqlQuery query_people_donations("CREATE TABLE IF NOT EXISTS people_donations ("
-                                     "rowid INTEGER KEY,"
-                                     " rowid_people INTEGER PRIMARY KEY,"
-                                     " amount INTEGER,"
+                                     "rowid INTEGER PRIMARY KEY,"
+                                     " rowid_people INTEGER,"
+                                     " person_name TEXT,"
+                                     " amount REAL,"
                                      " rowid_currencies INTEGER,"
-                                     " date TEXT)", this->db);
+                                     " date TEXT,"
+                                     " memo TEXT)", this->db);
     
     QSqlQuery query_expenses("CREATE TABLE IF NOT EXISTS expenses ("
                              "rowid INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -320,6 +322,16 @@ QMap<QString,QVariant> DbAdapter::selectPerson(qlonglong rowid)
     query.exec();
     
     return dbIteratorToMap(query);
+}
+
+qlonglong DbAdapter::personRowidForTNTCode(QString code)
+{
+    QSqlQuery query(this->db);
+    query.prepare("SELECT rowid FROM people WHERE tnt_id=:tnt_id");
+    query.bindValue(":tnt_id", code.toInt());
+    query.exec();
+    
+    return dbIteratorToMap(query)["rowid"].toLongLong();
 }
 
 QList<QMap<QString,QVariant>> DbAdapter::selectAllPersonsFiltered(int todo, int waiting, int donating, int deactivated, int agreed_mail, QString group, QString name, QString mail)
@@ -824,6 +836,16 @@ void DbAdapter::deleteCurrency(qlonglong rowid)
     query.exec();
 }
 
+qlonglong DbAdapter::currencyROWIDForCode(QString code)
+{
+    QSqlQuery query(this->db);
+    query.prepare("SELECT rowid FROM currencies WHERE code=:code");
+    query.bindValue(":code", code);
+    query.exec();
+    
+    return dbIteratorToMap(query)["rowid"].toLongLong();
+}
+
 
 QList<QMap<QString,QVariant>> DbAdapter::donationsSelect()
 {
@@ -842,12 +864,23 @@ QMap<QString, QVariant> DbAdapter::donationsSelectForPerson(qlonglong rowid_pers
 
 void DbAdapter::donationInsert(QMap<QString, QVariant> data)
 {
+    /*
+    rowid_people INTEGER PRIMARY KEY,"
+                                         " person_name TEXT,"
+                                         " amount REAL,"
+                                         " rowid_currencies INTEGER,"
+                                         " date TEXT,"
+                                         " memo TEXT
+            */
     QSqlQuery query(this->db);
-    query.prepare("INSERT INTO people_donations (rowid_people, amount, rowid_currencies, date) VALUES (:rowid_people, :amount, :rowid_currencies, :date)");
+    query.prepare("INSERT INTO people_donations (rowid_people, person_name, amount, rowid_currencies, date, memo) VALUES (:rowid_people, :person_name, :amount, :rowid_currencies, :date, :memo)");
+    
     query.bindValue(":rowid_people", data["rowid_people"].toString());
+    query.bindValue(":person_name", data["person_name"].toString());
     query.bindValue(":amount", data["amount"].toString());
     query.bindValue(":rowid_currencies", data["rowid_currencies"].toString());
     query.bindValue(":date", data["date"].toString());
+    query.bindValue(":memo", data["memo"].toString());
     query.exec();
 }
 /*

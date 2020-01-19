@@ -53,10 +53,12 @@ void DonationsImport::showCSVFileDialog()
         // [this slotnames] -> [csv colname]
         QMap<QString,QString> data_map;
         // for testing
-        //data_map["rowid_people"]
-        //data_map["amount"]
-        //data_map["rowid_currencies"]
-        //data_map["date"]
+        data_map["person_name"] = "DonorName";
+        data_map["person_tnt_code"] = "DonorCode";
+        data_map["amount"] = "Amount";
+        data_map["currency_code"] = "TenderedCurrency";
+        data_map["date"] = "GiftDate";
+        data_map["memo"] = "Memo";
         
         
         this->stack_import_progress = new DonationsImportProgress(this->db, data, data_map);
