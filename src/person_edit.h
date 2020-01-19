@@ -13,6 +13,7 @@
 #include <QPushButton>
 #include <QDialog>
 #include <QDate>
+#include <QScrollArea>
 
 #include "db_adapter.h"
 #include "people_selector.h"
@@ -115,6 +116,25 @@ private:
     QTableWidget *table = new QTableWidget;
     
     void showData();
+};
+
+class PersonDonations : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit PersonDonations(DbAdapter *db, qlonglong rowid, QWidget *parent = nullptr);
+    
+private:
+    DbAdapter *db;
+    qlonglong rowid_person;
+    QVBoxLayout *layout = new QVBoxLayout;
+    QGridLayout *grid = new QGridLayout;
+    
+    QScrollArea *scroll_area = new QScrollArea;
+    QWidget *scroll_widget = nullptr;
+    
+    void showData();
+    
 };
 
 class GroupsEdit : public QWidget

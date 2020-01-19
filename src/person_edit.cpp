@@ -9,27 +9,32 @@ PersonDetails::PersonDetails(DbAdapter *db, qlonglong rowid, QWidget *parent) : 
     connect(edit, &PersonEdit::dataChanged, this, &PersonDetails::onDataChanged);
     PersonVisits *visits = new PersonVisits(db, rowid);
     PersonMails *mails = new PersonMails(db, rowid);
+    PersonDonations *donations = new PersonDonations(db, rowid);
     
     QGroupBox *group_data = new QGroupBox("Data");
     QGroupBox *group_visits = new QGroupBox("Visits");
     QGroupBox *group_mails = new QGroupBox("Mails");
+    QGroupBox *group_donations = new QGroupBox("Donations");
     
     QVBoxLayout *layout_data = new QVBoxLayout;
     QVBoxLayout *layout_visits = new QVBoxLayout;
     QVBoxLayout *layout_mails = new QVBoxLayout;
+    QVBoxLayout *layout_donations = new QVBoxLayout;
     
     group_data->setLayout(layout_data);
     group_visits->setLayout(layout_visits);
     group_mails->setLayout(layout_mails);
+    group_donations->setLayout(layout_donations);
     
     layout_data->addWidget(edit);
     layout_visits->addWidget(visits);
     layout_mails->addWidget(mails);
+    layout_donations->addWidget(donations);
     
-    //grid->addWidget(edit, 0, 0, 2, 1);
-    grid->addWidget(group_data, 0, 0, 2, 1);
+    grid->addWidget(group_data, 0, 0, 3, 1);
     grid->addWidget(group_visits, 0, 1);
     grid->addWidget(group_mails, 1, 1);
+    grid->addWidget(group_donations, 2, 1);
 }
 
 void PersonDetails::onDataChanged()
@@ -334,6 +339,63 @@ void PersonMails::showData()
     
     //this->table->resizeRowsToContents();
     this->table->resizeColumnsToContents();
+}
+
+
+
+PersonDonations::PersonDonations(DbAdapter *db, qlonglong rowid, QWidget *parent)
+    : QWidget(parent)
+{
+    this->db = db;
+    this->rowid_person = rowid;
+    
+    setLayout(this->layout);
+    this->layout->setMargin(0);
+    
+    this->scroll_area->setWidgetResizable(true);
+    
+    this->layout->addWidget(this->scroll_area);
+    
+    showData();
+}
+
+void PersonDonations::showData()
+{
+    this->scroll_widget = new QWidget(this);
+    this->scroll_widget->setLayout(this->grid);
+    this->scroll_area->setWidget(this->scroll_widget);
+    
+    QList<QMap<QString,QVariant>> data = this->db->donationsSelectForPerson(this->rowid_person);
+    
+    this->grid->addWidget(new QLabel("<b>Amount</b>"), 0, 0);
+    this->grid->addWidget(new QLabel("<b>Currency</b>"), 0, 1);
+    this->grid->addWidget(new QLabel("<b>Date</b>"), 0, 2);
+    this->grid->addWidget(new QLabel("<b>Memo</b>"), 0, 3);
+    
+    QMap<QString,QVariant> currency_default = this->db->currencySelectDefault();
+    double sum = 0;
+    for (int i=0; i < data.length(); ++i)
+    {
+        sum += data.at(i)["amount"].toDouble() * data.at(i)["exchange_rate"].toDouble();
+        
+        QLabel *label_amount = new QLabel(data.at(i)["amount"].toString());
+        QLabel *label_currency = new QLabel(data.at(i)["code"].toString());
+        QLabel *label_date = new QLabel(data.at(i)["date"].toString());
+        QLabel *label_memo = new QLabel(data.at(i)["memo"].toString());
+        
+        this->grid->addWidget(label_amount, i+1, 0);
+        this->grid->addWidget(label_currency, i+1, 1);
+        this->grid->addWidget(label_date, i+1, 2);
+        this->grid->addWidget(label_memo, i+1, 3);
+    }
+    
+    QLabel *label_sum_name = new QLabel("<b>Sum:</b>");
+    QLabel *label_sum_value = new QLabel(QString::number(sum));
+    QLabel *label_sum_currency = new QLabel(currency_default["code"].toString());
+    
+    this->grid->addWidget(label_sum_name, data.length()+10, 0);
+    this->grid->addWidget(label_sum_value, data.length()+10, 1);
+    this->grid->addWidget(label_sum_currency, data.length()+10, 2);
 }
 
 

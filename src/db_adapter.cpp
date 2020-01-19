@@ -846,6 +846,13 @@ qlonglong DbAdapter::currencyROWIDForCode(QString code)
     return dbIteratorToMap(query)["rowid"].toLongLong();
 }
 
+QMap<QString,QVariant> DbAdapter::currencySelectDefault()
+{
+    QSqlQuery query("SELECT rowid, code FROM currencies WHERE exchange_rate=1 ORDER BY rowid LIMIT 1", this->db);
+    
+    return dbIteratorToMap(query);
+}
+
 
 QList<QMap<QString,QVariant>> DbAdapter::donationsSelect()
 {
@@ -857,9 +864,18 @@ QList<QMap<QString,QVariant>> DbAdapter::donationsSelect()
     return dbIteratorToMapList(query);
 }
 
-QMap<QString, QVariant> DbAdapter::donationsSelectForPerson(qlonglong rowid_person)
+QList<QMap<QString,QVariant>> DbAdapter::donationsSelectForPerson(qlonglong rowid_people)
 {
+    QSqlQuery query(this->db);
+    query.prepare("SELECT name, people_donations.rowid, rowid_people, amount, currencies.code, currencies.exchange_rate, rowid_currencies, people_donations.date, memo"
+                  " FROM people_donations"
+                  " LEFT JOIN people ON rowid_people=people.rowid"
+                  " LEFT JOIN currencies ON rowid_currencies=currencies.rowid"
+                  " WHERE rowid_people=:rowid_people");
+    query.bindValue(":rowid_people", rowid_people);
+    query.exec();
     
+    return dbIteratorToMapList(query);
 }
 
 void DbAdapter::donationInsert(QMap<QString, QVariant> data)
