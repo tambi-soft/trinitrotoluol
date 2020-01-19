@@ -393,6 +393,9 @@ void PersonDonations::showData()
     QLabel *label_sum_value = new QLabel(QString::number(sum));
     QLabel *label_sum_currency = new QLabel(currency_default["code"].toString());
     
+    // spacer
+    this->grid->addWidget(new QLabel(""), data.length()+9, 0);
+    
     this->grid->addWidget(label_sum_name, data.length()+10, 0);
     this->grid->addWidget(label_sum_value, data.length()+10, 1);
     this->grid->addWidget(label_sum_currency, data.length()+10, 2);
