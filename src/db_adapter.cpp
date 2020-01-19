@@ -561,12 +561,13 @@ QString DbAdapter::selectSettings(QString key)
 
 QList<QMap<QString,QVariant>> DbAdapter::selectJourneys()
 {
-    QSqlQuery query("SELECT j.rowid, j.name, j.date_from, j.date_to, printf('%.2f', t.costs) AS costs "
-                    "FROM journeys j "
-                    "LEFT JOIN ( "
-                        "SELECT rowid_journeys, SUM(cost) AS costs "
-                        "FROM journey_tickets "
-                        "GROUP BY rowid_journeys "
+    QSqlQuery query("SELECT j.rowid, j.name, j.date_from, j.date_to, printf('%.2f', t.costs) AS costs"
+                    " FROM journeys j"
+                    " LEFT JOIN ("
+                        " SELECT rowid_journeys, SUM(cost * currencies.exchange_rate) AS costs"
+                    " FROM journey_tickets"
+                    " LEFT JOIN currencies ON journey_tickets.rowid_currency=currencies.rowid"
+                    " GROUP BY rowid_journeys "
                     ") t ON t.rowid_journeys = j.rowid "
                     "ORDER BY date_from, date_to", this->db);
     

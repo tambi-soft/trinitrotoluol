@@ -20,6 +20,7 @@ JourneyList::JourneyList(DbAdapter *db, QWidget *parent)
 void JourneyList::showJourneys()
 {
     QList<QMap<QString,QVariant>> data = this->db->selectJourneys();
+    QString currency_code_default = this->db->currencySelectDefault()["code"].toString();
     
     this->grid = new QGridLayout(this);
     this->scroll_widget = new QWidget(this);
@@ -62,6 +63,7 @@ void JourneyList::showJourneys()
         this->grid->addWidget(new QLabel(date_from), i, 3, Qt::AlignRight);
         this->grid->addWidget(new QLabel(date_to), i, 4, Qt::AlignRight);
         this->grid->addWidget(new QLabel(journey["costs"].toString()), i, 5, Qt::AlignRight);
+        this->grid->addWidget(new QLabel(currency_code_default), i, 6);
     }
     // push all columns to the left for getting the table a bit more compact
     this->grid->setColumnStretch(100, 100);
