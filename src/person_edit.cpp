@@ -274,33 +274,39 @@ PersonVisits::PersonVisits(DbAdapter *db, qlonglong rowid, QWidget *parent)
     setLayout(this->layout);
     this->layout->setMargin(0);
     
-    this->layout->addWidget(this->table);
+    this->scroll_area->setWidgetResizable(true);
+    
+    this->layout->addWidget(this->scroll_area);
+    
+    this->grid->setHorizontalSpacing(20);
     
     showData();
 }
 
 void PersonVisits::showData()
 {
+    this->scroll_widget = new QWidget(this);
+    this->scroll_widget->setLayout(this->grid);
+    this->scroll_area->setWidget(this->scroll_widget);
+    
     QList<QMap<QString,QVariant>> data = this->db->selectVisitsForPerson(this->rowid_person);
     
-    QStringList headers;
-    headers << "journey_name" << "date" << "notes";
-    
-    this->table->setColumnCount(headers.length());
-    this->table->setRowCount(data.length());
-    this->table->setHorizontalHeaderLabels(headers);
+    this->grid->addWidget(new QLabel("<b>Journey Name</b>"), 0, 0);
+    this->grid->addWidget(new QLabel("<b>Date</b>"), 0, 1);
+    this->grid->addWidget(new QLabel("<b>Notes</b>"), 0, 2);
     
     for (int i=0; i < data.length(); ++i)
     {
         QMap<QString,QVariant> visit = data.at(i);
         
-        this->table->setItem(i, 0, new QTableWidgetItem(visit["journey_name"].toString()));
-        this->table->setItem(i, 1, new QTableWidgetItem(visit["date"].toString()));
-        this->table->setItem(i, 2, new QTableWidgetItem(visit["notes"].toString()));
+        this->grid->addWidget(new QLabel(visit["journey_name"].toString()), i+1, 0);
+        this->grid->addWidget(new QLabel(visit["date"].toString()), i+1, 1);
+        this->grid->addWidget(new QLabel(visit["notes"].toString()), i+1, 2);
     }
-    
-    //this->table->resizeRowsToContents();
-    this->table->resizeColumnsToContents();
+    // push all columns to the left for getting the table a bit more compact
+    this->grid->setColumnStretch(100, 100);
+    // push everything up
+    this->grid->setRowStretch(data.length()+100, 100);
 }
 
 
@@ -313,32 +319,37 @@ PersonMails::PersonMails(DbAdapter *db, qlonglong rowid, QWidget *parent)
     setLayout(this->layout);
     this->layout->setMargin(0);
     
-    this->layout->addWidget(this->table);
+    this->scroll_area->setWidgetResizable(true);
+    
+    this->layout->addWidget(this->scroll_area);
+    
+    this->grid->setHorizontalSpacing(20);
     
     showData();
 }
 
 void PersonMails::showData()
 {
+    this->scroll_widget = new QWidget(this);
+    this->scroll_widget->setLayout(this->grid);
+    this->scroll_area->setWidget(this->scroll_widget);
+    
     QList<QMap<QString,QVariant>> data = this->db->selectMailsForPerson(this->rowid_person);
     
-    QStringList headers;
-    headers << "number" << "date";
-    
-    this->table->setColumnCount(headers.length());
-    this->table->setRowCount(data.length());
-    this->table->setHorizontalHeaderLabels(headers);
+    this->grid->addWidget(new QLabel("<b>Number</b>"), 0, 0);
+    this->grid->addWidget(new QLabel("<b>Date</b>"), 0, 1);
     
     for (int i=0; i < data.length(); ++i)
     {
         QMap<QString,QVariant> mail = data.at(i);
         
-        this->table->setItem(i, 0, new QTableWidgetItem(mail["number"].toString()));
-        this->table->setItem(i, 1, new QTableWidgetItem(mail["date"].toString()));
+        this->grid->addWidget(new QLabel(mail["number"].toString()), i+1, 0);
+        this->grid->addWidget(new QLabel(mail["date"].toString()), i+1, 1);
     }
-    
-    //this->table->resizeRowsToContents();
-    this->table->resizeColumnsToContents();
+    // push all columns to the left for getting the table a bit more compact
+    this->grid->setColumnStretch(100, 100);
+    // push everything up
+    this->grid->setRowStretch(data.length()+100, 100);
 }
 
 
@@ -355,6 +366,8 @@ PersonDonations::PersonDonations(DbAdapter *db, qlonglong rowid, QWidget *parent
     this->scroll_area->setWidgetResizable(true);
     
     this->layout->addWidget(this->scroll_area);
+    
+    this->grid->setHorizontalSpacing(20);
     
     showData();
 }
@@ -399,6 +412,11 @@ void PersonDonations::showData()
     this->grid->addWidget(label_sum_name, data.length()+10, 0);
     this->grid->addWidget(label_sum_value, data.length()+10, 1);
     this->grid->addWidget(label_sum_currency, data.length()+10, 2);
+    
+    // push all columns to the left for getting the table a bit more compact
+    this->grid->setColumnStretch(100, 100);
+    // push everything up
+    this->grid->setRowStretch(data.length()+100, 100);
 }
 
 

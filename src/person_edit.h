@@ -98,7 +98,10 @@ private:
     DbAdapter *db;
     qlonglong rowid_person;
     QVBoxLayout *layout = new QVBoxLayout;
-    QTableWidget *table = new QTableWidget;
+    QGridLayout *grid = new QGridLayout;
+    
+    QScrollArea *scroll_area = new QScrollArea;
+    QWidget *scroll_widget = nullptr;
     
     void showData();
 };
@@ -113,7 +116,10 @@ private:
     DbAdapter *db;
     qlonglong rowid_person;
     QVBoxLayout *layout = new QVBoxLayout;
-    QTableWidget *table = new QTableWidget;
+    QGridLayout *grid = new QGridLayout;
+    
+    QScrollArea *scroll_area = new QScrollArea;
+    QWidget *scroll_widget = nullptr;
     
     void showData();
 };
