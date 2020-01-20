@@ -59,6 +59,8 @@ void DonationsImport::showCSVFileDialog()
         data_map["currency_code"] = "TenderedCurrency";
         data_map["date"] = "GiftDate";
         data_map["memo"] = "Memo";
+        data_map["tnt_code"] = "Code";
+        data_map["tnt_donor_code"] = "DonorCode";
         
         
         this->stack_import_progress = new DonationsImportProgress(this->db, data, data_map);

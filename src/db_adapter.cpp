@@ -174,7 +174,8 @@ void DbAdapter::initializeTables()
                                      " amount REAL,"
                                      " rowid_currencies INTEGER,"
                                      " date TEXT,"
-                                     " memo TEXT)", this->db);
+                                     " memo TEXT,"
+                                     " tnt_code TEXT)", this->db);
     
     QSqlQuery query_expenses("CREATE TABLE IF NOT EXISTS expenses ("
                              "rowid INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -276,6 +277,17 @@ qlonglong DbAdapter::insertNewPerson()
     this->db.commit();
     return query.lastInsertId().toLongLong();
 }
+
+void DbAdapter::personInsertTNTID(qlonglong rowid, QString tnt_id)
+{
+    QSqlQuery query(this->db);
+    query.prepare("UPDATE people SET tnt_id=:tnt_id WHERE rowid=:rowid");
+    query.bindValue(":tnt_id", tnt_id);
+    query.bindValue(":rowid", rowid);
+    query.exec();
+    this->db.commit();
+}
+
 /*
 qlonglong DbAdapter::insertNewPerson(QMap<QString,QVariant> data)
 {
@@ -881,16 +893,8 @@ QList<QMap<QString,QVariant>> DbAdapter::donationsSelectForPerson(qlonglong rowi
 
 void DbAdapter::donationInsert(QMap<QString, QVariant> data)
 {
-    /*
-    rowid_people INTEGER PRIMARY KEY,"
-                                         " person_name TEXT,"
-                                         " amount REAL,"
-                                         " rowid_currencies INTEGER,"
-                                         " date TEXT,"
-                                         " memo TEXT
-            */
     QSqlQuery query(this->db);
-    query.prepare("INSERT INTO people_donations (rowid_people, person_name, amount, rowid_currencies, date, memo) VALUES (:rowid_people, :person_name, :amount, :rowid_currencies, :date, :memo)");
+    query.prepare("INSERT INTO people_donations (rowid_people, person_name, amount, rowid_currencies, date, memo, tnt_code) VALUES (:rowid_people, :person_name, :amount, :rowid_currencies, :date, :memo, :tnt_code)");
     
     query.bindValue(":rowid_people", data["rowid_people"].toString());
     query.bindValue(":person_name", data["person_name"].toString());
@@ -898,15 +902,33 @@ void DbAdapter::donationInsert(QMap<QString, QVariant> data)
     query.bindValue(":rowid_currencies", data["rowid_currencies"].toString());
     query.bindValue(":date", data["date"].toString());
     query.bindValue(":memo", data["memo"].toString());
+    query.bindValue(":tnt_code", data["tnt_code"].toString());
     query.exec();
 }
-/*
-void DbAdapter::donationsInsert(QList<QMap<QString, QVariant> > data)
-{
-    
-}
-*/
+
 void DbAdapter::donationDelete(qlonglong rowid_donation)
 {
     
+}
+
+bool DbAdapter::donationDoesEntryAlreadyExist(QString person_name, QString amount, QString date, QString memo, QString tnt_code)
+{
+    QSqlQuery query(this->db);
+    query.prepare("SELECT COUNT(*) AS count FROM people_donations WHERE person_name=:person_name AND amount=:amount AND date=:date AND memo=:memo AND tnt_code=:tnt_code");
+    query.bindValue(":person_name", person_name);
+    query.bindValue(":amount", amount);
+    query.bindValue(":date", date);
+    query.bindValue(":memo", memo);
+    query.bindValue(":tnt_code", tnt_code);
+    query.exec();
+    
+    QMap<QString,QVariant> result = dbIteratorToMap(query);
+    if (result["count"].toInt() > 0)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }

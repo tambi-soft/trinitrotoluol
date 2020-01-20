@@ -10,8 +10,14 @@
 #include <QTextEdit>
 #include <QProgressBar>
 #include <QLabel>
+#include <QDialog>
+#include <QGroupBox>
+#include <QMessageBox>
+
+#include <QDate>
 
 #include "db_adapter.h"
+#include "people_selector.h"
 
 class DonationsImportProgress : public QWidget
 {
@@ -21,12 +27,25 @@ public:
     
 private:
     DbAdapter *db;
-    //QGridLayout *layout = new QGridLayout;
+    QString person_name;
+    QString memo;
+    QString tnt_code;
+    QString tnt_donor_code;
+    
+    qlonglong rowid_people;
+    qlonglong rowid_currency;
+    
     QVBoxLayout *layout = new QVBoxLayout;
     
     QTextEdit *edit_log = new QTextEdit;
     
+    void selectPerson(QString name, QString memo);
+    QDialog *dialog_select_person;
+    
 signals:
+    
+private slots:
+    void onPersonSelected(qlonglong rowid, QString name);
     
 };
 
