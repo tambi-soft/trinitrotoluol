@@ -23,6 +23,8 @@ CurrenciesList::CurrenciesList(DbAdapter *db, GridWidget *parent) : GridWidget(p
 
 void CurrenciesList::showData()
 {
+    deleteView();
+    
     this->scroll_widget = new QWidget(this);
     this->scroll_widget->setLayout(this->grid);
     this->scroll_area->setWidget(this->scroll_widget);
@@ -73,7 +75,6 @@ void CurrenciesList::onNewButtonClicked()
 {
     qlonglong rowid = this->db->insertCurrency();
     
-    deleteView();
     showData();
     
     onEditButtonClicked(rowid);
@@ -86,14 +87,12 @@ void CurrenciesList::onDeleteButtonClicked(qlonglong rowid, QString code)
     {
         this->db->deleteCurrency(rowid);
         
-        deleteView();
         showData();
     }
 }
 
 void CurrenciesList::onUpdateSignaled()
 {
-    deleteView();
     showData();
 }
 

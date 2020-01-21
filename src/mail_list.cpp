@@ -1,69 +1,55 @@
 #include "mail_list.h"
 
-MailList::MailList(DbAdapter *db, QWidget *parent)
-    : QWidget(parent)
-    , layout (new QVBoxLayout)
-    , table (new QTableWidget)
+MailList::MailList(DbAdapter *db, GridWidget *parent) : GridWidget(parent)
 {
     this->db = db;
     
     setLayout(this->layout);
- 
-    this->data = this->db->selectAllMails();
-    
-    this->layout->addWidget(this->table);
-    
-    //initView();
     
     QPushButton *button_new_mail = new QPushButton("new Mail");
     connect(button_new_mail, &QPushButton::clicked, this, &MailList::onNewMail);
     this->layout->addWidget(button_new_mail);
 }
 
-void MailList::initView()
+void MailList::showData()
 {
-    QStringList headers;
-    headers << "" << "" << "" << "number" << "subject" << "date of creation" << "date last edit";
-    this->table->setColumnCount(headers.length());
-    this->table->setHorizontalHeaderLabels(headers);
+    deleteView();
+    
+    this->grid->addWidget(new QLabel("<b>Number</b>"), 0, 3);
+    this->grid->addWidget(new QLabel("<b>Subject</b>"), 0, 4);
+    this->grid->addWidget(new QLabel("<b>Date of Creation</b>"), 0, 5);
+    this->grid->addWidget(new QLabel("<b>Date of last Edit</b>"), 0, 6);
     
     this->data = this->db->selectAllMails();
     
-    if (this->data.length() > 0)
+    for (int i=0; i < data.length(); ++i)
     {
-        this->table->setRowCount(this->data.length());
+        qlonglong rowid = data.at(i)["rowid"].toLongLong();
+        QString number = data.at(i)["number"].toString();
+        QString subject = data.at(i)["subject"].toString();
         
-        for (int i=0; i < data.length(); ++i)
-        {
-            qlonglong rowid = data.at(i)["rowid"].toLongLong();
-            QString number = data.at(i)["number"].toString();
-            QString subject = data.at(i)["subject"].toString();
-            
-            QPushButton *button_delete = new QPushButton();
-            button_delete->setIcon(QIcon::fromTheme("edit-delete"));
-            button_delete->setToolTip("delete this email");
-            connect(button_delete, &QPushButton::clicked, this, [this, rowid, subject]{ onDeleteMail(rowid, subject); });
-            
-            QPushButton *button_edit = new QPushButton();
-            button_edit->setIcon(QIcon::fromTheme("document-properties"));
-            button_edit->setToolTip("edit this email");
-            connect(button_edit, &QPushButton::clicked, this, [this, rowid]{ onEditMail(rowid); });
-            
-            QPushButton *button_send = new QPushButton();
-            button_send->setIcon(QIcon::fromTheme("document-send"));
-            button_send->setToolTip("send this email");
-            connect(button_send, &QPushButton::clicked, this, [this, rowid, number]{ onSendMail(rowid, number); });
-            
-            this->table->setCellWidget(i, 0, button_delete);
-            this->table->setCellWidget(i, 1, button_edit);
-            this->table->setCellWidget(i, 2, button_send);
-            this->table->setItem(i, 3, new QTableWidgetItem(number));
-            this->table->setItem(i, 4, new QTableWidgetItem(subject));
-            this->table->setItem(i, 5, new QTableWidgetItem(data.at(i)["date"].toString()));
-            this->table->setItem(i, 6, new QTableWidgetItem(data.at(i)["date_last_edit"].toString()));
-        }
+        QPushButton *button_delete = new QPushButton();
+        button_delete->setIcon(QIcon::fromTheme("edit-delete"));
+        button_delete->setToolTip("delete this email");
+        connect(button_delete, &QPushButton::clicked, this, [this, rowid, subject]{ onDeleteMail(rowid, subject); });
         
-        this->table->resizeColumnsToContents();
+        QPushButton *button_edit = new QPushButton();
+        button_edit->setIcon(QIcon::fromTheme("document-properties"));
+        button_edit->setToolTip("edit this email");
+        connect(button_edit, &QPushButton::clicked, this, [this, rowid]{ onEditMail(rowid); });
+        
+        QPushButton *button_send = new QPushButton();
+        button_send->setIcon(QIcon::fromTheme("document-send"));
+        button_send->setToolTip("send this email");
+        connect(button_send, &QPushButton::clicked, this, [this, rowid, number]{ onSendMail(rowid, number); });
+        
+        this->grid->addWidget(button_delete, i+1, 0);
+        this->grid->addWidget(button_edit, i+1, 1);
+        this->grid->addWidget(button_send, i+1, 2);
+        this->grid->addWidget(new QLabel(number), i+1, 3);
+        this->grid->addWidget(new QLabel(subject), i+1, 4);
+        this->grid->addWidget(new QLabel(data.at(i)["date"].toString()), i+1, 5);
+        this->grid->addWidget(new QLabel(data.at(i)["date_last_edit"].toString()), i+1, 6);
     }
 }
 
@@ -73,8 +59,7 @@ void MailList::onNewMail()
     
     emit signalEditMail(rowid);
     
-    this->table->clear();
-    initView();
+    showData();
 }
 
 void MailList::onEditMail(qlonglong rowid)
@@ -97,13 +82,11 @@ void MailList::onDeleteMail(qlonglong rowid, QString subject)
     {
         this->db->deleteMail(rowid);
         
-        this->table->clear();
-        initView();
+        showData();
     }
 }
 
 void MailList::showEvent(QShowEvent */*event*/)
 {
-    this->table->clear();
-    initView();
+    showData();
 }
