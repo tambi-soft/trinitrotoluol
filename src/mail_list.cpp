@@ -4,8 +4,6 @@ MailList::MailList(DbAdapter *db, GridWidget *parent) : GridWidget(parent)
 {
     this->db = db;
     
-    setLayout(this->layout);
-    
     QPushButton *button_new_mail = new QPushButton("new Mail");
     connect(button_new_mail, &QPushButton::clicked, this, &MailList::onNewMail);
     this->layout->addWidget(button_new_mail);

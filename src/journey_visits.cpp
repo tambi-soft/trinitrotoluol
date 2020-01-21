@@ -1,24 +1,18 @@
 #include "journey_visits.h"
 
-JourneyVisits::JourneyVisits(qlonglong rowid_journey, DbAdapter *db, QString date_hint, QWidget *parent)
-    : QWidget(parent)
-    , table (new QTableWidget)
-    , layout (new QVBoxLayout)
+JourneyVisits::JourneyVisits(qlonglong rowid_journey, DbAdapter *db, QString date_hint, GridWidget *parent) : GridWidget(parent)
 {
     this->rowid_journey = rowid_journey;
     this->db = db;
     
     this->date_hint = date_hint;
     
-    setLayout(this->layout);
-    
     QPushButton *button_new_visit = new QPushButton("add visited person");
     connect(button_new_visit, &QPushButton::clicked, this, &JourneyVisits::addNewVisit);
     
-    this->layout->addWidget(this->table);
     this->layout->addWidget(button_new_visit);
     
-    loadData();
+    showData();
 }
 
 void JourneyVisits::setDateHint(QString date)
@@ -26,15 +20,15 @@ void JourneyVisits::setDateHint(QString date)
     this->date_hint = date;
 }
 
-void JourneyVisits::loadData()
+void JourneyVisits::showData()
 {
-    QStringList header;
-    header << "" << "" << "name" << "date" << "notes";
-    this->table->setColumnCount(header.length());
-    this->table->setHorizontalHeaderLabels(header);
+    deleteView();
+    
+    this->grid->addWidget(new QLabel("<b>Name</b>"), 0, 2);
+    this->grid->addWidget(new QLabel("<b>Date</b>"), 0, 3);
+    this->grid->addWidget(new QLabel("<b>Notes</b>"), 0, 4);
     
     QList<QMap<QString,QVariant>> data = this->db->selectVisitsForJourney(this->rowid_journey);
-    this->table->setRowCount(data.length());
     
     for (int i=0; i < data.length(); ++i)
     {
@@ -50,30 +44,20 @@ void JourneyVisits::loadData()
         button_edit->setIcon(QIcon::fromTheme("document-properties"));
         connect(button_edit, &QPushButton::clicked, this, [this, rowid]{ JourneyVisits::editVisit(rowid); });
         
-        this->table->setCellWidget(i, 0, button_delete);
-        this->table->setCellWidget(i, 1, button_edit);
+        this->grid->addWidget(button_delete, i+1, 0);
+        this->grid->addWidget(button_edit, i+1, 1);
         
-        this->table->setItem(i, 2, new QTableWidgetItem(journey["name"].toString()));
-        this->table->setItem(i, 3, new QTableWidgetItem(QDate::fromString(journey["date"].toString(), "yyyy-MM-dd").toString()));
-        this->table->setItem(i, 4, new QTableWidgetItem(journey["notes"].toString()));
+        this->grid->addWidget(new QLabel(journey["name"].toString()), i+1, 2);
+        this->grid->addWidget(new QLabel(QDate::fromString(journey["date"].toString(), "yyyy-MM-dd").toString()), i+1, 3);
+        this->grid->addWidget(new QLabel(journey["notes"].toString()), i+1, 4);
     }
-    
-    this->table->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    this->table->resizeColumnsToContents();
-}
-
-void JourneyVisits::reloadData()
-{
-    this->table->clear();
-    loadData();
 }
 
 void JourneyVisits::addNewVisit()
 {
     qlonglong rowid_visits = this->db->insertVisit(this->rowid_journey);
     
-    this->table->clear();
-    loadData();
+    showData();
     
     editVisit(rowid_visits);
 }
@@ -81,7 +65,7 @@ void JourneyVisits::addNewVisit()
 void JourneyVisits::editVisit(qlonglong rowid_visits)
 {
     JourneyVisitsEdit *edit = new JourneyVisitsEdit(rowid_visits, this->db, this->date_hint);
-    connect(edit, &JourneyVisitsEdit::signalReload, this, &JourneyVisits::reloadData);
+    connect(edit, &JourneyVisitsEdit::signalReload, this, &JourneyVisits::showData);
     
     QDialog *dialog = new QDialog();
     QVBoxLayout *layout_dialog = new QVBoxLayout;
@@ -99,8 +83,7 @@ void JourneyVisits::deleteVisit(qlonglong rowid, QString name)
     {
         this->db->deleteVisit(rowid);
         
-        this->table->clear();
-        loadData();
+        showData();
     }
 }
 

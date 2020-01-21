@@ -8,8 +8,6 @@
 #include <QVBoxLayout>
 
 #include <QPushButton>
-#include <QTableWidget>
-#include <QTableWidgetItem>
 #include <QAbstractItemView>
 #include <QDateEdit>
 #include <QLineEdit>
@@ -23,24 +21,22 @@
 
 #include "db_adapter.h"
 #include "people_selector.h"
+#include "lib/grid_widget.h"
 
-class JourneyVisits : public QWidget
+class JourneyVisits : public GridWidget
 {
     Q_OBJECT
 public:
-    explicit JourneyVisits(qlonglong rowid_journey, DbAdapter *db, QString date_hint, QWidget *parent = nullptr);
+    explicit JourneyVisits(qlonglong rowid_journey, DbAdapter *db, QString date_hint, GridWidget *parent = nullptr);
     void setDateHint(QString date);
+    
+    void showData();
     
 private:
     qlonglong rowid_journey;
     DbAdapter *db;
-    QTableWidget *table;
-    QVBoxLayout *layout;
     
     QString date_hint;
-    
-    void loadData();
-    void reloadData();
     
 signals:
     

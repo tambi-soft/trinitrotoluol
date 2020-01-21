@@ -8,9 +8,6 @@
 #include <QVBoxLayout>
 
 #include <QPushButton>
-#include <QTableWidget>
-#include <QTableWidgetItem>
-#include <QAbstractItemView>
 #include <QDateEdit>
 #include <QLineEdit>
 #include <QTextEdit>
@@ -25,20 +22,19 @@
 
 #include "db_adapter.h"
 #include "combo_currencies.h"
+#include "lib/grid_widget.h"
 
-class JourneyTickets : public QWidget
+class JourneyTickets : public GridWidget
 {
     Q_OBJECT
 public:
-    explicit JourneyTickets(qlonglong rowid_journey, DbAdapter *db, QWidget *parent = nullptr);
+    explicit JourneyTickets(qlonglong rowid_journey, DbAdapter *db, GridWidget *parent = nullptr);
     
 private:
     qlonglong rowid_journey;
     DbAdapter *db;
-    QTableWidget *table;
-    QVBoxLayout *layout;
     
-    void loadData();
+    void showData();
     
 signals:
     
@@ -48,7 +44,6 @@ private slots:
     void addNewTicket();
     void editTicket(qlonglong rowid);
     void deleteTicket(qlonglong rowid, QString name);
-    void reloadData();
 };
 
 class JourneyTicketsEdit : public QWidget

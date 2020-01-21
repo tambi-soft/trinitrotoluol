@@ -1,9 +1,6 @@
 #include "journey_tickets.h"
 
-JourneyTickets::JourneyTickets(qlonglong rowid_journey, DbAdapter *db, QWidget *parent)
-    : QWidget(parent)
-    , table (new QTableWidget)
-    , layout (new QVBoxLayout)
+JourneyTickets::JourneyTickets(qlonglong rowid_journey, DbAdapter *db, GridWidget *parent) : GridWidget(parent)
 {
     this->rowid_journey = rowid_journey;
     this->db = db;
@@ -13,22 +10,22 @@ JourneyTickets::JourneyTickets(qlonglong rowid_journey, DbAdapter *db, QWidget *
     QPushButton *button_new_visit = new QPushButton("add ticket");
     connect(button_new_visit, &QPushButton::clicked, this, &JourneyTickets::addNewTicket);
     
-    this->layout->addWidget(this->table);
     this->layout->addWidget(button_new_visit);
     
-    loadData();
+    showData();
 }
 
-void JourneyTickets::loadData()
+void JourneyTickets::showData()
 {
+    deleteView();
+    
     QList<QMap<QString,QVariant>> data = this->db->selectTicketsForJourney(this->rowid_journey);
     
-    this->table->setRowCount(data.length());
-    
-    QStringList header;
-    header << "" << "" << "name" << "cost" << "currency" << "settled" << "notes";
-    this->table->setColumnCount(header.length());
-    this->table->setHorizontalHeaderLabels(header);
+    this->grid->addWidget(new QLabel("<b>Name</b>"), 0, 2);
+    this->grid->addWidget(new QLabel("<b>Cost</b>"), 0, 3);
+    this->grid->addWidget(new QLabel("<b>Currency</b>"), 0, 4);
+    this->grid->addWidget(new QLabel("<b>Settled</b>"), 0, 5);
+    this->grid->addWidget(new QLabel("<b>Notes</b>"), 0, 6);
     
     for (int i=0; i < data.length(); ++i)
     {
@@ -45,41 +42,35 @@ void JourneyTickets::loadData()
         button_edit->setIcon(QIcon::fromTheme("document-properties"));
         connect(button_edit, &QPushButton::clicked, this, [this, rowid]{ JourneyTickets::editTicket(rowid); });
         
-        this->table->setCellWidget(i, 0, button_delete);
-        this->table->setCellWidget(i, 1, button_edit);
+        this->grid->addWidget(button_delete, i+1, 0);
+        this->grid->addWidget(button_edit, i+1, 1);
         
-        this->table->setItem(i, 2, new QTableWidgetItem(ticket["name"].toString()));
+        this->grid->addWidget(new QLabel(ticket["name"].toString()), i+1, 2);
         
-        QTableWidgetItem *cost = new QTableWidgetItem(ticket["cost"].toString());
-        cost->setData(Qt::TextAlignmentRole,int(Qt::AlignRight|Qt::AlignVCenter));
-        this->table->setItem(i, 3, cost);
+        QLabel *cost = new QLabel(ticket["cost"].toString());
+        //cost->setData(Qt::TextAlignmentRole,int(Qt::AlignRight|Qt::AlignVCenter));
+        this->grid->addWidget(cost, i+1, 3);
         
-        this->table->setItem(i, 4, new QTableWidgetItem(ticket["currency_code"].toString()));
-        
-        qDebug() << ticket;
+        this->grid->addWidget(new QLabel(ticket["currency_code"].toString()), i+1, 4);
         
         if (ticket["flag_settled"].toInt() == 1)
         {
-            this->table->setItem(i, 5, new QTableWidgetItem("yes"));
+            this->grid->addWidget(new QLabel("yes"), i+1, 5);
         }
         else
         {
-            this->table->setItem(i, 5, new QTableWidgetItem("not yet"));
+            this->grid->addWidget(new QLabel("not yet"), i+1, 5);
         }
         
-        this->table->setItem(i, 6, new QTableWidgetItem(ticket["notes"].toString()));
+        this->grid->addWidget(new QLabel(ticket["notes"].toString()), i+1, 6);
     }
-    
-    this->table->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    this->table->resizeColumnsToContents();
 }
 
 void JourneyTickets::addNewTicket()
 {
     qlonglong rowid = this->db->insertTicket(this->rowid_journey);
     
-    this->table->clear();
-    loadData();
+    showData();
     
     editTicket(rowid);
 }
@@ -87,7 +78,7 @@ void JourneyTickets::addNewTicket()
 void JourneyTickets::editTicket(qlonglong rowid)
 {
     JourneyTicketsEdit *edit = new JourneyTicketsEdit(rowid, this->db);
-    connect(edit, &JourneyTicketsEdit::dataSaved, this, &JourneyTickets::reloadData);
+    connect(edit, &JourneyTicketsEdit::dataSaved, this, &JourneyTickets::showData);
     
     QDialog *dialog = new QDialog();
     QVBoxLayout *layout_dialog = new QVBoxLayout;
@@ -105,15 +96,8 @@ void JourneyTickets::deleteTicket(qlonglong rowid, QString name)
     {
         this->db->deleteTicket(rowid);
         
-        this->table->clear();
-        loadData();
+        showData();
     }
-}
-
-void JourneyTickets::reloadData()
-{
-    this->table->clear();
-    loadData();
 }
 
 
