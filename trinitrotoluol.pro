@@ -51,6 +51,7 @@ HEADERS += \
     src/journey_list.h \
     src/journey_tickets.h \
     src/journey_visits.h \
+    src/lib/grid_widget.h \
     src/mail_edit.h \
     src/mail_list.h \
     src/mail_message.h \
@@ -84,6 +85,7 @@ SOURCES += \
     src/journey_list.cpp \
     src/journey_tickets.cpp \
     src/journey_visits.cpp \
+    src/lib/grid_widget.cpp \
     src/mail_edit.cpp \
     src/mail_list.cpp \
     src/mail_message.cpp \
