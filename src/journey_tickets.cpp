@@ -135,7 +135,10 @@ JourneyTicketsEdit::JourneyTicketsEdit(qlonglong rowid, DbAdapter *db, QWidget *
     
     edit_name->setText(data["name"].toString());
     edit_cost->setValue(data["cost"].toDouble());
-    combo_currencies->setCurrentCurrencyRowid(data["rowid_currency"].toLongLong());
+    if (data["rowid_currency"].toLongLong() != 0)
+    {
+        combo_currencies->setCurrentCurrencyRowid(data["rowid_currency"].toLongLong());
+    }
     if (data["flag_settled"].toInt() == 1)
     {
         edit_flag_settled->setChecked(true);

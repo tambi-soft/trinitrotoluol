@@ -16,14 +16,11 @@ ComboCurrencies::ComboCurrencies(DbAdapter *db, QComboBox *parent) : QComboBox(p
         this->map_rowid_to_code[current_currency["rowid"].toLongLong()] = current_currency["code"].toString();
         this->map_code_to_comboid[current_currency["code"].toString()] = i;
         this->map_combo_id_to_code[i] = current_currency["code"].toString();
-        /*
-        if (data["rowid_currency"].toLongLong() == current_currency["rowid"].toLongLong())
-        {
-            currency_code = current_currency["code"].toString();
-        }
-        */
     }
     addItems(currency_codes);
+    
+    qlonglong currency_default = db->currencySelectDefault()["rowid"].toLongLong();
+    setCurrentCurrencyRowid(currency_default);
 }
 
 qlonglong ComboCurrencies::currentCurrencyRowid()
