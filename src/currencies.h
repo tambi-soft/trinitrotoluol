@@ -14,23 +14,19 @@
 #include <QLabel>
 
 #include "db_adapter.h"
+#include "lib/grid_widget.h"
 
-class CurrenciesList : public QWidget
+class CurrenciesList : public GridWidget
 {
     Q_OBJECT
 public:
-    explicit CurrenciesList(DbAdapter *db, QWidget *parent = nullptr);
+    explicit CurrenciesList(DbAdapter *db, GridWidget *parent = nullptr);
     
     void showData();
+    void onUpdateSignaled();
     
 private:
     DbAdapter *db;
-    
-    QVBoxLayout *layout = new QVBoxLayout;
-    QGridLayout *grid = new QGridLayout;
-    
-    QScrollArea *scroll_area = new QScrollArea;
-    QWidget *scroll_widget = nullptr;
     
     QComboBox *combo_default_currency;
     
@@ -40,7 +36,6 @@ public slots:
     void onEditButtonClicked(qlonglong rowid);
     void onNewButtonClicked();
     void onDeleteButtonClicked(qlonglong rowid, QString code);
-    void updateView();
 };
 
 

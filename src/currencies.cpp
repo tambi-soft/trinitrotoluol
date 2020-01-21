@@ -1,29 +1,20 @@
 #include "currencies.h"
 
-CurrenciesList::CurrenciesList(DbAdapter *db, QWidget *parent)
-    : QWidget(parent)
-    , layout (new QVBoxLayout)
+CurrenciesList::CurrenciesList(DbAdapter *db, GridWidget *parent) : GridWidget(parent)
     , combo_default_currency (new QComboBox)
 {
     this->db = db;
-    
-    setLayout(this->layout);
-    
-    this->scroll_area->setWidgetResizable(true);
-    
-    this->grid->setHorizontalSpacing(20);
     
     QPushButton *button_new_currency = new QPushButton("add new Currency");
     connect(button_new_currency, &QPushButton::clicked, this, &CurrenciesList::onNewButtonClicked);
     
     //this->layout->addWidget(new QLabel("default Currency"));
     //this->layout->addWidget(this->combo_default_currency);
-    this->layout->addWidget(new QLabel("• The default-Currency should have an Exchange-Rate of 1"));
-    this->layout->addWidget(new QLabel("• The Exchange-Rate of any other currency should be specified as a multiplicator in relation to the default Currency"));
-    this->layout->addWidget(new QLabel("\t Example:\n\t If 1 USD = 0.91 EUR, and USD is your default Currency,\n\t USD would have an Exchange-Rate of 1,\n\t EUR would have an Exchange-Rate of 0.91"));
-    this->layout->addWidget(new QLabel("• If no Currency has an Exchange-Rate of 1, the uppermost entry is taken as the default one"));
-    this->layout->addWidget(new QLabel("• If more than one Currency has an Exchange-Rate of 1, the uppermost entry with an Exchange-Rate of 1 would be the default one"));
-    this->layout->addWidget(this->scroll_area);
+    this->layout->insertWidget(0, new QLabel("• The default-Currency should have an Exchange-Rate of 1"));
+    this->layout->insertWidget(1, new QLabel("• The Exchange-Rate of any other currency should be specified as a multiplicator in relation to the default Currency"));
+    this->layout->insertWidget(2, new QLabel("\t Example:\n\t If 1 USD = 0.91 EUR, and USD is your default Currency,\n\t USD would have an Exchange-Rate of 1,\n\t EUR would have an Exchange-Rate of 0.91"));
+    this->layout->insertWidget(3, new QLabel("• If no Currency has an Exchange-Rate of 1, the uppermost entry is taken as the default one"));
+    this->layout->insertWidget(4, new QLabel("• If more than one Currency has an Exchange-Rate of 1, the uppermost entry with an Exchange-Rate of 1 would be the default one"));
     this->layout->addWidget(button_new_currency);
     
     // iso-4217
@@ -62,17 +53,12 @@ void CurrenciesList::showData()
         this->grid->addWidget(new QLabel(cur["exchange_rate"].toString()), i+1, 3);
         this->grid->addWidget(new QLabel(cur["notes"].toString()), i+1, 4);
     }
-    
-    // push all columns to the left for getting the table a bit more compact
-    this->grid->setColumnStretch(100, 100);
-    // push everything up
-    this->grid->setRowStretch(data.length()+100, 100);
 }
 
 void CurrenciesList::onEditButtonClicked(qlonglong rowid)
 {
     CurrenciesEdit *edit = new CurrenciesEdit(rowid, this->db);
-    connect(edit, &CurrenciesEdit::signalUpdate, this, &CurrenciesList::updateView);
+    connect(edit, &CurrenciesEdit::signalUpdate, this, &CurrenciesList::onUpdateSignaled);
     
     QDialog *dialog = new QDialog();
     QVBoxLayout *layout_dialog = new QVBoxLayout;
@@ -86,7 +72,10 @@ void CurrenciesList::onEditButtonClicked(qlonglong rowid)
 void CurrenciesList::onNewButtonClicked()
 {
     qlonglong rowid = this->db->insertCurrency();
-    updateView();
+    
+    deleteView();
+    showData();
+    
     onEditButtonClicked(rowid);
 }
 
@@ -97,15 +86,14 @@ void CurrenciesList::onDeleteButtonClicked(qlonglong rowid, QString code)
     {
         this->db->deleteCurrency(rowid);
         
-        updateView();
+        deleteView();
+        showData();
     }
 }
 
-void CurrenciesList::updateView()
+void CurrenciesList::onUpdateSignaled()
 {
-    this->scroll_widget->deleteLater();
-    this->grid = nullptr;
-    
+    deleteView();
     showData();
 }
 
