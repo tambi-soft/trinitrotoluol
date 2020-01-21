@@ -3,12 +3,15 @@
 CurrenciesList::CurrenciesList(DbAdapter *db, QWidget *parent)
     : QWidget(parent)
     , layout (new QVBoxLayout)
-    , table (new QTableWidget)
     , combo_default_currency (new QComboBox)
 {
     this->db = db;
     
     setLayout(this->layout);
+    
+    this->scroll_area->setWidgetResizable(true);
+    
+    this->grid->setHorizontalSpacing(20);
     
     QPushButton *button_new_currency = new QPushButton("add new Currency");
     connect(button_new_currency, &QPushButton::clicked, this, &CurrenciesList::onNewButtonClicked);
@@ -20,7 +23,7 @@ CurrenciesList::CurrenciesList(DbAdapter *db, QWidget *parent)
     this->layout->addWidget(new QLabel("\t Example:\n\t If 1 USD = 0.91 EUR, and USD is your default Currency,\n\t USD would have an Exchange-Rate of 1,\n\t EUR would have an Exchange-Rate of 0.91"));
     this->layout->addWidget(new QLabel("• If no Currency has an Exchange-Rate of 1, the uppermost entry is taken as the default one"));
     this->layout->addWidget(new QLabel("• If more than one Currency has an Exchange-Rate of 1, the uppermost entry with an Exchange-Rate of 1 would be the default one"));
-    this->layout->addWidget(this->table);
+    this->layout->addWidget(this->scroll_area);
     this->layout->addWidget(button_new_currency);
     
     // iso-4217
@@ -29,13 +32,15 @@ CurrenciesList::CurrenciesList(DbAdapter *db, QWidget *parent)
 
 void CurrenciesList::showData()
 {
+    this->scroll_widget = new QWidget(this);
+    this->scroll_widget->setLayout(this->grid);
+    this->scroll_area->setWidget(this->scroll_widget);
+    
     QList<QMap<QString,QVariant>> data = this->db->selectCurrencies();
     
-    QStringList headers;
-    headers << "" << "" << "iso-4217 code" << "exchange rate" << "notes";
-    this->table->setColumnCount(headers.length());
-    this->table->setHorizontalHeaderLabels(headers);
-    this->table->setRowCount(data.length());
+    this->grid->addWidget(new QLabel("<b>ISO-4217 Code</b>"), 0, 2);
+    this->grid->addWidget(new QLabel("<b>Exchange Rate</b>"), 0, 3);
+    this->grid->addWidget(new QLabel("<b>Notes</b>"), 0, 4);
     
     for (int i=0; i < data.length(); ++i)
     {
@@ -51,14 +56,17 @@ void CurrenciesList::showData()
         button_delete->setIcon(QIcon::fromTheme("edit-delete"));
         connect(button_delete, &QPushButton::clicked, this, [this, rowid, code]{ CurrenciesList::onDeleteButtonClicked(rowid, code); });
         
-        this->table->setCellWidget(i, 0, button_edit);
-        this->table->setCellWidget(i, 1, button_delete);
-        this->table->setItem(i, 2, new QTableWidgetItem(code));
-        this->table->setItem(i, 3, new QTableWidgetItem(cur["exchange_rate"].toString()));
-        this->table->setItem(i, 4, new QTableWidgetItem(cur["notes"].toString()));
+        this->grid->addWidget(button_edit, i+1, 0);
+        this->grid->addWidget(button_delete, i+1, 1);
+        this->grid->addWidget(new QLabel(code), i+1, 2);
+        this->grid->addWidget(new QLabel(cur["exchange_rate"].toString()), i+1, 3);
+        this->grid->addWidget(new QLabel(cur["notes"].toString()), i+1, 4);
     }
     
-    this->table->resizeColumnsToContents();
+    // push all columns to the left for getting the table a bit more compact
+    this->grid->setColumnStretch(100, 100);
+    // push everything up
+    this->grid->setRowStretch(data.length()+100, 100);
 }
 
 void CurrenciesList::onEditButtonClicked(qlonglong rowid)
@@ -95,7 +103,9 @@ void CurrenciesList::onDeleteButtonClicked(qlonglong rowid, QString code)
 
 void CurrenciesList::updateView()
 {
-    this->table->clear();
+    this->scroll_widget->deleteLater();
+    this->grid = nullptr;
+    
     showData();
 }
 

@@ -7,8 +7,7 @@
 #include <QMessageBox>
 
 #include <QVBoxLayout>
-#include <QTableWidget>
-#include <QTableWidgetItem>
+#include <QScrollArea>
 
 #include <QComboBox>
 #include <QPushButton>
@@ -26,8 +25,13 @@ public:
     
 private:
     DbAdapter *db;
-    QVBoxLayout *layout;
-    QTableWidget *table;
+    
+    QVBoxLayout *layout = new QVBoxLayout;
+    QGridLayout *grid = new QGridLayout;
+    
+    QScrollArea *scroll_area = new QScrollArea;
+    QWidget *scroll_widget = nullptr;
+    
     QComboBox *combo_default_currency;
     
 signals:
