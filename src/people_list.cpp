@@ -211,69 +211,54 @@ void PeopleList::showPeople()
         button_edit->setMaximumWidth(40);
         connect(button_edit, &QPushButton::clicked, this, [this, rowid, name]{ PeopleList::onEditPersonButtonClicked(rowid, name); });
         
-        /*
-        QPushButton *button_donations = new QPushButton();
-        button_donations->setIcon(QIcon(":money_receive"));
-        button_donations->setMaximumWidth(90);
-        connect(button_donations, &QPushButton::clicked, this, []{  });
-        */
-        
-        QLabel *label_agreed = new QLabel("[mail]", this);
-        label_agreed->setStyleSheet("QLabel { color : green; }");
-
-        QLabel *label_prayer = new QLabel("[prayer]", this);
-        label_prayer->setStyleSheet("QLabel { color: darkgreen; }");
-
-        QLabel *label_donating = new QLabel("[donating]", this);
-        label_donating->setStyleSheet("QLabel { color : blue; }");
-
-        QLabel *label_todo = new QLabel("[todo]", this);
-        label_todo->setStyleSheet("QLabel { color : red; }");
-
-        QLabel *label_waiting = new QLabel("[waiting]", this);
-        label_waiting->setStyleSheet("QLabel { color: orange; }");
-        
         this->grid->addWidget(button_delete, i, 0);
         this->grid->addWidget(button_edit, i, 1);
         
         if (person["flag_todo"] == 1)
         {
+            QLabel *label_todo = new QLabel("[todo]", this);
+            label_todo->setStyleSheet("QLabel { color : red; }");
+            
             this->grid->addWidget(label_todo, i, 2);
         }
         if (person["flag_waiting"] == 1)
         {
+            QLabel *label_waiting = new QLabel("[waiting]", this);
+            label_waiting->setStyleSheet("QLabel { color: orange; }");
+            
             this->grid->addWidget(label_waiting, i, 3);
         }
         if (person["agreed_mail"] == 1)
         {
+            QLabel *label_agreed = new QLabel("[mail]", this);
+            label_agreed->setStyleSheet("QLabel { color : green; }");
+            
             this->grid->addWidget(label_agreed, i, 4);
         }
         if (person["agreed_prayer"] == 1)
         {
+            QLabel *label_prayer = new QLabel("[prayer]", this);
+            label_prayer->setStyleSheet("QLabel { color: darkgreen; }");
+            
             this->grid->addWidget(label_prayer, i, 5);
         }
-        if (person["donations_monthly"] > 0 || person["donations_monthly_promised"] > 0)
+        if (person["donations_monthly_promised"] > 0)
         {
+            QLabel *label_donating = new QLabel("[donation promised]", this);
+            label_donating->setStyleSheet("QLabel { color : blue; }");
+            
             this->grid->addWidget(label_donating, i, 6);
         }
+        if (person["donations_received"] > 0)
+        {
+            QLabel *label_donating = new QLabel("[donating]", this);
+            label_donating->setStyleSheet("QLabel { color : darkblue; }");
+            
+            this->grid->addWidget(label_donating, i, 7);
+        }
         
-        this->grid->addWidget(new QLabel(person["name"].toString(), this), i, 7);
-        this->grid->addWidget(new QLabel(person["group"].toString(), this), i, 8);
-        
-        /*
-        this->table_widget->setCellWidget(i, 0, button_delete);
-        this->table_widget->setCellWidget(i, 1, button_edit);
-        this->table_widget->setCellWidget(i, 2, button_donations);
-        this->table_widget->setItem(i, 3, flag_todo);
-        this->table_widget->setItem(i, 4, flag_waiting);
-        this->table_widget->setItem(i, 5, flag_donations);
-        this->table_widget->setItem(i, 6, new QTableWidgetItem(person["name"].toString()));
-        this->table_widget->setItem(i, 7, new QTableWidgetItem(person["group"].toString()));
-        this->table_widget->setItem(i, 8, new QTableWidgetItem(person["email"].toString()));
-        this->table_widget->setItem(i, 9, mail);
-        this->table_widget->setItem(i, 10, prayer);
-        this->table_widget->setItem(i, 11, new QTableWidgetItem(person["agreement"].toString()));
-        */
+        this->grid->addWidget(new QLabel(person["name"].toString(), this), i, 8);
+        this->grid->addWidget(new QLabel(person["group"].toString(), this), i, 9);
     }
     // push all columns to the left for getting the table a bit more compact
     this->grid->setColumnStretch(100, 100);

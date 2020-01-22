@@ -350,9 +350,10 @@ QList<QMap<QString,QVariant>> DbAdapter::selectAllPersonsFiltered(int todo, int 
 {
     QSqlQuery query(this->db);
     // the ORs in the last two lines should really be XORs, but SQLite do not support XOR for now, and it would be far to annoying to fiddle a XOR together by myself
-    query.prepare("SELECT people.rowid, people.name, people_groups.name AS \"group\", email, agreed_mail, agreed_prayer, agreement, flag_todo, flag_waiting, donations_monthly, donations_monthly_promised "
+    query.prepare("SELECT people.rowid, people.name, people_groups.name AS \"group\", email, agreed_mail, agreed_prayer, agreement, flag_todo, flag_waiting, donations_monthly, donations_monthly_promised, people_donations.amount AS donations_received "
                   "FROM people "
                   "LEFT JOIN people_groups ON people.group_rowid=people_groups.rowid "
+                  "LEFT JOIN people_donations ON people.rowid=people_donations.rowid_people "
                   "WHERE "
                   "CASE "
                       "WHEN (:todo=0) THEN flag_todo = 0 OR flag_todo IS NULL "
@@ -385,7 +386,8 @@ QList<QMap<QString,QVariant>> DbAdapter::selectAllPersonsFiltered(int todo, int 
                   "END "
                   "AND (people_groups.name LIKE :group OR people_groups.name IS NULL) "
                   "AND (people.name LIKE :name OR people.name IS NULL) "
-                  "AND (email LIKE :mail OR email IS NULL) ");
+                  "AND (email LIKE :mail OR email IS NULL) "
+                  "GROUP BY people.rowid");
     query.bindValue(":todo", todo);
     query.bindValue(":waiting", waiting);
     query.bindValue(":donating", donating);
