@@ -19,7 +19,8 @@ public:
     DbMerge(Config *config, DbAccess *parent = nullptr);
     Config *config;
     
-    QList<QMap<QString,QVariant> > selectTables();
+    QList<QMap<QString,QVariant>> selectTables();
+    QList<QMap<QString,QVariant>> selectColumns(QString table);
     
 private:
     QSqlDatabase db;

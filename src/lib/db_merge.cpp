@@ -32,3 +32,13 @@ QList<QMap<QString,QVariant>> DbMerge::selectTables()
     
     return dbIteratorToMapList(query);
 }
+
+QList<QMap<QString,QVariant>> DbMerge::selectColumns(QString table)
+{
+    QSqlQuery query(this->db);
+    query.prepare("PRAGMA table_info(:table)");
+    query.bindValue(":table", table);
+    query.exec();
+    
+    return dbIteratorToMapList(query);
+}
