@@ -33,6 +33,7 @@ private:
 signals:
     void signalDonations();
     void signalImportDonations();
+    void signalMergeDatabase();
     void signalMailList();
     void signalSettings();
     void signalSQLEditor();

@@ -16,6 +16,7 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
     setMenuBar(this->menu_bar);
     connect(this->menu_bar, &MenuBar::signalDonations, this, &QTNTMainWindow::addDonationsListTab);
     connect(this->menu_bar, &MenuBar::signalImportDonations, this, &QTNTMainWindow::addDonationsImportTab);
+    connect(this->menu_bar, &MenuBar::signalMergeDatabase, this, &QTNTMainWindow::addMergeDatabaseTab);
     connect(this->menu_bar, &MenuBar::signalMailList, this, &QTNTMainWindow::addMailListTab);
     connect(this->menu_bar, &MenuBar::signalSettings, this, &QTNTMainWindow::addSettingsTab);
     connect(this->menu_bar, &MenuBar::signalSQLEditor, this, &QTNTMainWindow::addSQLEditorTab);
@@ -191,6 +192,13 @@ void QTNTMainWindow::addDonationsImportTab()
     DonationsImport *don = new DonationsImport(this->db);
     QIcon *icon = new QIcon(QIcon::fromTheme("emblem-downloads"));
     createSingleTab("Import Donations", don, icon);
+}
+
+void QTNTMainWindow::addMergeDatabaseTab()
+{
+    MergeDatabaseWidget *merge = new MergeDatabaseWidget(this->db);
+    QIcon *icon = new QIcon(QIcon::fromTheme("emblem-downloads"));
+    createSingleTab("Merge from other Database", merge, icon);
 }
 
 void QTNTMainWindow::addMailListTab()

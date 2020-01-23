@@ -61,6 +61,7 @@ HEADERS += \
     src/config.h \
     src/db_adapter.h \
     src/menubar.h \
+    src/merge_database_widget.h \
     src/parse_csv.h \
     src/people_list.h \
     src/people_selector.h \
@@ -92,6 +93,7 @@ SOURCES += \
     src/mail_preview.cpp \
     src/mail_send.cpp \
     src/menubar.cpp \
+    src/merge_database_widget.cpp \
     src/parse_csv.cpp \
     src/people_list.cpp \
     src/people_selector.cpp \
