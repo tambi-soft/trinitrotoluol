@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QWidget>
+#include <QFileDialog>
 
 #include "db_adapter.h"
 
@@ -15,10 +16,11 @@ public:
     DbAdapter *db;
     
 private:
+    void showFileOpenDialog();
     
     
 signals:
-    
+    void signalCloseTab();
 };
 
 #endif // MERGEDATABASEWIDGET_H

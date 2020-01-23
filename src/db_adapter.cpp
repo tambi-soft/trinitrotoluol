@@ -560,6 +560,8 @@ void DbAdapter::insertSettings(QString key, int value)
     query.bindValue(":key", key);
     query.bindValue(":value", value);
     query.exec();
+    
+    this->db.commit();
 }
 
 QString DbAdapter::selectSettings(QString key)
