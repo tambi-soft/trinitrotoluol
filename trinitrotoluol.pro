@@ -51,6 +51,8 @@ HEADERS += \
     src/journey_list.h \
     src/journey_tickets.h \
     src/journey_visits.h \
+    src/lib/db_access.h \
+    src/lib/db_merge.h \
     src/lib/grid_widget.h \
     src/mail_edit.h \
     src/mail_list.h \
@@ -86,6 +88,8 @@ SOURCES += \
     src/journey_list.cpp \
     src/journey_tickets.cpp \
     src/journey_visits.cpp \
+    src/lib/db_access.cpp \
+    src/lib/db_merge.cpp \
     src/lib/grid_widget.cpp \
     src/mail_edit.cpp \
     src/mail_list.cpp \

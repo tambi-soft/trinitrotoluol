@@ -1,6 +1,6 @@
 #include "db_adapter.h"
 
-DbAdapter::DbAdapter(Config *config, QObject *parent) : QObject(parent)
+DbAdapter::DbAdapter(Config *config, DbAccess *parent) : DbAccess(parent)
 {
     QString db_name = "trinitro";
     
@@ -24,49 +24,6 @@ DbAdapter::DbAdapter(Config *config, QObject *parent) : QObject(parent)
     }
     
     initializeTables();
-}
-
-// maps the selected field name to the fetched value
-QList<QMap<QString,QVariant>> DbAdapter::dbIteratorToMapList(QSqlQuery query)
-{
-    QList<QMap<QString,QVariant>> result;
-    
-    QSqlRecord rec = query.record();
-    while (query.next())
-    {
-        QMap<QString,QVariant> map;
-        for (int i = 0; i <= rec.count(); ++i)
-        {
-            QString name = rec.fieldName(i);
-            QString value = query.value(i).toString();
-            
-            map[name] = value;
-        }
-        
-        result.append(map);
-    }
-    
-    return result;
-}
-
-QMap<QString,QVariant> DbAdapter::dbIteratorToMap(QSqlQuery query)
-{
-    QMap<QString,QVariant> result;
-    
-    QSqlRecord rec = query.record();
-    while (query.next())
-    {
-        //result[ query.value(0).toString() ] = query.value(1).toString();
-        for (int i=0; i <= rec.count(); ++i)
-        {
-            QString name = rec.fieldName(i);
-            QVariant value = query.value(i);
-            
-            result[name] = value;
-        }
-    }
-    
-    return result;
 }
 
 void DbAdapter::initializeTables()

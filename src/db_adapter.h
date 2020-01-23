@@ -11,13 +11,14 @@
 #include <QDateTime>
 
 #include "config.h"
+#include "lib/db_access.h"
 
-class DbAdapter : public QObject
+class DbAdapter : public DbAccess
 {
     Q_OBJECT
     
 public:
-    explicit DbAdapter(Config *config, QObject *parent = nullptr);
+    explicit DbAdapter(Config *config, DbAccess *parent = nullptr);
     void commit();
     
     QSqlQuery bindPersonParams(QSqlQuery query, QMap<QString, QVariant> data);
@@ -96,9 +97,6 @@ public:
     
 private:
     QSqlDatabase db;
-    
-    QList<QMap<QString,QVariant>> dbIteratorToMapList(QSqlQuery query);
-    QMap<QString, QVariant> dbIteratorToMap(QSqlQuery query);
     
     void initializeTables();
     
