@@ -41,7 +41,7 @@ PeopleList::PeopleList(DbAdapter *db, QWidget *parent)
     
     this->line_mail_filter->setClearButtonEnabled(true);
     this->line_mail_filter->setPlaceholderText("type a MAIL address here to search");
-    connect(this->line_mail_filter, &QLineEdit::textChanged, this, &PeopleList::onNameFilterChanged);
+    connect(this->line_mail_filter, &QLineEdit::textChanged, this, &PeopleList::onMailFilterChanged);
     
     // we want to have the initialization of the separator-lines structured in a bit more compact way
     QList<QFrame*> lines;
@@ -288,7 +288,17 @@ void PeopleList::onFilterChanged()
 void PeopleList::onNameFilterChanged()
 {
     // only start to search, if search pattern at least 3 chars long
-    if (this->line_name_filter->text().length() >= 3 || this->line_mail_filter->text().length() >= 3)
+    // == 0, for if clear button pressed
+    if (this->line_name_filter->text().length() >= 3 || this->line_name_filter->text().length() == 0)
+    {
+        refresh();
+    }
+}
+void PeopleList::onMailFilterChanged()
+{
+    // only start to search, if search pattern at least 3 chars long
+    // == 0, for if clear button pressed
+    if (this->line_mail_filter->text().length() >= 3 || this->line_mail_filter->text().length() == 0)
     {
         refresh();
     }

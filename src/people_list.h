@@ -61,6 +61,7 @@ signals:
 public slots:
     void onFilterChanged();
     void onNameFilterChanged();
+    void onMailFilterChanged();
     void onGroupsFilterChanged();
     void onNewPersonButtonClicked();
     void onEditPersonButtonClicked(qlonglong rowid, QString name);
