@@ -266,28 +266,19 @@ void PersonEdit::saveData()
 
 
 
-PersonVisits::PersonVisits(DbAdapter *db, qlonglong rowid, QWidget *parent)
-    : QWidget(parent)
+PersonVisits::PersonVisits(DbAdapter *db, qlonglong rowid, GridWidget *parent)
+    : GridWidget(parent)
 {
     this->db = db;
     this->rowid_person = rowid;
-    setLayout(this->layout);
     this->layout->setMargin(0);
-    
-    this->scroll_area->setWidgetResizable(true);
-    
-    this->layout->addWidget(this->scroll_area);
-    
-    this->grid->setHorizontalSpacing(20);
     
     showData();
 }
 
 void PersonVisits::showData()
 {
-    this->scroll_widget = new QWidget(this);
-    this->scroll_widget->setLayout(this->grid);
-    this->scroll_area->setWidget(this->scroll_widget);
+    deleteView();
     
     QList<QMap<QString,QVariant>> data = this->db->selectVisitsForPerson(this->rowid_person);
     
@@ -303,36 +294,23 @@ void PersonVisits::showData()
         this->grid->addWidget(new QLabel(visit["date"].toString()), i+1, 1);
         this->grid->addWidget(new QLabel(visit["notes"].toString()), i+1, 2);
     }
-    // push all columns to the left for getting the table a bit more compact
-    this->grid->setColumnStretch(100, 100);
-    // push everything up
-    this->grid->setRowStretch(data.length()+100, 100);
 }
 
 
 
-PersonMails::PersonMails(DbAdapter *db, qlonglong rowid, QWidget *parent)
-    : QWidget(parent)
+PersonMails::PersonMails(DbAdapter *db, qlonglong rowid, GridWidget *parent)
+    : GridWidget(parent)
 {
     this->db = db;
     this->rowid_person = rowid;
-    setLayout(this->layout);
     this->layout->setMargin(0);
-    
-    this->scroll_area->setWidgetResizable(true);
-    
-    this->layout->addWidget(this->scroll_area);
-    
-    this->grid->setHorizontalSpacing(20);
     
     showData();
 }
 
 void PersonMails::showData()
 {
-    this->scroll_widget = new QWidget(this);
-    this->scroll_widget->setLayout(this->grid);
-    this->scroll_area->setWidget(this->scroll_widget);
+    deleteView();
     
     QList<QMap<QString,QVariant>> data = this->db->selectMailsForPerson(this->rowid_person);
     
@@ -346,37 +324,23 @@ void PersonMails::showData()
         this->grid->addWidget(new QLabel(mail["number"].toString()), i+1, 0);
         this->grid->addWidget(new QLabel(mail["date"].toString()), i+1, 1);
     }
-    // push all columns to the left for getting the table a bit more compact
-    this->grid->setColumnStretch(100, 100);
-    // push everything up
-    this->grid->setRowStretch(data.length()+100, 100);
 }
 
 
 
-PersonDonations::PersonDonations(DbAdapter *db, qlonglong rowid, QWidget *parent)
-    : QWidget(parent)
+PersonDonations::PersonDonations(DbAdapter *db, qlonglong rowid, GridWidget *parent)
+    : GridWidget(parent)
 {
     this->db = db;
     this->rowid_person = rowid;
-    
-    setLayout(this->layout);
     this->layout->setMargin(0);
-    
-    this->scroll_area->setWidgetResizable(true);
-    
-    this->layout->addWidget(this->scroll_area);
-    
-    this->grid->setHorizontalSpacing(20);
     
     showData();
 }
 
 void PersonDonations::showData()
 {
-    this->scroll_widget = new QWidget(this);
-    this->scroll_widget->setLayout(this->grid);
-    this->scroll_area->setWidget(this->scroll_widget);
+    deleteView();
     
     QList<QMap<QString,QVariant>> data = this->db->donationsSelectForPerson(this->rowid_person);
     
@@ -412,11 +376,6 @@ void PersonDonations::showData()
     this->grid->addWidget(label_sum_name, data.length()+10, 0);
     this->grid->addWidget(label_sum_value, data.length()+10, 1);
     this->grid->addWidget(label_sum_currency, data.length()+10, 2);
-    
-    // push all columns to the left for getting the table a bit more compact
-    this->grid->setColumnStretch(100, 100);
-    // push everything up
-    this->grid->setRowStretch(data.length()+100, 100);
 }
 
 

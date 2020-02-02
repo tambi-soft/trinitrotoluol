@@ -39,6 +39,7 @@ public slots:
 };
 
 
+
 #include <QLineEdit>
 #include <QTextEdit>
 class CurrenciesEdit : public QWidget

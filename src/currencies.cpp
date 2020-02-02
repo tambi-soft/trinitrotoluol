@@ -25,10 +25,6 @@ void CurrenciesList::showData()
 {
     deleteView();
     
-    this->scroll_widget = new QWidget(this);
-    this->scroll_widget->setLayout(this->grid);
-    this->scroll_area->setWidget(this->scroll_widget);
-    
     QList<QMap<QString,QVariant>> data = this->db->selectCurrencies();
     
     this->grid->addWidget(new QLabel("<b>ISO-4217 Code</b>"), 0, 2);

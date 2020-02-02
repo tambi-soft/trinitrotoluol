@@ -85,63 +85,55 @@ signals:
     void dataChanged();
 };
 
-#include <QTableWidget>
-#include <QTableWidgetItem>
 
-class PersonVisits : public QWidget
+
+#include "lib/grid_widget.h"
+
+class PersonVisits : public GridWidget
 {
     Q_OBJECT
 public:
-    explicit PersonVisits(DbAdapter *db, qlonglong rowid, QWidget *parent = nullptr);
+    explicit PersonVisits(DbAdapter *db, qlonglong rowid, GridWidget *parent = nullptr);
 
 private:
     DbAdapter *db;
     qlonglong rowid_person;
-    QVBoxLayout *layout = new QVBoxLayout;
-    QGridLayout *grid = new QGridLayout;
-    
-    QScrollArea *scroll_area = new QScrollArea;
-    QWidget *scroll_widget = nullptr;
     
     void showData();
 };
 
-class PersonMails : public QWidget
+
+
+class PersonMails : public GridWidget
 {
     Q_OBJECT
 public:
-    explicit PersonMails(DbAdapter *db, qlonglong rowid, QWidget *parent = nullptr);
+    explicit PersonMails(DbAdapter *db, qlonglong rowid, GridWidget *parent = nullptr);
     
 private:
     DbAdapter *db;
     qlonglong rowid_person;
-    QVBoxLayout *layout = new QVBoxLayout;
-    QGridLayout *grid = new QGridLayout;
-    
-    QScrollArea *scroll_area = new QScrollArea;
-    QWidget *scroll_widget = nullptr;
     
     void showData();
 };
 
-class PersonDonations : public QWidget
+
+
+class PersonDonations : public GridWidget
 {
     Q_OBJECT
 public:
-    explicit PersonDonations(DbAdapter *db, qlonglong rowid, QWidget *parent = nullptr);
+    explicit PersonDonations(DbAdapter *db, qlonglong rowid, GridWidget *parent = nullptr);
     
 private:
     DbAdapter *db;
     qlonglong rowid_person;
-    QVBoxLayout *layout = new QVBoxLayout;
-    QGridLayout *grid = new QGridLayout;
-    
-    QScrollArea *scroll_area = new QScrollArea;
-    QWidget *scroll_widget = nullptr;
     
     void showData();
     
 };
+
+
 
 class GroupsEdit : public QWidget
 {
