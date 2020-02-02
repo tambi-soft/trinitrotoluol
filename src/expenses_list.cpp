@@ -1,27 +1,28 @@
 #include "expenses_list.h"
 
-ExpensesList::ExpensesList(DbAdapter *db, QWidget *parent)
-    : QWidget(parent)
+ExpensesList::ExpensesList(DbAdapter *db, GridWidget *parent)
+    : GridWidget(parent)
 {
     this->db = db;
-    setLayout(this->layout);
     
     QPushButton *button_new = new QPushButton("add new expenses");
     connect(button_new, &QPushButton::clicked, this, &ExpensesList::onNewButtonClicked);
     
-    this->layout->addWidget(this->table);
     this->layout->addWidget(button_new);
 }
 
-void ExpensesList::loadData()
+void ExpensesList::showData()
 {
-    QStringList headers;
-    headers << "" << "" << "name" << "amount" << "cost one" << "currency" << "sum" << "date";
+    recreateView();
+    
+    this->grid->addWidget(new QLabel("<b>Name</b>"), 0, 2);
+    this->grid->addWidget(new QLabel("<b>Amount</b>"), 0, 3);
+    this->grid->addWidget(new QLabel("<b>Cost One</b>"), 0, 4);
+    this->grid->addWidget(new QLabel("<b>Currency</b>"), 0, 5);
+    this->grid->addWidget(new QLabel("<b>Sum</b>"), 0, 6);
+    this->grid->addWidget(new QLabel("<b>Date</b>"), 0, 7);
     
     QList<QMap<QString,QVariant>> data = this->db->selectExpenses();
-    this->table->setRowCount(data.length());
-    this->table->setColumnCount(headers.length());
-    this->table->setHorizontalHeaderLabels(headers);
     
     for (int i=0; i < data.length(); ++i)
     {
@@ -38,24 +39,20 @@ void ExpensesList::loadData()
         button_edit->setMaximumWidth(40);
         connect(button_edit, &QPushButton::clicked, this, [this, rowid]{ ExpensesList::onEditButtonClicked(rowid); });
         
-        this->table->setCellWidget(i, 0, button_delete);
-        this->table->setCellWidget(i, 1, button_edit);
+        this->grid->addWidget(button_delete, i+1, 0);
+        this->grid->addWidget(button_edit, i+1, 1);
         
-        this->table->setItem(i, 2, new QTableWidgetItem(name));
-        this->table->setItem(i, 3, new QTableWidgetItem(data.at(i)["amount"].toString()));
-        this->table->setItem(i, 4, new QTableWidgetItem(data.at(i)["cost_one"].toString()));
-        this->table->setItem(i, 5, new QTableWidgetItem(data.at(i)["currency_code"].toString()));
+        this->grid->addWidget(new QLabel(name), i+1, 2);
+        this->grid->addWidget(new QLabel(data.at(i)["amount"].toString()), i+1, 3);
+        this->grid->addWidget(new QLabel(data.at(i)["cost_one"].toString()), i+1, 4);
+        this->grid->addWidget(new QLabel(data.at(i)["currency_code"].toString()), i+1, 5);
         
         double sum = data.at(i)["cost_one"].toDouble() *
                 data.at(i)["amount"].toDouble();
-        this->table->setItem(i, 6, new QTableWidgetItem(
-                                 QString::number(sum)
-                                 ));
+        this->grid->addWidget(new QLabel(QString::number(sum)), i+1, 6);
         
-        this->table->setItem(i, 7, new QTableWidgetItem(data.at(i)["date"].toString()));
+        this->grid->addWidget(new QLabel(data.at(i)["date"].toString()), i+1, 7);
     }
-    
-    this->table->resizeColumnsToContents();
 }
 
 void ExpensesList::onDeleteButtonClicked(qlonglong rowid, QString name)
@@ -65,14 +62,14 @@ void ExpensesList::onDeleteButtonClicked(qlonglong rowid, QString name)
     {
         this->db->deleteExpense(rowid);
         
-        updateView();
+        showData();
     }
 }
 
 void ExpensesList::onEditButtonClicked(qlonglong rowid)
 {
     ExpensesEdit *edit = new ExpensesEdit(rowid, this->db);
-    connect(edit, &ExpensesEdit::signalUpdate, this, &ExpensesList::updateView);
+    connect(edit, &ExpensesEdit::signalUpdate, this, &ExpensesList::showData);
     
     QDialog *dialog = new QDialog();
     QVBoxLayout *layout_dialog = new QVBoxLayout;
@@ -86,19 +83,13 @@ void ExpensesList::onEditButtonClicked(qlonglong rowid)
 void ExpensesList::onNewButtonClicked()
 {
     qlonglong rowid = this->db->insertExpense();
-    updateView();
+    showData();
     onEditButtonClicked(rowid);
-}
-
-void ExpensesList::updateView()
-{
-    this->table->clear();
-    loadData();
 }
 
 void ExpensesList::showEvent(QShowEvent */** event **/)
 {
-    updateView();
+    showData();
 }
 
 
@@ -133,7 +124,10 @@ ExpensesEdit::ExpensesEdit(qlonglong rowid, DbAdapter *db, QWidget *parent) : QW
     this->edit_amount->setText(data["amount"].toString());
     this->edit_cost_one->setText(data["cost_one"].toString());
     
-    this->combo_currency->setCurrentCurrencyRowid(data["rowid_currency"].toLongLong());
+    if (data["rowid_currency"].toLongLong() != 0)
+    {
+        this->combo_currency->setCurrentCurrencyRowid(data["rowid_currency"].toLongLong());
+    }
     
     this->edit_date->setCalendarPopup(true);
     this->edit_date->setDate(QDate::fromString(data["date"].toString(), "yyyy-MM-dd"));

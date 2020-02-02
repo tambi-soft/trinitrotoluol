@@ -6,8 +6,6 @@
 
 #include <QVBoxLayout>
 
-#include <QTableWidget>
-#include <QTableWidgetItem>
 #include <QPushButton>
 #include <QMessageBox>
 #include <QLineEdit>
@@ -20,20 +18,20 @@
 
 #include "db_adapter.h"
 #include "combo_currencies.h"
+#include "lib/grid_widget.h"
 
-class ExpensesList : public QWidget
+class ExpensesList : public GridWidget
 {
     Q_OBJECT
 public:
-    explicit ExpensesList(DbAdapter *db, QWidget *parent = nullptr);
+    explicit ExpensesList(DbAdapter *db, GridWidget *parent = nullptr);
     
     void updateView();
     
 private:
     DbAdapter *db;
-    QVBoxLayout *layout = new QVBoxLayout;
-    QTableWidget *table = new QTableWidget;
-    void loadData();
+    
+    void showData();
     
 signals:
     
