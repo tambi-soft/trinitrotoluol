@@ -17,7 +17,7 @@ JourneyTickets::JourneyTickets(qlonglong rowid_journey, DbAdapter *db, GridWidge
 
 void JourneyTickets::showData()
 {
-    deleteView();
+    recreateView();
     
     QList<QMap<QString,QVariant>> data = this->db->selectTicketsForJourney(this->rowid_journey);
     

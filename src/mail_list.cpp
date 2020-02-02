@@ -11,7 +11,7 @@ MailList::MailList(DbAdapter *db, GridWidget *parent) : GridWidget(parent)
 
 void MailList::showData()
 {
-    deleteView();
+    recreateView();
     
     this->grid->addWidget(new QLabel("<b>Number</b>"), 0, 3);
     this->grid->addWidget(new QLabel("<b>Subject</b>"), 0, 4);

@@ -26,7 +26,7 @@ void GridWidget::showData()
     
 }
 
-void GridWidget::deleteView()
+void GridWidget::recreateView()
 {
     if (this->scroll_widget == nullptr)
     {

@@ -23,7 +23,7 @@ CurrenciesList::CurrenciesList(DbAdapter *db, GridWidget *parent) : GridWidget(p
 
 void CurrenciesList::showData()
 {
-    deleteView();
+    recreateView();
     
     QList<QMap<QString,QVariant>> data = this->db->selectCurrencies();
     

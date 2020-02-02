@@ -278,7 +278,7 @@ PersonVisits::PersonVisits(DbAdapter *db, qlonglong rowid, GridWidget *parent)
 
 void PersonVisits::showData()
 {
-    deleteView();
+    recreateView();
     
     QList<QMap<QString,QVariant>> data = this->db->selectVisitsForPerson(this->rowid_person);
     
@@ -310,7 +310,7 @@ PersonMails::PersonMails(DbAdapter *db, qlonglong rowid, GridWidget *parent)
 
 void PersonMails::showData()
 {
-    deleteView();
+    recreateView();
     
     QList<QMap<QString,QVariant>> data = this->db->selectMailsForPerson(this->rowid_person);
     
@@ -340,7 +340,7 @@ PersonDonations::PersonDonations(DbAdapter *db, qlonglong rowid, GridWidget *par
 
 void PersonDonations::showData()
 {
-    deleteView();
+    recreateView();
     
     QList<QMap<QString,QVariant>> data = this->db->donationsSelectForPerson(this->rowid_person);
     

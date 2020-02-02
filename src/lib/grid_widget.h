@@ -18,7 +18,7 @@ public:
     void initGrid();
     // show data is the main function you want to reimplement
     void showData();
-    void deleteView();
+    void recreateView();
     
     void setHorizontalSpacing(int spacing);
     

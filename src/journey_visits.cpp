@@ -22,7 +22,7 @@ void JourneyVisits::setDateHint(QString date)
 
 void JourneyVisits::showData()
 {
-    deleteView();
+    recreateView();
     
     this->grid->addWidget(new QLabel("<b>Name</b>"), 0, 2);
     this->grid->addWidget(new QLabel("<b>Date</b>"), 0, 3);
