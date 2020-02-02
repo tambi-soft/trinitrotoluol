@@ -27,8 +27,22 @@ class JourneyEdit : public QWidget
 {
     Q_OBJECT
 public:
-    //explicit JourneyEdit(DbAdapter *db, QWidget *parent = nullptr);
     explicit JourneyEdit(qlonglong rowid, DbAdapter *db, QWidget *parent = nullptr);
+    
+private:
+    qlonglong rowid;
+    DbAdapter *db;
+    
+    JourneyVisits *visits;
+};
+
+
+
+class JourneyDetails : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit JourneyDetails(qlonglong rowid, DbAdapter *db, JourneyVisits *visits, QWidget *parent = nullptr);
     
 private:
     qlonglong rowid;

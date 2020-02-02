@@ -1,19 +1,57 @@
 #include "journey_edit.h"
 
-JourneyEdit::JourneyEdit(qlonglong rowid, DbAdapter *db, QWidget *parent)
+
+JourneyEdit::JourneyEdit(qlonglong rowid, DbAdapter *db, QWidget *parent) : QWidget(parent)
+{
+    this->rowid = rowid;
+    this->db = db;
+    
+    QGridLayout *grid = new QGridLayout;
+    setLayout(grid);
+    
+    this->visits = new JourneyVisits(this->rowid, this->db, QDate::currentDate().toString("yyyy-MM-dd"));
+    JourneyDetails *data = new JourneyDetails(this->rowid, this->db, this->visits);
+    JourneyTickets *tickets = new JourneyTickets(this->rowid, this->db);
+    
+    QGroupBox *group_edit = new QGroupBox("Data");
+    QGroupBox *group_visits = new QGroupBox("Visited People");
+    QGroupBox *group_tickets = new QGroupBox("Tickets");
+    
+    QVBoxLayout *layout_edit = new QVBoxLayout;
+    QVBoxLayout *layout_visits = new QVBoxLayout;
+    QVBoxLayout *layout_tickets = new QVBoxLayout;
+    
+    group_edit->setLayout(layout_edit);
+    group_visits->setLayout(layout_visits);
+    group_tickets->setLayout(layout_tickets);
+    
+    layout_edit->addWidget(data);
+    layout_visits->addWidget(this->visits);
+    layout_tickets->addWidget(tickets);
+    
+    grid->addWidget(group_edit, 0, 0, 2, 1);
+    grid->addWidget(group_visits, 0, 1);
+    grid->addWidget(group_tickets, 1, 1);
+}
+
+
+
+JourneyDetails::JourneyDetails(qlonglong rowid, DbAdapter *db, JourneyVisits *visits, QWidget *parent)
     : QWidget(parent)
     , layout (new QGridLayout)
 {
     this->rowid = rowid;
     this->db = db;
+    this->visits = visits;
     
     setLayout(this->layout);
+    this->layout->setMargin(0);
     
     drawGUI();
     loadData();
 }
 
-void JourneyEdit::drawGUI()
+void JourneyDetails::drawGUI()
 {
     this->edit_name = new QLineEdit;
     this->edit_date_from = new QDateEdit;
@@ -35,41 +73,13 @@ void JourneyEdit::drawGUI()
     this->layout->addWidget(new QLabel("notes"), 6, 0);
     this->layout->addWidget(edit_notes, 7, 0);
     
-    connect(this->edit_name, &QLineEdit::textChanged, this, &JourneyEdit::saveData);
-    connect(this->edit_date_from, &QDateEdit::dateChanged, this, &JourneyEdit::saveData);
-    connect(this->edit_date_to, &QDateEdit::dateChanged, this, &JourneyEdit::saveData);
-    connect(this->edit_notes, &QTextEdit::textChanged, this, &JourneyEdit::saveData);
-    
-    // BEGIN: groups for visits and tickets areas
-    QWidget *widget_groups = new QWidget;
-    QVBoxLayout *layout_groups = new QVBoxLayout;
-    widget_groups->setLayout(layout_groups);
-    layout_groups->setMargin(0);
-    this->layout->addWidget(widget_groups, 0, 1, 8, 1);
-    
-    QGroupBox *group_visits = new QGroupBox("Visited People");
-    QGroupBox *group_tickets = new QGroupBox("Tickets");
-    
-    this->visits = new JourneyVisits(this->rowid, this->db, this->edit_date_from->date().toString("yyyy-MM-dd"));
-    QVBoxLayout *layout_visits = new QVBoxLayout();
-    layout_visits->setMargin(0);
-    layout_visits->addWidget(visits);
-    group_visits->setLayout(layout_visits);
-    
-    JourneyTickets *tickets = new JourneyTickets(this->rowid, this->db);
-    QVBoxLayout *layout_tickets = new QVBoxLayout();
-    layout_tickets->setMargin(0);
-    layout_tickets->addWidget(tickets);
-    group_tickets->setLayout(layout_tickets);
-    
-    layout_groups->addWidget(group_visits);
-    layout_groups->addWidget(group_tickets);
-    // END: groups for visits and tickets areas
-    
-    //this->layout->addStretch();
+    connect(this->edit_name, &QLineEdit::textChanged, this, &JourneyDetails::saveData);
+    connect(this->edit_date_from, &QDateEdit::dateChanged, this, &JourneyDetails::saveData);
+    connect(this->edit_date_to, &QDateEdit::dateChanged, this, &JourneyDetails::saveData);
+    connect(this->edit_notes, &QTextEdit::textChanged, this, &JourneyDetails::saveData);
 }
 
-void JourneyEdit::loadData()
+void JourneyDetails::loadData()
 {
     QMap<QString,QVariant> data = this->db->selectJourney(this->rowid);
     this->edit_name->setText(data["name"].toString());
@@ -83,7 +93,7 @@ void JourneyEdit::loadData()
     
 }
 
-void JourneyEdit::saveData()
+void JourneyDetails::saveData()
 {
     QString name = this->edit_name->text();
     QString date_from = this->edit_date_from->date().toString("yyyy-MM-dd");

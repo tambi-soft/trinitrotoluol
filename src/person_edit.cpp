@@ -271,7 +271,6 @@ PersonVisits::PersonVisits(DbAdapter *db, qlonglong rowid, GridWidget *parent)
 {
     this->db = db;
     this->rowid_person = rowid;
-    this->layout->setMargin(0);
     
     showData();
 }
@@ -303,7 +302,6 @@ PersonMails::PersonMails(DbAdapter *db, qlonglong rowid, GridWidget *parent)
 {
     this->db = db;
     this->rowid_person = rowid;
-    this->layout->setMargin(0);
     
     showData();
 }
@@ -333,7 +331,6 @@ PersonDonations::PersonDonations(DbAdapter *db, qlonglong rowid, GridWidget *par
 {
     this->db = db;
     this->rowid_person = rowid;
-    this->layout->setMargin(0);
     
     showData();
 }

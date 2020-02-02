@@ -3,6 +3,7 @@
 GridWidget::GridWidget(QWidget *parent) : QWidget(parent)
 {
     setLayout(this->layout);
+    this->layout->setMargin(0);
     
     this->scroll_area->setWidgetResizable(true);
     
