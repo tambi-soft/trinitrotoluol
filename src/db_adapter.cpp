@@ -378,7 +378,7 @@ QList<QMap<QString,QVariant>> DbAdapter::selectVisitsForPerson(qlonglong rowid_p
     QSqlQuery query(this->db);
     query.prepare("SELECT people_visits.rowid, rowid_journeys, people_visits.date, people_visits.notes, journeys.name AS journey_name "
                   "FROM people_visits "
-                  "JOIN journeys ON journeys.rowid=rowid_journeys "
+                  "LEFT JOIN journeys ON journeys.rowid=rowid_journeys "
                   "WHERE rowid_people=:rowid_people "
                   "ORDER BY people_visits.date DESC");
     query.bindValue(":rowid_people", rowid_person);
