@@ -44,11 +44,14 @@ void PersonGroups::deletePersonFromGroup(qlonglong rowid_groups)
 void PersonGroups::addPersonToGroup(qlonglong rowid_groups)
 {
     QString group_str = this->combo_group->currentText();
-    int group = this->group_data_map[group_str];
-    
-    this->db->groupMatrixInsert(this->rowid_people, group);
-    
-    showData();
+    if (group_str != "")
+    {
+        int group = this->group_data_map[group_str];
+        
+        this->db->groupMatrixInsert(this->rowid_people, group);
+        
+        showData();
+    }
 }
 
 void PersonGroups::loadGroupsComboData()
