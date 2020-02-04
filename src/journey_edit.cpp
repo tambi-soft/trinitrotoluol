@@ -1,6 +1,5 @@
 #include "journey_edit.h"
 
-
 JourneyEdit::JourneyEdit(qlonglong rowid, DbAdapter *db, QWidget *parent) : QWidget(parent)
 {
     this->rowid = rowid;

@@ -51,6 +51,8 @@ void DbAdapter::initializeTables()
         "flag_supporter  INTEGER DEFAULT 0)", this->db);
     
     QSqlQuery query_groups("CREATE TABLE IF NOT EXISTS people_groups (rowid INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)", this->db);
+    QSqlQuery query_tags("CREATE TABLE IF NOT EXISTS people_tags (rowid INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)", this->db);
+    QSqlQuery query_tags_people("CREATE TABLE IF NOT EXISTS people_tags_matrix (rowid_people INTEGER, rowid_tags INTEGER)", this->db);
     
     QSqlQuery query_people_visited("CREATE TABLE IF NOT EXISTS people_visits ( "
         "rowid INTEGER PRIMARY KEY AUTOINCREMENT "
