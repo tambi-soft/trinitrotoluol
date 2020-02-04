@@ -16,7 +16,8 @@
 #include <QScrollArea>
 
 #include "db_adapter.h"
-#include "people_selector.h"
+#include "people_selector.h" // for selecting the spouse
+#include "person_groups.h"
 
 class PersonDetails : public QWidget
 {
@@ -72,6 +73,8 @@ private:
     
     QLabel *edit_spouse = new QLabel;
     QTextEdit *edit_notes = new QTextEdit;
+    
+    PersonGroups *groups;
     
 private slots:
     void onAddNewGroupButton();

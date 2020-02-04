@@ -92,6 +92,9 @@ void PersonEdit::drawGUI()
     
     this->grid->addWidget(edit_notes, 14, 1, 1, 2);
     
+    this->groups = new PersonGroups(this->db, this->rowid);
+    this->grid->addWidget(this->groups, 15, 1, 1, 2);
+    
     this->grid->addWidget(new QLabel("ToDo"), 0, 0);
     this->grid->addWidget(new QLabel("Waiting"), 1, 0);
     this->grid->addWidget(new QLabel("TNT-Number"), 2, 0);
@@ -107,6 +110,7 @@ void PersonEdit::drawGUI()
     this->grid->addWidget(new QLabel("donations promised"), 12, 0);
     this->grid->addWidget(new QLabel("Spouse"), 13, 0);
     this->grid->addWidget(new QLabel("Notes"), 14, 0);
+    this->grid->addWidget(new QLabel("Groups"), 15, 0);
     
     loadGroupsComboData();
     loadData();

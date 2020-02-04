@@ -52,7 +52,7 @@ DonationsImportProgress::DonationsImportProgress(DbAdapter *db, QList<QMap<QStri
         // check, if currency already exists in database
         if (this->rowid_currency < 1)
         {
-            edit_log->append("Currency "+currency_code+" now recognized in the database. Please create this currency now!");
+            edit_log->append("Currency "+currency_code+" not recognized in the database. Please create this currency now!");
             
             
         }
