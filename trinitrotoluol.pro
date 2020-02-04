@@ -68,6 +68,7 @@ HEADERS += \
     src/people_list.h \
     src/people_selector.h \
     src/person_edit.h \
+    src/person_groups.h \
     src/settings.h \
     src/simplecrypt.h \
     src/sqlite_editor_widget.h \
@@ -102,6 +103,7 @@ SOURCES += \
     src/people_list.cpp \
     src/people_selector.cpp \
     src/person_edit.cpp \
+    src/person_groups.cpp \
     src/settings.cpp \
     src/simplecrypt.cpp \
     src/sqlite_editor_widget.cpp \

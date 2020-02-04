@@ -51,8 +51,8 @@ void DbAdapter::initializeTables()
         "flag_supporter  INTEGER DEFAULT 0)", this->db);
     
     QSqlQuery query_groups("CREATE TABLE IF NOT EXISTS people_groups (rowid INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)", this->db);
-    QSqlQuery query_tags("CREATE TABLE IF NOT EXISTS people_tags (rowid INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)", this->db);
-    QSqlQuery query_tags_people("CREATE TABLE IF NOT EXISTS people_tags_matrix (rowid_people INTEGER, rowid_tags INTEGER)", this->db);
+    //QSqlQuery query_tags("CREATE TABLE IF NOT EXISTS people_tags (rowid INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)", this->db);
+    QSqlQuery query_tags_people("CREATE TABLE IF NOT EXISTS people_groups_matrix (rowid_people INTEGER, rowid_tags INTEGER)", this->db);
     
     QSqlQuery query_people_visited("CREATE TABLE IF NOT EXISTS people_visits ( "
         "rowid INTEGER PRIMARY KEY AUTOINCREMENT "
@@ -424,6 +424,34 @@ void DbAdapter::updateGroup(qlonglong rowid, QString name)
     query.bindValue(":name", name);
     query.bindValue(":rowid", rowid);
     query.exec();
+}
+
+void DbAdapter::groupMatrixInsert(qlonglong rowid_people, qlonglong rowid_groups)
+{
+    QSqlQuery query(this->db);
+    query.prepare("INSERT INTO people_groups_matrix (rowid_people, rowid_groups) VALUES (:rowid_people, :rowid_groups)");
+    query.bindValue(":rowid_people", rowid_people);
+    query.bindValue(":rowid_groups", rowid_groups);
+    query.exec();
+}
+
+void DbAdapter::groupMatrixDelete(qlonglong rowid_people, qlonglong rowid_groups)
+{
+    QSqlQuery query(this->db);
+    query.prepare("DELETE FROM people_groups_matrix WHERE rowid_people=:rowid_people AND rowid_groups=:rowid_groups");
+    query.bindValue(":rowid_people", rowid_people);
+    query.bindValue(":rowid_groups", rowid_groups);
+    query.exec();
+}
+
+QList<QMap<QString,QVariant>> DbAdapter::groupMatrixSelect(qlonglong rowid_people)
+{
+    QSqlQuery query(this->db);
+    query.prepare("SELECT rowid_groups FROM people_groups_matrix WHERE rowid_people=:rowid_people");
+    query.bindValue(":rowid_people", rowid_people);
+    query.exec();
+    
+    return dbIteratorToMapList(query);
 }
 
 QMap<QString,QVariant> DbAdapter::selectMoneyStats()
