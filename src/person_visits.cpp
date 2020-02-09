@@ -55,5 +55,14 @@ void PersonVisits::onDeleteButtonClicked(qlonglong rowid, QString name)
 
 void PersonVisits::onEditButtonClicked(qlonglong rowid)
 {
+    JourneyVisitsEdit *edit = new JourneyVisitsEdit(rowid, this->db, QDate::currentDate().toString("yyyy-MM-dd"));
+    connect(edit, &JourneyVisitsEdit::signalReload, this, &PersonVisits::showData);
     
+    QDialog *dialog = new QDialog();
+    QVBoxLayout *layout_dialog = new QVBoxLayout;
+    layout_dialog->setMargin(0);
+    dialog->setLayout(layout_dialog);
+    layout_dialog->addWidget(edit);
+    
+    dialog->exec();
 }

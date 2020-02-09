@@ -5,9 +5,11 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QMessageBox>
+#include <QDate>
 
 #include "lib/grid_widget.h"
 #include "db_adapter.h"
+#include "journey_visits_edit.h"
 
 class PersonVisits : public GridWidget
 {
