@@ -44,14 +44,11 @@ void PersonGroups::deletePersonFromGroup(qlonglong rowid_groups)
 void PersonGroups::addPersonToGroup(qlonglong rowid_groups)
 {
     QString group_str = this->combo_group->currentText();
-    if (group_str != "")
-    {
-        int group = this->group_data_map[group_str];
-        
-        this->db->groupMatrixInsert(this->rowid_people, group);
-        
-        showData();
-    }
+    int group = this->group_data_map[group_str];
+    
+    this->db->groupMatrixInsert(this->rowid_people, group);
+    
+    showData();
 }
 
 void PersonGroups::loadGroupsComboData()
@@ -59,7 +56,7 @@ void PersonGroups::loadGroupsComboData()
     QList<QMap<QString,QVariant>> group_data = this->db->selectGroups();
     
     QList<QString> gr;
-    gr << "";
+    gr << "[add tags]";
     for (int i=0; i < group_data.length(); ++i)
     {
         gr.append(group_data.at(i)["name"].toString());
