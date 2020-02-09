@@ -258,7 +258,28 @@ void PeopleList::showPeople()
         }
         
         this->grid->addWidget(new QLabel(person["name"].toString(), this), i, 8);
-        this->grid->addWidget(new QLabel(person["group"].toString(), this), i, 9);
+        //this->grid->addWidget(new QLabel(person["group"].toString(), this), i, 9);
+        
+        QString groups_names = person["groups_names"].toString();
+        QString groups_colors = person["groups_colors"].toString();
+        QStringList groups_names_splitted = groups_names.split(",");
+        QStringList groups_colors_splitted = groups_colors.split(",");
+        
+        QHBoxLayout *layout_groups = new QHBoxLayout;
+        layout_groups->setMargin(0);
+        for (int j=0; j < groups_names_splitted.length(); ++j)
+        {
+            QLabel *label_group = new QLabel(groups_names_splitted.at(j));
+            if (groups_names_splitted.length() == groups_colors_splitted.length())
+            {
+                label_group->setStyleSheet("QLabel { color : "+QColor(groups_colors_splitted.at(j)).name()+"; }");
+            }
+            
+            layout_groups->addWidget(label_group);
+        }
+        layout_groups->addStretch();
+        layout_groups->setAlignment(Qt::AlignLeft);
+        this->grid->addLayout(layout_groups, i, 9);
     }
     // push all columns to the left for getting the table a bit more compact
     this->grid->setColumnStretch(100, 100);

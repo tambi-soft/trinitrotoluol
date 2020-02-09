@@ -30,7 +30,6 @@ void DbAdapter::initializeTables()
 {
     QSqlQuery query_table_people("CREATE TABLE IF NOT EXISTS people ( "
         "rowid	INTEGER PRIMARY KEY AUTOINCREMENT, "
-        "group_rowid	INTEGER, "
         "tnt_id    INTEGER, "
         "name	TEXT, "
         "email	TEXT, "
@@ -50,7 +49,7 @@ void DbAdapter::initializeTables()
         "flag_waiting    INTEGER DEFAULT 0, "
         "flag_supporter  INTEGER DEFAULT 0)", this->db);
     
-    QSqlQuery query_groups("CREATE TABLE IF NOT EXISTS people_groups (rowid INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)", this->db);
+    QSqlQuery query_groups("CREATE TABLE IF NOT EXISTS people_groups (rowid INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, color TEXT)", this->db);
     //QSqlQuery query_tags("CREATE TABLE IF NOT EXISTS people_tags (rowid INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)", this->db);
     QSqlQuery query_tags_people("CREATE TABLE IF NOT EXISTS people_groups_matrix (rowid_people INTEGER, rowid_groups INTEGER)", this->db);
     
@@ -309,10 +308,14 @@ QList<QMap<QString,QVariant>> DbAdapter::selectAllPersonsFiltered(int todo, int 
 {
     QSqlQuery query(this->db);
     // the ORs in the last two lines should really be XORs, but SQLite do not support XOR for now, and it would be far to annoying to fiddle a XOR together by myself
-    query.prepare("SELECT people.rowid, people.name, people_groups.name AS \"group\", email, agreed_mail, agreed_prayer, agreement, flag_todo, flag_waiting, donations_monthly, donations_monthly_promised, people_donations.amount AS donations_received "
+    query.prepare("SELECT people.rowid, people.name, email, "
+                  "GROUP_CONCAT(DISTINCT people_groups.name) AS groups_names, "
+                  "GROUP_CONCAT(DISTINCT people_groups.color) AS groups_colors, "
+                  "agreed_mail, agreed_prayer, agreement, flag_todo, flag_waiting, donations_monthly, donations_monthly_promised, people_donations.amount AS donations_received "
                   "FROM people "
-                  "LEFT JOIN people_groups ON people.group_rowid=people_groups.rowid "
                   "LEFT JOIN people_donations ON people.rowid=people_donations.rowid_people "
+                  "LEFT JOIN people_groups_matrix ON people_groups_matrix.rowid_people=people.rowid "
+                  "INNER JOIN people_groups ON people_groups_matrix.rowid_groups=people_groups.rowid "
                   "WHERE "
                   "CASE "
                       "WHEN (:todo=0) THEN flag_todo = 0 OR flag_todo IS NULL "
@@ -404,7 +407,10 @@ QList<QMap<QString,QVariant>> DbAdapter::selectMailsForPerson(qlonglong rowid_pe
 
 QList<QMap<QString,QVariant>> DbAdapter::selectGroups()
 {
-    QSqlQuery query("SELECT rowid, name FROM people_groups", this->db);
+    QSqlQuery query("SELECT people_groups.rowid, people_groups.name, people_groups.color, COUNT(rowid_people) AS count_people"
+                    " FROM people_groups"
+                    " LEFT JOIN people_groups_matrix ON people_groups_matrix.rowid_groups=people_groups.rowid"
+                    " GROUP BY people_groups.rowid", this->db);
     
     return dbIteratorToMapList(query);
 }
@@ -417,11 +423,20 @@ qlonglong DbAdapter::insertNewGroup()
     return query.lastInsertId().toLongLong();
 }
 
-void DbAdapter::updateGroup(qlonglong rowid, QString name)
+void DbAdapter::deleteGroup(qlonglong rowid)
 {
     QSqlQuery query(this->db);
-    query.prepare("UPDATE people_groups SET name=:name WHERE rowid=:rowid");
+    query.prepare("DELETE FROM people_groups WHERE rowid=:rowid");
+    query.bindValue(":rowid", rowid);
+    query.exec();
+}
+
+void DbAdapter::updateGroup(qlonglong rowid, QString name, QString color)
+{
+    QSqlQuery query(this->db);
+    query.prepare("UPDATE people_groups SET name=:name, color=:color WHERE rowid=:rowid");
     query.bindValue(":name", name);
+    query.bindValue(":color", color);
     query.bindValue(":rowid", rowid);
     query.exec();
 }
