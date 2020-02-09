@@ -77,7 +77,6 @@ private:
     PersonGroups *groups;
     
 private slots:
-    void onAddNewGroupButton();
     void onInsertAgreementDateButton();
     void onSelectSpouseButton();
     void onSpouseSelected(qlonglong rowid, QString name);
@@ -134,30 +133,6 @@ private:
     
     void showData();
     
-};
-
-
-
-class GroupsEdit : public QWidget
-{
-    Q_OBJECT
-public:
-    explicit GroupsEdit(DbAdapter *db, QWidget *parent = nullptr);
-    void reloadData();
-    void onDeleteButtonClicked(qlonglong group_id);
-    void onNewGroupButtonClicked();
-    void onGroupNameChanged(QString name);
-
-private:
-    DbAdapter *db;
-    QVBoxLayout *layout = new QVBoxLayout;
-    QGridLayout *grid; // inner layout containing the qscrollarea
-    QScrollArea *scroll_area = new QScrollArea;
-    QWidget *scroll_widget = nullptr;
-
-    qlonglong rowid_new_group;
-
-    void showData();
 };
 
 #endif // PERSON_EDIT_H

@@ -68,11 +68,6 @@ void PersonEdit::drawGUI()
     this->grid->addWidget(edit_address, 5, 1, 1, 2);
     this->grid->addWidget(edit_phone, 6, 1, 1, 2);
     
-    QPushButton *button_edit_groups = new QPushButton("Edit Groups");
-    connect(button_edit_groups, &QPushButton::clicked, this, &PersonEdit::onAddNewGroupButton);
-    this->grid->addWidget(combo_group, 7, 1);
-    this->grid->addWidget(button_edit_groups, 7, 2);
-    
     this->grid->addWidget(check_agreed_mail, 8, 1);
     this->grid->addWidget(check_agreed_prayer, 9, 1);
     
@@ -102,7 +97,7 @@ void PersonEdit::drawGUI()
     this->grid->addWidget(new QLabel("Email"), 4, 0);
     this->grid->addWidget(new QLabel("Address"), 5, 0);
     this->grid->addWidget(new QLabel("Phone"), 6, 0);
-    this->grid->addWidget(new QLabel("Group"), 7, 0);
+    
     this->grid->addWidget(new QLabel("agreed mail"), 8, 0);
     this->grid->addWidget(new QLabel("agreed prayer"), 9, 0);
     this->grid->addWidget(new QLabel("agreement"), 10, 0);
@@ -212,20 +207,6 @@ QMap<QString,QVariant> PersonEdit::collectSaveData()
     data["donations_monthly_promised"] = this->edit_donations_monthly_promised->text().toInt();
     
     return data;
-}
-
-void PersonEdit::onAddNewGroupButton()
-{
-    GroupsEdit *edit = new GroupsEdit(this->db);
-    //connect(edit, &CurrenciesEdit::signalUpdate, this, &CurrenciesList::updateView);
-
-    QDialog *dialog = new QDialog();
-    QVBoxLayout *layout_dialog = new QVBoxLayout;
-    layout_dialog->setMargin(0);
-    dialog->setLayout(layout_dialog);
-    layout_dialog->addWidget(edit);
-
-    dialog->exec();
 }
 
 void PersonEdit::onInsertAgreementDateButton()
@@ -377,84 +358,4 @@ void PersonDonations::showData()
     this->grid->addWidget(label_sum_name, data.length()+10, 0);
     this->grid->addWidget(label_sum_value, data.length()+10, 1);
     this->grid->addWidget(label_sum_currency, data.length()+10, 2);
-}
-
-
-
-GroupsEdit::GroupsEdit(DbAdapter *db, QWidget *parent) : QWidget(parent)
-{
-    this->db = db;
-    setLayout(this->layout);
-
-    QPushButton *button_new = new QPushButton("add new group");
-    connect(button_new, &QPushButton::clicked, this, &GroupsEdit::onNewGroupButtonClicked);
-
-    this->scroll_area->setWidgetResizable(true);
-    this->layout->addWidget(this->scroll_area);
-    this->layout->addWidget(button_new);
-
-    showData();
-}
-
-void GroupsEdit::reloadData()
-{
-    this->scroll_widget->deleteLater();
-    showData();
-}
-
-void GroupsEdit::showData()
-{
-    this->grid = new QGridLayout;
-    this->scroll_widget = new QWidget;
-    this->scroll_widget->setLayout(this->grid);
-    this->scroll_area->setWidget(this->scroll_widget);
-
-    QList<QMap<QString,QVariant>> groups = this->db->selectGroups();
-
-    for (int i=0; i < groups.length(); i++)
-    {
-        qlonglong rowid = groups.at(i)["rowid"].toLongLong();
-        QPushButton *button_delete = new QPushButton();
-        button_delete->setIcon(QIcon::fromTheme("edit-delete"));
-        button_delete->setToolTip("delete this group");
-        button_delete->setMaximumWidth(25);
-        connect(button_delete, &QPushButton::clicked, this, [this, rowid]{ GroupsEdit::onDeleteButtonClicked(rowid); });
-
-        this->grid->addWidget(button_delete, i, 0);
-        this->grid->addWidget(new QLabel(groups.at(i)["name"].toString()), i, 1);
-    }
-}
-
-void GroupsEdit::onDeleteButtonClicked(qlonglong group_id)
-{
-    // TODO: what to do with people already assigned to this group?
-    qDebug() << "we want to delete group " << group_id;
-}
-
-void GroupsEdit::onNewGroupButtonClicked()
-{
-    this->rowid_new_group = this->db->insertNewGroup();
-
-    // put together dialog content
-    QWidget *edit = new QWidget();
-    QVBoxLayout *layout = new QVBoxLayout;
-    edit->setLayout(layout);
-    QLineEdit *line = new QLineEdit();
-    layout->addWidget(line);
-    connect(line, &QLineEdit::textChanged, this, &GroupsEdit::onGroupNameChanged);
-    connect(line, &QLineEdit::textChanged, this, &GroupsEdit::reloadData);
-
-    // put together the dialog itself and show
-    QDialog *dialog = new QDialog();
-    QVBoxLayout *layout_dialog = new QVBoxLayout;
-    layout_dialog->setMargin(0);
-    dialog->setLayout(layout_dialog);
-    layout_dialog->addWidget(edit);
-
-    dialog->exec();
-}
-
-void GroupsEdit::onGroupNameChanged(QString name)
-{
-    this->db->updateGroup(this->rowid_new_group, name);
 }

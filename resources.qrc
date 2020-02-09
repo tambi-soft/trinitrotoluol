@@ -7,5 +7,6 @@
         <file alias="icon_journey">assets/journey.png</file>
         <file alias="icon_currencies">assets/currencies.png</file>
         <file alias="sqlite-logo">assets/sqlite-logo.jpg</file>
+        <file alias="color">assets/color_picker.jpg</file>
     </qresource>
 </RCC>

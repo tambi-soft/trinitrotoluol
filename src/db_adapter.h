@@ -41,7 +41,8 @@ public:
     
     QList<QMap<QString, QVariant>> selectGroups();
     qlonglong insertNewGroup();
-    void updateGroup(qlonglong rowid, QString name);
+    void deleteGroup(qlonglong rowid);
+    void updateGroup(qlonglong rowid, QString name, QString color);
     
     void groupMatrixInsert(qlonglong rowid_people, qlonglong rowid_groups);
     void groupMatrixDelete(qlonglong rowid_people, qlonglong rowid_groups);
