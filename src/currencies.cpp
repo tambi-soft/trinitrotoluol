@@ -37,16 +37,16 @@ void CurrenciesList::showData()
         qlonglong rowid = cur["rowid"].toLongLong();
         QString code = cur["code"].toString();
         
-        QPushButton *button_edit = new QPushButton();
-        button_edit->setIcon(QIcon::fromTheme("document-properties"));
-        connect(button_edit, &QPushButton::clicked, this, [this, rowid]{ CurrenciesList::onEditButtonClicked(rowid); });
-        
         QPushButton *button_delete = new QPushButton();
         button_delete->setIcon(QIcon::fromTheme("edit-delete"));
         connect(button_delete, &QPushButton::clicked, this, [this, rowid, code]{ CurrenciesList::onDeleteButtonClicked(rowid, code); });
         
-        this->grid->addWidget(button_edit, i+1, 0);
-        this->grid->addWidget(button_delete, i+1, 1);
+        QPushButton *button_edit = new QPushButton();
+        button_edit->setIcon(QIcon::fromTheme("document-properties"));
+        connect(button_edit, &QPushButton::clicked, this, [this, rowid]{ CurrenciesList::onEditButtonClicked(rowid); });
+        
+        this->grid->addWidget(button_delete, i+1, 0);
+        this->grid->addWidget(button_edit, i+1, 1);
         this->grid->addWidget(new QLabel(code), i+1, 2);
         this->grid->addWidget(new QLabel(cur["exchange_rate"].toString()), i+1, 3);
         this->grid->addWidget(new QLabel(cur["notes"].toString()), i+1, 4);

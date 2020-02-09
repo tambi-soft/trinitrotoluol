@@ -18,6 +18,7 @@
 #include "db_adapter.h"
 #include "people_selector.h" // for selecting the spouse
 #include "person_groups.h"
+#include "person_visits.h"
 
 class PersonDetails : public QWidget
 {
@@ -89,20 +90,7 @@ signals:
 
 
 
-#include "lib/grid_widget.h"
 
-class PersonVisits : public GridWidget
-{
-    Q_OBJECT
-public:
-    explicit PersonVisits(DbAdapter *db, qlonglong rowid, GridWidget *parent = nullptr);
-
-private:
-    DbAdapter *db;
-    qlonglong rowid_person;
-    
-    void showData();
-};
 
 
 

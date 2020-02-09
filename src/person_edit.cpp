@@ -251,34 +251,7 @@ void PersonEdit::saveData()
 
 
 
-PersonVisits::PersonVisits(DbAdapter *db, qlonglong rowid, GridWidget *parent)
-    : GridWidget(parent)
-{
-    this->db = db;
-    this->rowid_person = rowid;
-    
-    showData();
-}
 
-void PersonVisits::showData()
-{
-    recreateView();
-    
-    QList<QMap<QString,QVariant>> data = this->db->selectVisitsForPerson(this->rowid_person);
-    
-    this->grid->addWidget(new QLabel("<b>Journey Name</b>"), 0, 0);
-    this->grid->addWidget(new QLabel("<b>Date</b>"), 0, 1);
-    this->grid->addWidget(new QLabel("<b>Notes</b>"), 0, 2);
-    
-    for (int i=0; i < data.length(); ++i)
-    {
-        QMap<QString,QVariant> visit = data.at(i);
-        
-        this->grid->addWidget(new QLabel(visit["journey_name"].toString()), i+1, 0);
-        this->grid->addWidget(new QLabel(visit["date"].toString()), i+1, 1);
-        this->grid->addWidget(new QLabel(visit["notes"].toString()), i+1, 2);
-    }
-}
 
 
 
