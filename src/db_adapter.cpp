@@ -210,7 +210,6 @@ QSqlQuery DbAdapter::bindPersonParams(QSqlQuery query, QMap<QString,QVariant> da
 {
     query.bindValue(":tnt_id", data["tnt_id"].toInt());
     query.bindValue(":name", data["name"].toString());
-    query.bindValue(":group", data["group"].toInt());
     query.bindValue(":email", data["email"].toString());
     query.bindValue(":address", data["address"].toString());
     query.bindValue(":phone", data["phone"].toString());
@@ -271,7 +270,7 @@ void DbAdapter::updatePerson(qlonglong rowid, QMap<QString,QVariant> data)
 {
     QSqlQuery query(this->db);
     query.prepare("UPDATE people SET "
-                  "tnt_id=:tnt_id, name=:name, group_rowid=:group, email=:email, address=:address, phone=:phone, agreed_mail=:agreed_mail, agreed_prayer=:agreed_prayer, agreement=:agreement, notes=:notes, donations_monthly=:donations_monthly, donations_monthly_promised=:donations_monthly_promised, flag_todo=:flag_todo, flag_waiting=:flag_waiting, date_last_changed=CURRENT_TIMESTAMP"
+                  "tnt_id=:tnt_id, name=:name, email=:email, address=:address, phone=:phone, agreed_mail=:agreed_mail, agreed_prayer=:agreed_prayer, agreement=:agreement, notes=:notes, donations_monthly=:donations_monthly, donations_monthly_promised=:donations_monthly_promised, flag_todo=:flag_todo, flag_waiting=:flag_waiting, date_last_changed=CURRENT_TIMESTAMP"
                   " WHERE rowid=:rowid");
     
     query = bindPersonParams(query, data);
@@ -283,10 +282,9 @@ void DbAdapter::updatePerson(qlonglong rowid, QMap<QString,QVariant> data)
 QMap<QString,QVariant> DbAdapter::selectPerson(qlonglong rowid)
 {
     QSqlQuery query(this->db);
-    query.prepare("SELECT b.name AS spouse_name, a.tnt_id, a.name, a.group_rowid, g.name AS group_name, a.email, a.address, a.phone, a.agreed_mail, a.agreed_prayer, a.agreement, a.notes, a.donations_monthly, a.donations_monthly_promised, a.flag_todo, a.flag_waiting "
+    query.prepare("SELECT b.name AS spouse_name, a.tnt_id, a.name, a.email, a.address, a.phone, a.agreed_mail, a.agreed_prayer, a.agreement, a.notes, a.donations_monthly, a.donations_monthly_promised, a.flag_todo, a.flag_waiting "
         "FROM people a "
         "LEFT JOIN people b ON a.spouse_rowid=b.rowid "
-        "LEFT JOIN people_groups g ON a.group_rowid=g.rowid "
         "WHERE a.rowid=:rowid");
     query.bindValue(":rowid", rowid);
     query.exec();
@@ -315,7 +313,7 @@ QList<QMap<QString,QVariant>> DbAdapter::selectAllPersonsFiltered(int todo, int 
                   "FROM people "
                   "LEFT JOIN people_donations ON people.rowid=people_donations.rowid_people "
                   "LEFT JOIN people_groups_matrix ON people_groups_matrix.rowid_people=people.rowid "
-                  "INNER JOIN people_groups ON people_groups_matrix.rowid_groups=people_groups.rowid "
+                  "LEFT JOIN people_groups ON people_groups_matrix.rowid_groups=people_groups.rowid "
                   "WHERE "
                   "CASE "
                       "WHEN (:todo=0) THEN flag_todo = 0 OR flag_todo IS NULL "
