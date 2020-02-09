@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QLabel>
 #include <QPushButton>
+#include <QMessageBox>
 
 #include "lib/grid_widget.h"
 #include "db_adapter.h"
@@ -19,6 +20,11 @@ private:
     qlonglong rowid_person;
     
     void showData();
+    
+private slots:
+    void onDeleteButtonClicked(qlonglong rowid, QString name);
+    void onEditButtonClicked(qlonglong rowid);
+    
 };
 
 #endif // PERSONVISITS_H
