@@ -67,8 +67,10 @@ private slots:
 private:
     DbAdapter *db;
     qlonglong rowid_new_group;
+    QColor color_new_group;
 
     void showData();
+    void showNewGroupDialog(QString name);
 };
 
 #endif // PERSONGROUPS_H

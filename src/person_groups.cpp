@@ -181,12 +181,19 @@ void GroupsEdit::onDeleteButtonClicked(qlonglong group_id, QString group_name, i
 void GroupsEdit::onNewGroupButtonClicked()
 {
     this->rowid_new_group = this->db->insertNewGroup();
+    this->color_new_group = QColor("#000000");
 
+    showNewGroupDialog("");
+}
+
+void GroupsEdit::showNewGroupDialog(QString name)
+{
     // put together dialog content
     QWidget *edit = new QWidget();
     QVBoxLayout *layout = new QVBoxLayout;
     edit->setLayout(layout);
     QLineEdit *line = new QLineEdit();
+    line->setText(name);
     layout->addWidget(line);
     connect(line, &QLineEdit::textChanged, this, &GroupsEdit::onGroupNameChanged);
     connect(line, &QLineEdit::textChanged, this, &GroupsEdit::reloadData);
@@ -203,12 +210,15 @@ void GroupsEdit::onNewGroupButtonClicked()
 
 void GroupsEdit::onGroupNameChanged(QString name)
 {
-    this->db->updateGroup(this->rowid_new_group, name, QColor("#000000").name());
+    this->db->updateGroup(this->rowid_new_group, name, this->color_new_group.name());
 }
 
 void GroupsEdit::onGroupEditNameButton(qlonglong rowid_groups, QString name, QColor color_current)
 {
+    this->rowid_new_group = rowid_groups;
+    this->color_new_group = color_current;
     
+    showNewGroupDialog(name);
 }
 
 void GroupsEdit::onGroupColorButton(qlonglong rowid_groups, QString name, QColor color_current)
