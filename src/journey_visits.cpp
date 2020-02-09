@@ -55,7 +55,7 @@ void JourneyVisits::showData()
 
 void JourneyVisits::addNewVisit()
 {
-    qlonglong rowid_visits = this->db->insertVisit(this->rowid_journey);
+    qlonglong rowid_visits = this->db->insertVisitWithJourney(this->rowid_journey);
     
     showData();
     

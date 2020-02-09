@@ -655,12 +655,20 @@ QList<QMap<QString,QVariant>> DbAdapter::selectVisitsForJourney(qlonglong rowid_
     return dbIteratorToMapList(query);
 }
 
-qlonglong DbAdapter::insertVisit(qlonglong rowid_journey)
+qlonglong DbAdapter::insertVisitWithJourney(qlonglong rowid_journey)
 {
     QSqlQuery query(this->db);
     query.prepare("INSERT INTO people_visits (rowid_journeys) VALUES (:rowid)");
     query.bindValue(":rowid", rowid_journey);
     query.exec();
+    
+    this->db.commit();
+    return query.lastInsertId().toLongLong();
+}
+
+qlonglong DbAdapter::insertVisitWithoutJourney()
+{
+    QSqlQuery query("INSERT INTO people_visits DEFAULT VALUES", this->db);
     
     this->db.commit();
     return query.lastInsertId().toLongLong();

@@ -69,7 +69,8 @@ public:
     void deleteJourney(qlonglong rowid);
     
     QList<QMap<QString, QVariant>> selectVisitsForJourney(qlonglong rowid_journey);
-    qlonglong insertVisit(qlonglong rowid_journey);
+    qlonglong insertVisitWithJourney(qlonglong rowid_journey);
+    qlonglong insertVisitWithoutJourney();
     void updateVisit(qlonglong rowid, qlonglong rowid_people, QString date, QString notes);
     QMap<QString,QVariant> selectVisit(qlonglong rowid);
     void deleteVisit(qlonglong rowid);

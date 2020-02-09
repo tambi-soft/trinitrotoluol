@@ -6,6 +6,11 @@ PersonVisits::PersonVisits(DbAdapter *db, qlonglong rowid, GridWidget *parent)
     this->db = db;
     this->rowid_person = rowid;
     
+    QPushButton *button_new = new QPushButton("New Visit");
+    connect(button_new, &QPushButton::clicked, this, &PersonVisits::onNewButtonClicked);
+    
+    this->layout->addWidget(button_new);
+    
     showData();
 }
 
@@ -55,7 +60,7 @@ void PersonVisits::onDeleteButtonClicked(qlonglong rowid, QString name)
 
 void PersonVisits::onEditButtonClicked(qlonglong rowid)
 {
-    JourneyVisitsEdit *edit = new JourneyVisitsEdit(rowid, this->db, QDate::currentDate().toString("yyyy-MM-dd"));
+    JourneyVisitsEdit *edit = new JourneyVisitsEdit(rowid, this->rowid_person, this->db, QDate::currentDate().toString("yyyy-MM-dd"));
     connect(edit, &JourneyVisitsEdit::signalReload, this, &PersonVisits::showData);
     
     QDialog *dialog = new QDialog();
@@ -65,4 +70,11 @@ void PersonVisits::onEditButtonClicked(qlonglong rowid)
     layout_dialog->addWidget(edit);
     
     dialog->exec();
+}
+
+void PersonVisits::onNewButtonClicked()
+{
+    qlonglong rowid_visits = this->db->insertVisitWithoutJourney();
+    
+    onEditButtonClicked(rowid_visits);
 }

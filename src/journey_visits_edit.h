@@ -16,17 +16,21 @@ class JourneyVisitsEdit : public QWidget
     Q_OBJECT
 public:
     explicit JourneyVisitsEdit(qlonglong rowid_visits, DbAdapter *db, QString date_hint, QWidget *parent = nullptr);
+    explicit JourneyVisitsEdit(qlonglong rowid_visits, qlonglong rowid_person, DbAdapter *db, QString date_hint, QWidget *parent = nullptr);
     
 private:
     qlonglong rowid_visits;
     DbAdapter *db;
-    QVBoxLayout *layout;
     
-    QPushButton *button_name;
-    QDateEdit *edit_date;
-    QTextEdit *edit_notes;
-    QDialog *dialog_select_person;
-    qlonglong rowid_person;
+    QVBoxLayout *layout = new QVBoxLayout;
+    
+    QPushButton *button_name = new QPushButton;
+    QDateEdit *edit_date = new QDateEdit;
+    QTextEdit *edit_notes = new QTextEdit;
+    QDialog *dialog_select_person = new QDialog;
+    qlonglong rowid_person = -1;
+    
+    void initializeView(QString date_hint);
     
 private slots:
     void selectPerson();
