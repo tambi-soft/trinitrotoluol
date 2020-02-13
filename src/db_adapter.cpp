@@ -145,11 +145,11 @@ void DbAdapter::initializeTables()
                              " notes TEXT,"
                              " flag_settled INTEGER)", this->db);
     
-    QSqlQuery query_people_relatives("CREATE TABLE IF NOT EXISTS people_relatives ("
+    QSqlQuery query_people_relatives("CREATE TABLE IF NOT EXISTS people_relatives_matrix ("
                                      "rowid_people_a INTEGER PRIMARY KEY,"
                                      " rowid_people_b INTEGER KEY,"
                                      " rowid_people_relatives_labels)", this->db);
-    QSqlQuery query_people_relatives_labels("CREATE TABLE IF NOT EXISTS people_relatives_labels ("
+    QSqlQuery query_people_relatives_labels("CREATE TABLE IF NOT EXISTS people_relatives ("
                                             "rowid INTEGER PRIMARY KEY AUTOINCREMENT,"
                                             " label TEXT UNIQUE,"
                                             " translation TEXT)", this->db);
