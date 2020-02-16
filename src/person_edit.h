@@ -19,6 +19,7 @@
 #include "people_selector.h" // for selecting the spouse
 #include "person_groups.h"
 #include "person_visits.h"
+#include "person_relations.h"
 
 class PersonDetails : public QWidget
 {
@@ -75,6 +76,7 @@ private:
     QLabel *edit_spouse = new QLabel;
     QTextEdit *edit_notes = new QTextEdit;
     
+    PersonRelations *relations;
     PersonGroups *groups;
     
 private slots:

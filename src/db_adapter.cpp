@@ -145,11 +145,11 @@ void DbAdapter::initializeTables()
                              " notes TEXT,"
                              " flag_settled INTEGER)", this->db);
     
-    QSqlQuery query_people_relatives("CREATE TABLE IF NOT EXISTS people_relatives_matrix ("
-                                     "rowid_people_a INTEGER PRIMARY KEY,"
+    QSqlQuery query_people_relatives("CREATE TABLE IF NOT EXISTS people_relations_matrix ("
+                                     "rowid_people_a INTEGER KEY,"
                                      " rowid_people_b INTEGER KEY,"
-                                     " rowid_people_relatives_labels)", this->db);
-    QSqlQuery query_people_relatives_labels("CREATE TABLE IF NOT EXISTS people_relatives ("
+                                     " rowid_people_relations_labels)", this->db);
+    QSqlQuery query_people_relatives_labels("CREATE TABLE IF NOT EXISTS people_relations ("
                                             "rowid INTEGER PRIMARY KEY AUTOINCREMENT,"
                                             " label TEXT UNIQUE,"
                                             " translation TEXT)", this->db);
@@ -946,4 +946,34 @@ bool DbAdapter::donationDoesEntryAlreadyExist(QString person_name, QString amoun
     {
         return false;
     }
+}
+
+qlonglong DbAdapter::relationInsert()
+{
+    
+}
+
+void DbAdapter::relationDelete(qlonglong rowid_people_a, qlonglong rowid_people_b, qlonglong rowid_relations)
+{
+    QSqlQuery query(this->db);
+    query.prepare("DELETE FROM people_relations_matrix WHERE rowid_people_a = :rowid_people_a AND rowid_people_b = :rowid_people_b AND rowid_peoples_relations = :rowid_relations");
+    query.bindValue(":rowid_people_a", rowid_people_a);
+    query.bindValue(":rowid_people_b", rowid_people_b);
+    query.bindValue(":rowid_relations", rowid_relations);
+    query.exec();
+}
+
+QList<QMap<QString,QVariant>> DbAdapter::relationsMatrixSelect(qlonglong rowid_people)
+{
+    QSqlQuery query(this->db);
+    query.prepare("SELECT rowid_people_a, rowid_people_b, p1.name AS name_a, p2.name AS name_b, rowid_people_relations_labels, people_relations.label"
+                  " FROM people_relations_matrix"
+                  " JOIN people_relations ON people_relations.rowid = people_relations_matrix.rowid_people_relations_labels"
+                  " JOIN people AS p1 ON p1.rowid = people_relations_matrix.rowid_people_a"
+                  " JOIN people AS p2 ON p2.rowid = people_relations_matrix.rowid_people_b"
+                  " WHERE rowid_people_a = :rowid_people OR rowid_people_b = :rowid_people");
+    query.bindValue(":rowid_people", rowid_people);
+    query.exec();
+    
+    return dbIteratorToMapList(query);
 }

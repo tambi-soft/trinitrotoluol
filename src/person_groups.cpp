@@ -5,24 +5,18 @@ PersonGroups::PersonGroups(DbAdapter *db, qlonglong rowid_people, GridWidget *pa
     this->db = db;
     this->rowid_people = rowid_people;
     
-    //QPushButton *button_add_group = new QPushButton("Add Person to Group");
-    //this->layout->addWidget(button_add_group);
-    
     loadGroupsComboData();
     connect(combo_group, qOverload<int>(&QComboBox::currentIndexChanged), this, &PersonGroups::addPersonToGroup);
     
     QPushButton *button_edit_groups = new QPushButton("Edit Groups");
     connect(button_edit_groups, &QPushButton::clicked, this, &PersonGroups::onAddNewGroupButton);
     
-    QWidget *widget_controls = new QWidget;
     QHBoxLayout *layout_controls = new QHBoxLayout;
-    widget_controls->setLayout(layout_controls);
-    layout_controls->setMargin(0);
     
     layout_controls->addWidget(this->combo_group);
     layout_controls->addWidget(button_edit_groups);
     
-    this->layout->addWidget(widget_controls);
+    this->layout->addLayout(layout_controls);
     
     showData();
 }
@@ -68,7 +62,7 @@ void PersonGroups::loadGroupsComboData()
     QList<QMap<QString,QVariant>> group_data = this->db->selectGroups();
     
     QList<QString> gr;
-    gr << "[Select Groups]";
+    gr << "[Select Group]";
     for (int i=0; i < group_data.length(); ++i)
     {
         gr.append(group_data.at(i)["name"].toString());
