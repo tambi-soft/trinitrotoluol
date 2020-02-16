@@ -76,10 +76,8 @@ PeopleList::PeopleList(DbAdapter *db, QWidget *parent)
     hbox_filters->addWidget(this->line_mail_filter);
     
     hbox_filters->addWidget(this->combo_groups);
-    QWidget *widget_filters = new QWidget();
-    widget_filters->setLayout(hbox_filters);
     
-    this->layout->addWidget(widget_filters);
+    this->layout->addLayout(hbox_filters);
     this->layout->addWidget(this->scroll_area);
     
     QPushButton *button_add_new_person = new QPushButton("add new person");
@@ -214,52 +212,65 @@ void PeopleList::showPeople()
         this->grid->addWidget(button_delete, i, 0);
         this->grid->addWidget(button_edit, i, 1);
         
+        // BEGIN Flags Area
+        QHBoxLayout *layout_flags = new QHBoxLayout;
+        layout_flags->addStretch();
         if (person["flag_todo"] == 1)
         {
             QLabel *label_todo = new QLabel("[todo]", this);
             label_todo->setStyleSheet("QLabel { color : red; }");
             
-            this->grid->addWidget(label_todo, i, 2);
+            //this->grid->addWidget(label_todo, i, 2);
+            layout_flags->addWidget(label_todo);
         }
         if (person["flag_waiting"] == 1)
         {
             QLabel *label_waiting = new QLabel("[waiting]", this);
             label_waiting->setStyleSheet("QLabel { color: orange; }");
             
-            this->grid->addWidget(label_waiting, i, 3);
-        }
-        if (person["agreed_mail"] == 1)
-        {
-            QLabel *label_agreed = new QLabel("[mail]", this);
-            label_agreed->setStyleSheet("QLabel { color : green; }");
-            
-            this->grid->addWidget(label_agreed, i, 4);
+            //this->grid->addWidget(label_waiting, i, 3);
+            layout_flags->addWidget(label_waiting);
         }
         if (person["agreed_prayer"] == 1)
         {
             QLabel *label_prayer = new QLabel("[prayer]", this);
             label_prayer->setStyleSheet("QLabel { color: darkgreen; }");
             
-            this->grid->addWidget(label_prayer, i, 5);
+            //this->grid->addWidget(label_prayer, i, 5);
+            layout_flags->addWidget(label_prayer);
         }
         if (person["donations_monthly_promised"] > 0)
         {
             QLabel *label_donating = new QLabel("[donation promised]", this);
             label_donating->setStyleSheet("QLabel { color : blue; }");
             
-            this->grid->addWidget(label_donating, i, 6);
+            //this->grid->addWidget(label_donating, i, 6);
+            layout_flags->addWidget(label_donating);
         }
         if (person["donations_received"] > 0)
         {
             QLabel *label_donating = new QLabel("[donating]", this);
             label_donating->setStyleSheet("QLabel { color : darkblue; }");
             
-            this->grid->addWidget(label_donating, i, 7);
+            //this->grid->addWidget(label_donating, i, 7);
+            layout_flags->addWidget(label_donating);
         }
+        if (person["agreed_mail"] == 1)
+        {
+            QLabel *label_agreed = new QLabel("[mail]", this);
+            label_agreed->setStyleSheet("QLabel { color : green; }");
+            
+            //this->grid->addWidget(label_agreed, i, 4);
+            layout_flags->addWidget(label_agreed);
+        }
+        layout_flags->setAlignment(Qt::AlignRight);
+        this->grid->addLayout(layout_flags, i, 5);
+        // END Flags Area
         
         this->grid->addWidget(new QLabel(person["name"].toString(), this), i, 8);
         //this->grid->addWidget(new QLabel(person["group"].toString(), this), i, 9);
         
+        // BEGIN Groups Area
         QString groups_names = person["groups_names"].toString();
         QString groups_colors = person["groups_colors"].toString();
         QStringList groups_names_splitted = groups_names.split(",");
@@ -280,6 +291,7 @@ void PeopleList::showPeople()
         layout_groups->addStretch();
         layout_groups->setAlignment(Qt::AlignLeft);
         this->grid->addLayout(layout_groups, i, 9);
+        // END Groups Area
     }
     // push all columns to the left for getting the table a bit more compact
     this->grid->setColumnStretch(100, 100);
