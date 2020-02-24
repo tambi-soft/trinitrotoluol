@@ -5,14 +5,18 @@ PersonRelations::PersonRelations(DbAdapter *db, qlonglong rowid, GridWidget *par
     this->db = db;
     this->rowid_people = rowid;
     
-    QPushButton *button_new = new QPushButton("Add Relation");
+    loadRelationsCombaData();
     
+    
+    //QPushButton *button_new = new QPushButton("Add Relation");
+    //connect(button_new, &QPushButton::clicked, this, &PersonRelations::onNewButtonClicked);
     
     QPushButton *button_edit = new QPushButton("Edit Relations");
-    connect(button_new, &QPushButton::clicked, this, &PersonRelations::onNewButtonClicked);
+    
     
     QHBoxLayout *layout_controls = new QHBoxLayout;
-    layout_controls->addWidget(button_new);
+    //layout_controls->addWidget(button_new);
+    layout_controls->addWidget(this->combo_relations);
     layout_controls->addWidget(button_edit);
     
     this->layout->addLayout(layout_controls);
@@ -95,4 +99,22 @@ void PersonRelations::onNewButtonClicked()
     qlonglong rowid_visits = this->db->relationInsert();
     
     onEditButtonClicked(rowid_visits);
+}
+
+void PersonRelations::loadRelationsCombaData()
+{
+    QList<QMap<QString,QVariant>> data = this->db->selectRelations();
+    
+    QList<QString> gr;
+    gr << "[Select Relation]";
+    for (int i=0; i < data.length(); ++i)
+    {
+        gr.append(data.at(i)["label"].toString());
+        
+        int rowid = data.at(i)["rowid"].toInt();
+        QString group = data.at(i)["name"].toString();
+        group_data_map[group] = rowid;
+    }
+    
+    this->combo_relations->addItems(gr);
 }

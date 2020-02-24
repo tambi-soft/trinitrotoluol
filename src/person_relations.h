@@ -6,6 +6,7 @@
 #include <QPushButton>
 #include <QMessageBox>
 #include <QLabel>
+#include <QComboBox>
 
 #include "lib/grid_widget.h"
 #include "db_adapter.h"
@@ -16,11 +17,15 @@ class PersonRelations : public GridWidget
 public:
     explicit PersonRelations(DbAdapter *db, qlonglong rowid, GridWidget *parent = nullptr);
     
+    void loadRelationsCombaData();
+    
 private:
     DbAdapter *db;
     qlonglong rowid_people;
     
     QMap<QString,int> group_data_map;
+    
+    QComboBox *combo_relations = new QComboBox;
     
     void showData();
     

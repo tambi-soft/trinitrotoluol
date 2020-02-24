@@ -977,3 +977,13 @@ QList<QMap<QString,QVariant>> DbAdapter::relationsMatrixSelect(qlonglong rowid_p
     
     return dbIteratorToMapList(query);
 }
+
+QList<QMap<QString,QVariant>> DbAdapter::selectRelations()
+{
+    QSqlQuery query("SELECT people_relations.rowid, people_relations.label, people_relations.color, COUNT(m1.rowid_people_relations_labels) AS count_relations"
+                    " FROM people_relations"
+                    " LEFT JOIN people_relations_matrix AS m1 ON m1.rowid_people_relations_labels=people_relations.rowid"
+                    " GROUP BY people_relations.rowid", this->db);
+    
+    return dbIteratorToMapList(query);
+}
