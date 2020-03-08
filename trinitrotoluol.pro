@@ -47,6 +47,7 @@ HEADERS += \
     src/donations_import_progress.h \
     src/donations_list.h \
     src/expenses_list.h \
+    src/groups_edit.h \
     src/journey_edit.h \
     src/journey_list.h \
     src/journey_tickets.h \
@@ -88,6 +89,7 @@ SOURCES += \
     src/donations_import_progress.cpp \
     src/donations_list.cpp \
     src/expenses_list.cpp \
+    src/groups_edit.cpp \
     src/journey_edit.cpp \
     src/journey_list.cpp \
     src/journey_tickets.cpp \

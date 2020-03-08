@@ -10,6 +10,7 @@
 
 #include "lib/grid_widget.h"
 #include "db_adapter.h"
+#include "person_groups.h"
 
 class PersonRelations : public GridWidget
 {
