@@ -5,7 +5,7 @@ PersonRelations::PersonRelations(DbAdapter *db, qlonglong rowid, GridWidget *par
     this->db = db;
     this->rowid_people = rowid;
     
-    loadRelationsCombaData();
+    loadRelationsComboData();
     
     
     //QPushButton *button_new = new QPushButton("Add Relation");
@@ -101,7 +101,7 @@ void PersonRelations::onNewButtonClicked()
     onEditButtonClicked(rowid_visits);
 }
 
-void PersonRelations::loadRelationsCombaData()
+void PersonRelations::loadRelationsComboData()
 {
     QList<QMap<QString,QVariant>> data = this->db->selectRelations();
     

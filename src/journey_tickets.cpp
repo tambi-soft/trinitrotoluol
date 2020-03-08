@@ -115,7 +115,7 @@ JourneyTicketsEdit::JourneyTicketsEdit(qlonglong rowid, DbAdapter *db, QWidget *
     
     setLayout(this->layout);
     
-    edit_cost->setMinimum(0);
+    edit_cost->setMinimum(-1000000);
     edit_cost->setMaximum(1000000);
     
     this->combo_currencies = new ComboCurrencies(this->db);

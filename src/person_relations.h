@@ -17,7 +17,7 @@ class PersonRelations : public GridWidget
 public:
     explicit PersonRelations(DbAdapter *db, qlonglong rowid, GridWidget *parent = nullptr);
     
-    void loadRelationsCombaData();
+    void loadRelationsComboData();
     
 private:
     DbAdapter *db;

@@ -588,7 +588,7 @@ QList<QMap<QString,QVariant>> DbAdapter::selectJourneys()
                     " LEFT JOIN currencies ON journey_tickets.rowid_currency=currencies.rowid"
                     " GROUP BY rowid_journeys "
                     ") t ON t.rowid_journeys = j.rowid "
-                    "ORDER BY date_from, date_to", this->db);
+                    "ORDER BY date_from DESC, date_to DESC", this->db);
     
     return dbIteratorToMapList(query);
 }
