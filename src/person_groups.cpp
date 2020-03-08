@@ -176,7 +176,9 @@ void GroupsEdit::onNewGroupButtonClicked()
 {
     this->rowid_new_group = this->db->insertNewGroup();
     this->color_new_group = QColor("#000000");
-
+    
+    showData();
+    
     showNewGroupDialog("");
 }
 
