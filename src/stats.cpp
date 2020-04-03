@@ -120,7 +120,7 @@ void Stats::addRemainingStats()
     QString money_target = this->edit_money_needed->text();
     connect(this->edit_money_needed, &QLineEdit::textChanged, this, &Stats::onMoneyTargetChanged);
     
-    onMoneyTargetChanged(needed_money);
+    //onMoneyTargetChanged(needed_money);
 }
 
 void Stats::onMoneyTargetChanged(QString target)

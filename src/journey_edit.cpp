@@ -80,6 +80,8 @@ void JourneyDetails::drawGUI()
 
 void JourneyDetails::loadData()
 {
+    blockSignals(true);
+    
     QMap<QString,QVariant> data = this->db->selectJourney(this->rowid);
     this->edit_name->setText(data["name"].toString());
     
@@ -90,6 +92,7 @@ void JourneyDetails::loadData()
     
     this->visits->setDateHint(this->edit_date_from->date().toString("yyyy-MM-dd"));
     
+    blockSignals(false);
 }
 
 void JourneyDetails::saveData()
