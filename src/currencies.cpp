@@ -108,15 +108,15 @@ CurrenciesEdit::CurrenciesEdit(qlonglong rowid, DbAdapter *db, QWidget *parent) 
     this->layout->addWidget(new QLabel("Notes"));
     this->layout->addWidget(this->edit_notes);
     
-    connect(this->edit_code, &QLineEdit::textChanged, this, &CurrenciesEdit::saveData);
-    connect(this->edit_exchange, &QLineEdit::textChanged, this, &CurrenciesEdit::saveData);
-    connect(this->edit_notes, &QTextEdit::textChanged, this, &CurrenciesEdit::saveData);
-    
     QMap<QString,QVariant> data = db->selectCurrency(rowid);
     
     this->edit_code->setText(data["code"].toString());
     this->edit_exchange->setText(data["exchange_rate"].toString());
     this->edit_notes->setPlainText(data["notes"].toString());
+    
+    connect(this->edit_code, &QLineEdit::textChanged, this, &CurrenciesEdit::saveData);
+    connect(this->edit_exchange, &QLineEdit::textChanged, this, &CurrenciesEdit::saveData);
+    connect(this->edit_notes, &QTextEdit::textChanged, this, &CurrenciesEdit::saveData);
 }
 
 void CurrenciesEdit::saveData()

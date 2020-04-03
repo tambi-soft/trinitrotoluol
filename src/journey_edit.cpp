@@ -52,10 +52,10 @@ JourneyDetails::JourneyDetails(qlonglong rowid, DbAdapter *db, JourneyVisits *vi
 
 void JourneyDetails::drawGUI()
 {
-    this->edit_name = new QLineEdit;
-    this->edit_date_from = new QDateEdit;
-    this->edit_date_to = new QDateEdit;
-    this->edit_notes = new QTextEdit;
+    this->edit_name = new QLineEdit(this);
+    this->edit_date_from = new QDateEdit(this);
+    this->edit_date_to = new QDateEdit(this);
+    this->edit_notes = new QTextEdit(this);
     
     this->edit_date_from->setDate(QDate::currentDate());
     this->edit_date_to->setDate(QDate::currentDate());
@@ -81,6 +81,10 @@ void JourneyDetails::drawGUI()
 void JourneyDetails::loadData()
 {
     blockSignals(true);
+    this->edit_name->blockSignals(true);
+    this->edit_date_from->blockSignals(true);
+    this->edit_date_to->blockSignals(true);
+    this->edit_notes->blockSignals(true);
     
     QMap<QString,QVariant> data = this->db->selectJourney(this->rowid);
     this->edit_name->setText(data["name"].toString());
@@ -93,6 +97,10 @@ void JourneyDetails::loadData()
     this->visits->setDateHint(this->edit_date_from->date().toString("yyyy-MM-dd"));
     
     blockSignals(false);
+    this->edit_name->blockSignals(false);
+    this->edit_date_from->blockSignals(false);
+    this->edit_date_to->blockSignals(false);
+    this->edit_notes->blockSignals(false);
 }
 
 void JourneyDetails::saveData()
