@@ -26,7 +26,17 @@ PersonDetails::PersonDetails(DbAdapter *db, qlonglong rowid, QWidget *parent) : 
     group_mails->setLayout(layout_mails);
     group_donations->setLayout(layout_donations);
     
-    layout_data->addWidget(edit);
+    QScrollArea *scroll_data = new QScrollArea(this);
+    scroll_data->setWidgetResizable(true);
+    layout_data->addWidget(scroll_data);
+    QVBoxLayout *layout_data_scroll = new QVBoxLayout;
+    QWidget *scroll_widget = new QWidget;
+    //scroll_data->setLayout(layout_data_scroll);
+    scroll_data->setWidget(scroll_widget);
+    scroll_widget->setLayout(layout_data_scroll);
+    layout_data_scroll->addWidget(edit);
+    
+    //layout_data->addWidget(edit);
     layout_visits->addWidget(visits);
     layout_mails->addWidget(mails);
     layout_donations->addWidget(donations);
@@ -53,6 +63,8 @@ PersonEdit::PersonEdit(DbAdapter *db, qlonglong rowid, QWidget *parent)
     
     this->rowid = rowid;
     this->db = db;
+    
+    setMinimumHeight(740);
     
     drawGUI();
 }

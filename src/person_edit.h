@@ -14,6 +14,7 @@
 #include <QDialog>
 #include <QDate>
 #include <QScrollArea>
+#include <QSizePolicy>
 
 #include "db_adapter.h"
 #include "people_selector.h" // for selecting the spouse
