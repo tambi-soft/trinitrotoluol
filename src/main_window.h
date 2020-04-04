@@ -72,7 +72,7 @@ private slots:
     void addDonationsImportTab();
     void addMergeDatabaseTab();
     void addMailListTab();
-    void addMailEditTab(qlonglong rowid);
+    void addMailEditTab(qlonglong rowid, QString name);
     void addMailSendTab(qlonglong rowid, QString number);
     
     void addCurrenciesTab();

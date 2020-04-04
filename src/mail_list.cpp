@@ -34,7 +34,7 @@ void MailList::showData()
         QPushButton *button_edit = new QPushButton();
         button_edit->setIcon(QIcon::fromTheme("document-properties"));
         button_edit->setToolTip("edit this email");
-        connect(button_edit, &QPushButton::clicked, this, [this, rowid]{ onEditMail(rowid); });
+        connect(button_edit, &QPushButton::clicked, this, [this, rowid, number, subject]{ onEditMail(rowid, number, subject); });
         
         QPushButton *button_send = new QPushButton();
         button_send->setIcon(QIcon::fromTheme("document-send"));
@@ -55,14 +55,14 @@ void MailList::onNewMail()
 {
     qlonglong rowid = this->db->insertNewMail();
     
-    emit signalEditMail(rowid);
+    emit signalEditMail(rowid, "New Mail");
     
     showData();
 }
 
-void MailList::onEditMail(qlonglong rowid)
+void MailList::onEditMail(qlonglong rowid, QString number, QString name)
 {
-    emit signalEditMail(rowid);
+    emit signalEditMail(rowid, name+" | "+number);
     
     //this->table->clear();
     //initView();

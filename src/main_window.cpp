@@ -211,11 +211,11 @@ void QTNTMainWindow::addMailListTab()
     createSingleTab("Mail List", list, icon);
 }
 
-void QTNTMainWindow::addMailEditTab(qlonglong rowid)
+void QTNTMainWindow::addMailEditTab(qlonglong rowid, QString name)
 {
     MailEdit *mail = new MailEdit(this->db, rowid);
     QIcon *icon = new QIcon(QIcon::fromTheme("document-new"));
-    createSingleTab("New Mail", mail, icon);
+    createSingleTab(name, mail, icon);
 }
 
 void QTNTMainWindow::addMailSendTab(qlonglong rowid, QString number)

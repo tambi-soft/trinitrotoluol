@@ -30,13 +30,13 @@ private:
     void showData();
     
 signals:
-    void signalEditMail(qlonglong rowid);
+    void signalEditMail(qlonglong rowid, QString name);
     void signalSendMail(qlonglong rowid, QString number);
     
 public slots:
     void onNewMail();
     void onDeleteMail(qlonglong rowid, QString subject);
-    void onEditMail(qlonglong rowid);
+    void onEditMail(qlonglong rowid, QString number, QString name);
     void onSendMail(qlonglong rowid, QString number);
     void showEvent(QShowEvent *event);
 };
