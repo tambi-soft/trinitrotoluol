@@ -92,10 +92,10 @@ void PersonEdit::drawGUI()
     this->grid->addWidget(edit_donations_monthly, 11, 1, 1, 2);
     this->grid->addWidget(edit_donations_monthly_promised, 12, 1, 1, 2);
     
-    QPushButton *button_select_spouse = new QPushButton("Select Spouse");
-    connect(button_select_spouse, &QPushButton::clicked, this, &PersonEdit::onSelectSpouseButton);
-    this->grid->addWidget(edit_spouse, 13, 1);
-    this->grid->addWidget(button_select_spouse, 13, 2);
+    //QPushButton *button_select_spouse = new QPushButton("Select Spouse");
+    //connect(button_select_spouse, &QPushButton::clicked, this, &PersonEdit::onSelectSpouseButton);
+    //this->grid->addWidget(edit_spouse, 13, 1);
+    //this->grid->addWidget(button_select_spouse, 13, 2);
     
     this->grid->addWidget(edit_notes, 14, 1, 1, 2);
     

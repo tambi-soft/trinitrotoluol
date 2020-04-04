@@ -78,28 +78,7 @@ void PersonRelations::onDeleteButtonClicked(qlonglong rowid_a, qlonglong rowid_b
     }
 }
 
-void PersonRelations::onEditButtonClicked(qlonglong rowid)
-{
-    /*
-    JourneyVisitsEdit *edit = new JourneyVisitsEdit(rowid, this->rowid_person, this->db, QDate::currentDate().toString("yyyy-MM-dd"));
-    connect(edit, &JourneyVisitsEdit::signalReload, this, &PersonVisits::showData);
-    
-    QDialog *dialog = new QDialog();
-    QVBoxLayout *layout_dialog = new QVBoxLayout;
-    layout_dialog->setMargin(0);
-    dialog->setLayout(layout_dialog);
-    layout_dialog->addWidget(edit);
-    
-    dialog->exec();
-    */
-}
 
-void PersonRelations::onNewButtonClicked()
-{
-    qlonglong rowid_visits = this->db->relationInsert();
-    
-    onEditButtonClicked(rowid_visits);
-}
 
 void PersonRelations::loadRelationsComboData()
 {
@@ -117,4 +96,20 @@ void PersonRelations::loadRelationsComboData()
     }
     
     this->combo_relations->addItems(gr);
+}
+
+void PersonRelations::onEditRelationsButton()
+{
+    /*
+    GroupsEdit *edit = new GroupsEdit(this->db);
+    //connect(edit, &CurrenciesEdit::signalUpdate, this, &CurrenciesList::updateView);
+
+    QDialog *dialog = new QDialog();
+    QVBoxLayout *layout_dialog = new QVBoxLayout;
+    layout_dialog->setMargin(0);
+    dialog->setLayout(layout_dialog);
+    layout_dialog->addWidget(edit);
+
+    dialog->exec();
+    */
 }

@@ -10,7 +10,7 @@
 
 #include "lib/grid_widget.h"
 #include "db_adapter.h"
-#include "person_groups.h"
+//#include "person_groups.h"
 
 class PersonRelations : public GridWidget
 {
@@ -32,8 +32,8 @@ private:
     
 private slots:
     void onDeleteButtonClicked(qlonglong rowid_a, qlonglong rowid_b, qlonglong rowid_peoples_relations, QString relation, QString name);
-    void onEditButtonClicked(qlonglong rowid);
-    void onNewButtonClicked();
+    void onEditRelationsButton();
+    
     
 signals:
     

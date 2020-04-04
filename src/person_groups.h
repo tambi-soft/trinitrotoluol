@@ -32,7 +32,7 @@ public:
     void loadGroupsComboData();
     
 private slots:
-    void onAddNewGroupButton();
+    void onEditGroupsButton();
     
 private:
     DbAdapter *db;

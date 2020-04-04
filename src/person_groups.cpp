@@ -9,7 +9,7 @@ PersonGroups::PersonGroups(DbAdapter *db, qlonglong rowid_people, GridWidget *pa
     connect(combo_group, qOverload<int>(&QComboBox::currentIndexChanged), this, &PersonGroups::addPersonToGroup);
     
     QPushButton *button_edit_groups = new QPushButton("Edit Groups");
-    connect(button_edit_groups, &QPushButton::clicked, this, &PersonGroups::onAddNewGroupButton);
+    connect(button_edit_groups, &QPushButton::clicked, this, &PersonGroups::onEditGroupsButton);
     
     QHBoxLayout *layout_controls = new QHBoxLayout;
     
@@ -62,7 +62,7 @@ void PersonGroups::loadGroupsComboData()
     QList<QMap<QString,QVariant>> group_data = this->db->selectGroups();
     
     QList<QString> gr;
-    gr << "[Select Group]";
+    gr << "[Add Group]";
     for (int i=0; i < group_data.length(); ++i)
     {
         gr.append(group_data.at(i)["name"].toString());
@@ -75,7 +75,7 @@ void PersonGroups::loadGroupsComboData()
     this->combo_group->addItems(gr);
 }
 
-void PersonGroups::onAddNewGroupButton()
+void PersonGroups::onEditGroupsButton()
 {
     GroupsEdit *edit = new GroupsEdit(this->db);
     //connect(edit, &CurrenciesEdit::signalUpdate, this, &CurrenciesList::updateView);
