@@ -17,7 +17,7 @@ class GroupsAndRelationsEdit : public GridWidget
 {
     Q_OBJECT
 public:
-    explicit GroupsAndRelationsEdit(QString new_button_label, GridWidget *parent = nullptr);
+    explicit GroupsAndRelationsEdit(QString new_button_label, QString label_group, GridWidget *parent = nullptr);
     
     void reloadData();
     
@@ -39,11 +39,12 @@ private slots:
     void onGroupNameChanged(QString name);
     void onGroupEditNameButton(qlonglong rowid_groups, QString name, QColor color_current);
     void onGroupColorButton(qlonglong rowid_groups, QString name, QColor color_current);
-    
 
 private:
     qlonglong rowid_new_group;
     QColor color_new_group;
+    
+    QString label_group;
 };
 
 #endif // GROUPSANDRELATIONSEDIT_H

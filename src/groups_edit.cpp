@@ -1,7 +1,7 @@
 #include "groups_edit.h"
 
 
-GroupsEdit::GroupsEdit(DbAdapter *db, GroupsAndRelationsEdit *parent) : GroupsAndRelationsEdit("add new group", parent)
+GroupsEdit::GroupsEdit(DbAdapter *db, GroupsAndRelationsEdit *parent) : GroupsAndRelationsEdit("add new group", "<b>Group Name</b>", parent)
 {
     this->db = db;
     
@@ -17,7 +17,6 @@ qlonglong GroupsEdit::insertTableEntry()
 // overloaded
 void GroupsEdit::updateTableEntry(qlonglong rowid_groups, QString name, QColor color)
 {
-    qDebug() << "saving ....";
     this->db->updateGroup(rowid_groups, name, color.name());
 }
 

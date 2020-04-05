@@ -102,7 +102,9 @@ public:
     bool donationDoesEntryAlreadyExist(QString person_name, QString amount, QString date, QString memo, QString tnt_code);
     
     qlonglong relationInsert();
-    void relationDelete(qlonglong rowid_people_a, qlonglong rowid_people_b, qlonglong rowid_relations);
+    void relationDelete(qlonglong rowid);
+    void relationMatrixDelete(qlonglong rowid_people_a, qlonglong rowid_people_b, qlonglong rowid_relations);
+    void relationUpdate(qlonglong rowid, QString name, QString color);
     QList<QMap<QString,QVariant>> relationsMatrixSelect(qlonglong rowid_people);
     QList<QMap<QString,QVariant>> selectRelations();
     

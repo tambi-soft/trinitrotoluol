@@ -950,16 +950,37 @@ bool DbAdapter::donationDoesEntryAlreadyExist(QString person_name, QString amoun
 
 qlonglong DbAdapter::relationInsert()
 {
-    
+    QSqlQuery query("INSERT INTO people_relations DEFAULT VALUES", this->db);
+
+    this->db.commit();
+    return query.lastInsertId().toLongLong();
 }
 
-void DbAdapter::relationDelete(qlonglong rowid_people_a, qlonglong rowid_people_b, qlonglong rowid_relations)
+void DbAdapter::relationDelete(qlonglong rowid)
+{
+    QSqlQuery query(this->db);
+    query.prepare("DELETE FROM people_relations WHERE rowid=:rowid");
+    query.bindValue(":rowid", rowid);
+    query.exec();
+}
+
+void DbAdapter::relationMatrixDelete(qlonglong rowid_people_a, qlonglong rowid_people_b, qlonglong rowid_relations)
 {
     QSqlQuery query(this->db);
     query.prepare("DELETE FROM people_relations_matrix WHERE rowid_people_a = :rowid_people_a AND rowid_people_b = :rowid_people_b AND rowid_peoples_relations = :rowid_relations");
     query.bindValue(":rowid_people_a", rowid_people_a);
     query.bindValue(":rowid_people_b", rowid_people_b);
     query.bindValue(":rowid_relations", rowid_relations);
+    query.exec();
+}
+
+void DbAdapter::relationUpdate(qlonglong rowid, QString name, QString color)
+{
+    QSqlQuery query(this->db);
+    query.prepare("UPDATE people_relations SET name=:name, color=:color WHERE rowid=:rowid");
+    query.bindValue(":name", name);
+    query.bindValue(":color", color);
+    query.bindValue(":rowid", rowid);
     query.exec();
 }
 

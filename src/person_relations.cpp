@@ -7,12 +7,8 @@ PersonRelations::PersonRelations(DbAdapter *db, qlonglong rowid, GridWidget *par
     
     loadRelationsComboData();
     
-    
-    //QPushButton *button_new = new QPushButton("Add Relation");
-    //connect(button_new, &QPushButton::clicked, this, &PersonRelations::onNewButtonClicked);
-    
     QPushButton *button_edit = new QPushButton("Edit Relations");
-    
+    connect(button_edit, &QPushButton::clicked, this, &PersonRelations::onEditRelationsButton);
     
     QHBoxLayout *layout_controls = new QHBoxLayout;
     //layout_controls->addWidget(button_new);
@@ -58,7 +54,7 @@ void PersonRelations::showData()
          
          
          
-         QLabel *label_relation = new QLabel(data.at(i)["label"].toString());
+         QLabel *label_relation = new QLabel(data.at(i)["name"].toString());
          QLabel *label_name = new QLabel(name);
          
          this->grid->addWidget(button_delete, i+1, 0);
@@ -73,7 +69,7 @@ void PersonRelations::onDeleteButtonClicked(qlonglong rowid_a, qlonglong rowid_b
     int reply = QMessageBox::question(this, "Delete "+relation, "Really delete relation \""+relation+"\" to \""+name+"\"?", QMessageBox::Yes, QMessageBox::No);
     if (reply == QMessageBox::Yes)
     {
-        this->db->relationDelete(rowid_a, rowid_b, rowid_peoples_relations);
+        this->db->relationMatrixDelete(rowid_a, rowid_b, rowid_peoples_relations);
         showData();
     }
 }
@@ -85,10 +81,10 @@ void PersonRelations::loadRelationsComboData()
     QList<QMap<QString,QVariant>> data = this->db->selectRelations();
     
     QList<QString> gr;
-    gr << "[Select Relation]";
+    gr << "[Add Relation]";
     for (int i=0; i < data.length(); ++i)
     {
-        gr.append(data.at(i)["label"].toString());
+        gr.append(data.at(i)["name"].toString());
         
         int rowid = data.at(i)["rowid"].toInt();
         QString group = data.at(i)["name"].toString();
@@ -100,8 +96,8 @@ void PersonRelations::loadRelationsComboData()
 
 void PersonRelations::onEditRelationsButton()
 {
-    /*
-    GroupsEdit *edit = new GroupsEdit(this->db);
+    //GroupsEdit *edit = new GroupsEdit(this->db);
+    RelationsEdit *edit = new RelationsEdit(this->db);
     //connect(edit, &CurrenciesEdit::signalUpdate, this, &CurrenciesList::updateView);
 
     QDialog *dialog = new QDialog();
@@ -111,5 +107,4 @@ void PersonRelations::onEditRelationsButton()
     layout_dialog->addWidget(edit);
 
     dialog->exec();
-    */
 }

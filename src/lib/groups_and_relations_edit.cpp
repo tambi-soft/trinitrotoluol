@@ -1,8 +1,9 @@
 #include "groups_and_relations_edit.h"
 
-GroupsAndRelationsEdit::GroupsAndRelationsEdit(QString new_button_label, GridWidget *parent) : GridWidget(parent)
+GroupsAndRelationsEdit::GroupsAndRelationsEdit(QString new_button_label, QString label_group, GridWidget *parent) : GridWidget(parent)
 {
     //this->db = db;
+    this->label_group = label_group;
     
     setMinimumSize(460, 600);
 
@@ -23,12 +24,11 @@ void GroupsAndRelationsEdit::showData()
 {
     recreateView();
     
-    this->grid->addWidget(new QLabel("<b>Group Name</b>"), 0, 3);
+    this->grid->addWidget(new QLabel(this->label_group), 0, 3);
     this->grid->addWidget(new QLabel("<b>Number of Group Members</b>"), 0, 4);
 
     //QList<QMap<QString,QVariant>> data = this->db->selectGroups();
     QList<QMap<QString,QVariant>> data = selectData();
-    qDebug() << data;
 
     for (int i=0; i < data.length(); i++)
     {
