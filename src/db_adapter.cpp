@@ -966,7 +966,7 @@ void DbAdapter::relationDelete(qlonglong rowid_people_a, qlonglong rowid_people_
 QList<QMap<QString,QVariant>> DbAdapter::relationsMatrixSelect(qlonglong rowid_people)
 {
     QSqlQuery query(this->db);
-    query.prepare("SELECT rowid_people_a, rowid_people_b, p1.name AS name_a, p2.name AS name_b, rowid_people_relations_labels, people_relations.label"
+    query.prepare("SELECT rowid_people_a, rowid_people_b, p1.name AS name_a, p2.name AS name_b, rowid_people_relations_labels, people_relations.name"
                   " FROM people_relations_matrix"
                   " JOIN people_relations ON people_relations.rowid = people_relations_matrix.rowid_people_relations_labels"
                   " JOIN people AS p1 ON p1.rowid = people_relations_matrix.rowid_people_a"
@@ -980,7 +980,7 @@ QList<QMap<QString,QVariant>> DbAdapter::relationsMatrixSelect(qlonglong rowid_p
 
 QList<QMap<QString,QVariant>> DbAdapter::selectRelations()
 {
-    QSqlQuery query("SELECT people_relations.rowid, people_relations.label, people_relations.color, COUNT(m1.rowid_people_relations_labels) AS count_relations"
+    QSqlQuery query("SELECT people_relations.rowid, people_relations.name, people_relations.color, COUNT(m1.rowid_people_relations_labels) AS count_relations"
                     " FROM people_relations"
                     " LEFT JOIN people_relations_matrix AS m1 ON m1.rowid_people_relations_labels=people_relations.rowid"
                     " GROUP BY people_relations.rowid", this->db);
