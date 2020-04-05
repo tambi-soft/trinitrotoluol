@@ -21,6 +21,18 @@ public:
     
     void reloadData();
     
+    void showData();
+    void showNewGroupDialog(QString name);
+    
+    // to be overloaded
+    virtual qlonglong insertTableEntry();
+    // to be overloaded
+    virtual void updateTableEntry(qlonglong rowid, QString name, QColor color);
+    // to be overloaded
+    virtual void deleteTableEntry(qlonglong rowid);
+    // to be overloaded
+    virtual QList<QMap<QString,QVariant>> selectData();
+    
 private slots:
     void onDeleteButtonClicked(qlonglong group_id, QString group_name, int people_count);
     void onNewGroupButtonClicked();
@@ -32,18 +44,6 @@ private slots:
 private:
     qlonglong rowid_new_group;
     QColor color_new_group;
-
-    void showData();
-    void showNewGroupDialog(QString name);
-    
-    // to be overloaded
-    qlonglong insertTableEntry();
-    // to be overloaded
-    void updateTableEntry(qlonglong rowid, QString name, QString color);
-    // to be overloaded
-    void deleteTableEntry(qlonglong rowid);
-    // to be overloaded
-    QList<QMap<QString,QVariant>> selectData();
 };
 
 #endif // GROUPSANDRELATIONSEDIT_H

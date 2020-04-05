@@ -10,7 +10,7 @@ GroupsAndRelationsEdit::GroupsAndRelationsEdit(QString new_button_label, GridWid
     connect(button_new, &QPushButton::clicked, this, &GroupsAndRelationsEdit::onNewGroupButtonClicked);
     this->layout->addWidget(button_new);
 
-    showData();
+    //showData();
 }
 
 void GroupsAndRelationsEdit::reloadData()
@@ -27,7 +27,8 @@ void GroupsAndRelationsEdit::showData()
     this->grid->addWidget(new QLabel("<b>Number of Group Members</b>"), 0, 4);
 
     //QList<QMap<QString,QVariant>> data = this->db->selectGroups();
-    QList<QMap<QString,QVariant>> data = this->selectData();
+    QList<QMap<QString,QVariant>> data = selectData();
+    qDebug() << data;
 
     for (int i=0; i < data.length(); i++)
     {
@@ -73,7 +74,7 @@ void GroupsAndRelationsEdit::onDeleteButtonClicked(qlonglong group_id, QString g
         if (reply == QMessageBox::Yes)
         {
             //this->db->deleteGroup(group_id);
-            this->deleteTableEntry(group_id);
+            deleteTableEntry(group_id);
             showData();
         }
     }
@@ -86,7 +87,7 @@ void GroupsAndRelationsEdit::onDeleteButtonClicked(qlonglong group_id, QString g
 void GroupsAndRelationsEdit::onNewGroupButtonClicked()
 {
     //this->rowid_new_group = this->db->insertNewGroup();
-    this->rowid_new_group = this->insertTableEntry();
+    this->rowid_new_group = insertTableEntry();
     this->color_new_group = QColor("#000000");
     
     showData();
@@ -119,7 +120,7 @@ void GroupsAndRelationsEdit::showNewGroupDialog(QString name)
 void GroupsAndRelationsEdit::onGroupNameChanged(QString name)
 {
     //this->db->updateGroup(this->rowid_new_group, name, this->color_new_group.name());
-    this->updateTableEntry(this->rowid_new_group, name, this->color_new_group.name());
+    updateTableEntry(this->rowid_new_group, name, this->color_new_group.name());
 }
 
 void GroupsAndRelationsEdit::onGroupEditNameButton(qlonglong rowid_groups, QString name, QColor color_current)
@@ -136,7 +137,7 @@ void GroupsAndRelationsEdit::onGroupColorButton(qlonglong rowid_groups, QString 
     if( color.isValid() )
     {
         //this->db->updateGroup(rowid_groups, name, color.name());
-        this->updateTableEntry(rowid_groups, name, color.name());
+        updateTableEntry(rowid_groups, name, color.name());
         showData();
     }
 }
@@ -148,7 +149,7 @@ qlonglong GroupsAndRelationsEdit::insertTableEntry()
 }
 
 // to be overloaded
-void GroupsAndRelationsEdit::updateTableEntry(qlonglong /*rowid*/, QString /*name*/, QString /*color*/)
+void GroupsAndRelationsEdit::updateTableEntry(qlonglong /*rowid*/, QString /*name*/, QColor /*color*/)
 {
     
 }

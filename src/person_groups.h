@@ -19,7 +19,6 @@
 #include "lib/grid_widget.h"
 #include "db_adapter.h"
 #include "groups_edit.h"
-//#include "lib/groups_and_relations_edit.h"
 
 class PersonGroups : public GridWidget
 {

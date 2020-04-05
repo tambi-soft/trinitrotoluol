@@ -1,5 +1,5 @@
-#ifndef PERSONRELATIONSANDGROUPSEDIT_H
-#define PERSONRELATIONSANDGROUPSEDIT_H
+#ifndef GROUPSEDIT_H
+#define GROUPSEDIT_H
 
 #include <QObject>
 #include <QWidget>
@@ -12,30 +12,28 @@
 #include <QColor>
 
 #include "db_adapter.h"
-#include "lib/grid_widget.h"
+#include "lib/groups_and_relations_edit.h"
 
-class GroupsEdit : public GridWidget
+class GroupsEdit : public GroupsAndRelationsEdit
 {
     Q_OBJECT
 public:
-    explicit GroupsEdit(DbAdapter *db, GridWidget *parent = nullptr);
-    void reloadData();
+    explicit GroupsEdit(DbAdapter *db, GroupsAndRelationsEdit *parent = nullptr);
     
 private slots:
-    void onDeleteButtonClicked(qlonglong group_id, QString group_name, int people_count);
-    void onNewGroupButtonClicked();
-    void onGroupNameChanged(QString name);
-    void onGroupEditNameButton(qlonglong rowid_groups, QString name, QColor color_current);
-    void onGroupColorButton(qlonglong rowid_groups, QString name, QColor color_current);
-    
 
 private:
     DbAdapter *db;
-    qlonglong rowid_new_group;
-    QColor color_new_group;
-
-    void showData();
-    void showNewGroupDialog(QString name);
+    
+    // overloaded
+    qlonglong insertTableEntry();
+    // overloaded
+    void updateTableEntry(qlonglong rowid_groups, QString name, QColor color);
+    // overloaded
+    void deleteTableEntry(qlonglong group_id);
+    // overloaded
+    QList<QMap<QString,QVariant>> selectData();
+    
 };
 
-#endif // PERSONRELATIONSANDGROUPSEDIT_H
+#endif // GROUPSEDIT_H

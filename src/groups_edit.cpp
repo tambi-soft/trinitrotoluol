@@ -1,138 +1,35 @@
 #include "groups_edit.h"
 
 
-GroupsEdit::GroupsEdit(DbAdapter *db, GridWidget *parent) : GridWidget(parent)
+GroupsEdit::GroupsEdit(DbAdapter *db, GroupsAndRelationsEdit *parent) : GroupsAndRelationsEdit("add new group", parent)
 {
     this->db = db;
     
-    setMinimumSize(460, 600);
-
-    QPushButton *button_new = new QPushButton("add new group");
-    connect(button_new, &QPushButton::clicked, this, &GroupsEdit::onNewGroupButtonClicked);
-    this->layout->addWidget(button_new);
-
     showData();
 }
 
-void GroupsEdit::reloadData()
+// overloaded
+qlonglong GroupsEdit::insertTableEntry()
 {
-    this->scroll_widget->deleteLater();
-    showData();
+    return this->db->insertNewGroup();
 }
 
-void GroupsEdit::showData()
+// overloaded
+void GroupsEdit::updateTableEntry(qlonglong rowid_groups, QString name, QColor color)
 {
-    recreateView();
-    
-    this->grid->addWidget(new QLabel("<b>Group Name</b>"), 0, 3);
-    this->grid->addWidget(new QLabel("<b>Number of Group Members</b>"), 0, 4);
-
-    QList<QMap<QString,QVariant>> data = this->db->selectGroups();
-
-    for (int i=0; i < data.length(); i++)
-    {
-        qlonglong rowid = data.at(i)["rowid"].toLongLong();
-        int people_count = data.at(i)["count_people"].toInt();
-        QString group_name = data.at(i)["name"].toString();
-        QColor color = QColor(data.at(i)["color"].toString());
-        
-        QPushButton *button_delete = new QPushButton();
-        button_delete->setIcon(QIcon::fromTheme("edit-delete"));
-        button_delete->setToolTip("delete name");
-        button_delete->setMaximumWidth(25);
-        connect(button_delete, &QPushButton::clicked, this, [this, rowid, group_name, people_count]{ GroupsEdit::onDeleteButtonClicked(rowid, group_name, people_count); });
-        
-        QPushButton *button_edit = new QPushButton();
-        button_edit->setIcon(QIcon::fromTheme("document-properties"));
-        button_edit->setToolTip("edit this group");
-        connect(button_edit, &QPushButton::clicked, this, [this, rowid, group_name, color]{ GroupsEdit::onGroupEditNameButton(rowid, group_name, color); });
-        
-        QPushButton *button_color = new QPushButton();
-        button_color->setIcon(QIcon(":color"));
-        button_color->setToolTip("change color");
-        connect(button_color, &QPushButton::clicked, this, [this, rowid, group_name, color]{ GroupsEdit::onGroupColorButton(rowid, group_name, color); });
-        
-        QLabel *label_name = new QLabel(data.at(i)["name"].toString());
-        label_name->setStyleSheet("QLabel { color : "+color.name()+"; }");
-        
-        this->grid->addWidget(button_delete, i+1, 0);
-        this->grid->addWidget(button_edit, i+1, 1);
-        this->grid->addWidget(button_color, i+1, 2);
-        this->grid->addWidget(label_name, i+1, 3);
-        this->grid->addWidget(new QLabel(data.at(i)["count_people"].toString()), i+1, 4);
-    }
+    qDebug() << "saving ....";
+    this->db->updateGroup(rowid_groups, name, color.name());
 }
 
-void GroupsEdit::onDeleteButtonClicked(qlonglong group_id, QString group_name, int people_count)
+// overloaded
+void GroupsEdit::deleteTableEntry(qlonglong group_id)
 {
-    // TODO: what to do with people already assigned to this group?
-    
-    if (people_count == 0)
-    {
-        int reply = QMessageBox::question(this, "Delete "+group_name, "Really delete \""+group_name+"\"?", QMessageBox::Yes, QMessageBox::No);
-        if (reply == QMessageBox::Yes)
-        {
-            this->db->deleteGroup(group_id);
-            showData();
-        }
-    }
-    else
-    {
-        QMessageBox::question(this, "Delete "+group_name, "Group \""+group_name+"\" is not empty. Please remove this Group-Assignment from all People first!", QMessageBox::Ok);
-    }
+    this->db->deleteGroup(group_id);
 }
 
-void GroupsEdit::onNewGroupButtonClicked()
+// overloaded
+QList<QMap<QString,QVariant>> GroupsEdit::selectData()
 {
-    this->rowid_new_group = this->db->insertNewGroup();
-    this->color_new_group = QColor("#000000");
-    
-    showData();
-    
-    showNewGroupDialog("");
-}
-
-void GroupsEdit::showNewGroupDialog(QString name)
-{
-    // put together dialog content
-    QWidget *edit = new QWidget();
-    QVBoxLayout *layout = new QVBoxLayout;
-    edit->setLayout(layout);
-    QLineEdit *line = new QLineEdit();
-    line->setText(name);
-    layout->addWidget(line);
-    connect(line, &QLineEdit::textChanged, this, &GroupsEdit::onGroupNameChanged);
-    connect(line, &QLineEdit::textChanged, this, &GroupsEdit::reloadData);
-
-    // put together the dialog itself and show
-    QDialog *dialog = new QDialog();
-    QVBoxLayout *layout_dialog = new QVBoxLayout;
-    layout_dialog->setMargin(0);
-    dialog->setLayout(layout_dialog);
-    layout_dialog->addWidget(edit);
-
-    dialog->exec();
-}
-
-void GroupsEdit::onGroupNameChanged(QString name)
-{
-    this->db->updateGroup(this->rowid_new_group, name, this->color_new_group.name());
-}
-
-void GroupsEdit::onGroupEditNameButton(qlonglong rowid_groups, QString name, QColor color_current)
-{
-    this->rowid_new_group = rowid_groups;
-    this->color_new_group = color_current;
-    
-    showNewGroupDialog(name);
-}
-
-void GroupsEdit::onGroupColorButton(qlonglong rowid_groups, QString name, QColor color_current)
-{
-    QColor color = QColorDialog::getColor(color_current, this );
-    if( color.isValid() )
-    {
-        this->db->updateGroup(rowid_groups, name, color.name());
-        showData();
-    }
+    QList<QMap<QString,QVariant>> result = this->db->selectGroups();
+    return result;
 }
