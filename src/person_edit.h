@@ -43,7 +43,6 @@ public:
     
     void drawGUI();
     void loadData();
-    //void loadGroupsComboData();
     /* pack all data in a qmap for beeing send to the db */
     QMap<QString,QVariant> collectSaveData();
     
@@ -82,8 +81,6 @@ private:
     
 private slots:
     void onInsertAgreementDateButton();
-    void onSelectSpouseButton();
-    void onSpouseSelected(qlonglong rowid, QString name);
     void saveDataWithInt(int /* param just for compat */);
     void saveData();
     

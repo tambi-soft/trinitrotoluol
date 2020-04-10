@@ -43,7 +43,6 @@ void DbAdapter::initializeTables()
         "notes	TEXT, "
         "donations_monthly INTEGER DEFAULT 0, "
         "donations_monthly_promised  INTEGER DEFAULT 0, "
-        "spouse_rowid    INTEGER, "
         "flag_deactivated     INTEGER DEFAULT 0, "
         "flag_todo       INTEGER DEFAULT 0, "
         "flag_waiting    INTEGER DEFAULT 0, "
@@ -178,34 +177,6 @@ void DbAdapter::deactivatePerson(qlonglong rowid)
     query.exec();
 }
 
-void DbAdapter::linkSpouses(qlonglong rowid_a, qlonglong rowid_b)
-{
-    QSqlQuery query_a(this->db);
-    query_a.prepare("UPDATE people SET spouse_rowid=:rowid_a WHERE rowid=:rowid_b");
-    query_a.bindValue(":rowid_a", rowid_a);
-    query_a.bindValue(":rowid_b", rowid_b);
-    query_a.exec();
-    
-    QSqlQuery query_b(this->db);
-    query_b.prepare("UPDATE people SET spouse_rowid=:rowid_b WHERE rowid=:rowid_a");
-    query_b.bindValue(":rowid_a", rowid_a);
-    query_b.bindValue(":rowid_b", rowid_b);
-    query_b.exec();
-}
-
-void DbAdapter::unlinkSpouses(qlonglong rowid_a, qlonglong rowid_b)
-{
-    QSqlQuery query_a(this->db);
-    query_a.prepare("UPDATE people SET spouse_rowid=NULL WHERE spouse_rowid=:rowid");
-    query_a.bindValue(":rowid", rowid_a);
-    query_a.exec();
-    
-    QSqlQuery query_b(this->db);
-    query_b.prepare("UPDATE people SET spouse_rowid=NULL WHERE spouse_rowid=:rowid");
-    query_a.bindValue(":rowid", rowid_b);
-    query_b.exec();
-}
-
 QSqlQuery DbAdapter::bindPersonParams(QSqlQuery query, QMap<QString,QVariant> data)
 {
     query.bindValue(":tnt_id", data["tnt_id"].toInt());
@@ -282,9 +253,8 @@ void DbAdapter::updatePerson(qlonglong rowid, QMap<QString,QVariant> data)
 QMap<QString,QVariant> DbAdapter::selectPerson(qlonglong rowid)
 {
     QSqlQuery query(this->db);
-    query.prepare("SELECT b.name AS spouse_name, a.tnt_id, a.name, a.email, a.address, a.phone, a.agreed_mail, a.agreed_prayer, a.agreement, a.notes, a.donations_monthly, a.donations_monthly_promised, a.flag_todo, a.flag_waiting "
+    query.prepare("SELECT a.tnt_id, a.name, a.email, a.address, a.phone, a.agreed_mail, a.agreed_prayer, a.agreement, a.notes, a.donations_monthly, a.donations_monthly_promised, a.flag_todo, a.flag_waiting "
         "FROM people a "
-        "LEFT JOIN people b ON a.spouse_rowid=b.rowid "
         "WHERE a.rowid=:rowid");
     query.bindValue(":rowid", rowid);
     query.exec();

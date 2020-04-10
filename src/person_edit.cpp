@@ -118,12 +118,11 @@ void PersonEdit::drawGUI()
     this->grid->addWidget(new QLabel("agreement"), 10, 0);
     this->grid->addWidget(new QLabel("donations monthly"), 11, 0);
     this->grid->addWidget(new QLabel("donations promised"), 12, 0);
-    this->grid->addWidget(new QLabel("Spouse"), 13, 0);
+    
     this->grid->addWidget(new QLabel("Notes"), 14, 0);
     this->grid->addWidget(new QLabel("Relations"), 15, 0);
     this->grid->addWidget(new QLabel("Groups"), 16, 0);
     
-    //loadGroupsComboData();
     loadData();
     
     QList<QCheckBox*> allCheckboxesToAutosave;
@@ -184,25 +183,6 @@ void PersonEdit::loadData()
     this->edit_notes->setText(person["notes"].toString());
 }
 
-/*
-void PersonEdit::loadGroupsComboData()
-{
-    this->group_data = this->db->selectGroups();
-    
-    QList<QString> gr;
-    for (int i=0; i < group_data.length(); ++i)
-    {
-        gr.append(group_data.at(i)["name"].toString());
-        
-        int rowid = group_data.at(i)["rowid"].toInt();
-        QString group = group_data.at(i)["name"].toString();
-        this->group_data_map[group] = rowid;
-    }
-    
-    this->combo_group->addItems(gr);
-}
-*/
-
 QMap<QString,QVariant> PersonEdit::collectSaveData()
 {
     QString group_str = this->combo_group->currentText();
@@ -232,29 +212,6 @@ void PersonEdit::onInsertAgreementDateButton()
     this->edit_agreement->setText(QDate::currentDate().toString("yyyy-MM-dd"));
 }
 
-void PersonEdit::onSelectSpouseButton()
-{
-    PeopleSelector *selector = new PeopleSelector(this->db);
-    connect(selector, &PeopleSelector::personSelected, this, &PersonEdit::onSpouseSelected);
-    
-    this->dialog_select_spouse = new QDialog();
-    QVBoxLayout *layout_dialog = new QVBoxLayout;
-    layout_dialog->setMargin(0);
-    this->dialog_select_spouse->setLayout(layout_dialog);
-    layout_dialog->addWidget(selector);
-    
-    this->dialog_select_spouse->exec();
-}
-
-void PersonEdit::onSpouseSelected(qlonglong rowid, QString name)
-{
-    this->dialog_select_spouse->close();
-    
-    this->db->linkSpouses(this->rowid, rowid);
-    
-    this->edit_spouse->setText(name);
-}
-
 void PersonEdit::saveDataWithInt(int /*param just for compat*/)
 {
     saveData();
@@ -266,8 +223,6 @@ void PersonEdit::saveData()
     
     emit dataChanged();
 }
-
-
 
 
 
