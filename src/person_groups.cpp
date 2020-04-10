@@ -55,6 +55,12 @@ void PersonGroups::addPersonToGroup(qlonglong rowid_groups)
     this->db->groupMatrixInsert(this->rowid_people, group);
     
     showData();
+    
+    blockSignals(true);
+    this->combo_group->blockSignals(true);
+    this->combo_group->setCurrentIndex(0);
+    this->combo_group->blockSignals(false);
+    blockSignals(false);
 }
 
 void PersonGroups::loadGroupsComboData()
