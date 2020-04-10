@@ -43,7 +43,7 @@ public:
     
     void drawGUI();
     void loadData();
-    void loadGroupsComboData();
+    //void loadGroupsComboData();
     /* pack all data in a qmap for beeing send to the db */
     QMap<QString,QVariant> collectSaveData();
     

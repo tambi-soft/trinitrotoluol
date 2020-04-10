@@ -43,7 +43,6 @@ private slots:
 private:
     qlonglong rowid_new_group;
     QColor color_new_group;
-    
     QString label_group;
 };
 

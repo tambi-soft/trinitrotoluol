@@ -103,6 +103,7 @@ public:
     
     qlonglong relationInsert();
     void relationDelete(qlonglong rowid);
+    void relationMatrixInsert(qlonglong rowid_person_a, qlonglong rowid_person_b, qlonglong rowid_relations);
     void relationMatrixDelete(qlonglong rowid_people_a, qlonglong rowid_people_b, qlonglong rowid_relations);
     void relationUpdate(qlonglong rowid, QString name, QString color);
     QList<QMap<QString,QVariant>> relationsMatrixSelect(qlonglong rowid_people);

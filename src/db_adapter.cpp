@@ -148,7 +148,7 @@ void DbAdapter::initializeTables()
     QSqlQuery query_people_relatives("CREATE TABLE IF NOT EXISTS people_relations_matrix ("
                                      "rowid_people_a INTEGER KEY,"
                                      " rowid_people_b INTEGER KEY,"
-                                     " rowid_people_relations_labels)", this->db);
+                                     " rowid_people_relations)", this->db);
     QSqlQuery query_people_relatives_labels("CREATE TABLE IF NOT EXISTS people_relations ("
                                             "rowid INTEGER PRIMARY KEY AUTOINCREMENT,"
                                             " label TEXT UNIQUE,"
@@ -964,10 +964,20 @@ void DbAdapter::relationDelete(qlonglong rowid)
     query.exec();
 }
 
+void DbAdapter::relationMatrixInsert(qlonglong rowid_person_a, qlonglong rowid_person_b, qlonglong rowid_relations)
+{
+    QSqlQuery query(this->db);
+    query.prepare("INSERT INTO people_relations_matrix (rowid_people_a, rowid_people_b, rowid_people_relations) VALUES (:rowid_person_a, :rowid_person_b, :rowid_relations)");
+    query.bindValue(":rowid_person_a", rowid_person_a);
+    query.bindValue(":rowid_person_b", rowid_person_b);
+    query.bindValue(":rowid_relations", rowid_relations);
+    query.exec();
+}
+
 void DbAdapter::relationMatrixDelete(qlonglong rowid_people_a, qlonglong rowid_people_b, qlonglong rowid_relations)
 {
     QSqlQuery query(this->db);
-    query.prepare("DELETE FROM people_relations_matrix WHERE rowid_people_a = :rowid_people_a AND rowid_people_b = :rowid_people_b AND rowid_peoples_relations = :rowid_relations");
+    query.prepare("DELETE FROM people_relations_matrix WHERE rowid_people_a = :rowid_people_a AND rowid_people_b = :rowid_people_b AND rowid_people_relations = :rowid_relations");
     query.bindValue(":rowid_people_a", rowid_people_a);
     query.bindValue(":rowid_people_b", rowid_people_b);
     query.bindValue(":rowid_relations", rowid_relations);
@@ -987,9 +997,9 @@ void DbAdapter::relationUpdate(qlonglong rowid, QString name, QString color)
 QList<QMap<QString,QVariant>> DbAdapter::relationsMatrixSelect(qlonglong rowid_people)
 {
     QSqlQuery query(this->db);
-    query.prepare("SELECT rowid_people_a, rowid_people_b, p1.name AS name_a, p2.name AS name_b, rowid_people_relations_labels, people_relations.name"
+    query.prepare("SELECT rowid_people_a, rowid_people_b, p1.name AS name_a, p2.name AS name_b, rowid_people_relations, people_relations.name"
                   " FROM people_relations_matrix"
-                  " JOIN people_relations ON people_relations.rowid = people_relations_matrix.rowid_people_relations_labels"
+                  " JOIN people_relations ON people_relations.rowid = people_relations_matrix.rowid_people_relations"
                   " JOIN people AS p1 ON p1.rowid = people_relations_matrix.rowid_people_a"
                   " JOIN people AS p2 ON p2.rowid = people_relations_matrix.rowid_people_b"
                   " WHERE rowid_people_a = :rowid_people OR rowid_people_b = :rowid_people");
@@ -1001,9 +1011,9 @@ QList<QMap<QString,QVariant>> DbAdapter::relationsMatrixSelect(qlonglong rowid_p
 
 QList<QMap<QString,QVariant>> DbAdapter::selectRelations()
 {
-    QSqlQuery query("SELECT people_relations.rowid, people_relations.name, people_relations.color, COUNT(m1.rowid_people_relations_labels) AS count_relations"
+    QSqlQuery query("SELECT people_relations.rowid, people_relations.name, people_relations.color, COUNT(m1.rowid_people_relations) AS count_relations"
                     " FROM people_relations"
-                    " LEFT JOIN people_relations_matrix AS m1 ON m1.rowid_people_relations_labels=people_relations.rowid"
+                    " LEFT JOIN people_relations_matrix AS m1 ON m1.rowid_people_relations=people_relations.rowid"
                     " GROUP BY people_relations.rowid", this->db);
     
     return dbIteratorToMapList(query);

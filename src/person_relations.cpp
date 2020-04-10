@@ -6,6 +6,7 @@ PersonRelations::PersonRelations(DbAdapter *db, qlonglong rowid, GridWidget *par
     this->rowid_people = rowid;
     
     loadRelationsComboData();
+    connect(combo_relations, qOverload<int>(&QComboBox::currentIndexChanged), this, &PersonRelations::addPersonToRelation);
     
     QPushButton *button_edit = new QPushButton("Edit Relations");
     connect(button_edit, &QPushButton::clicked, this, &PersonRelations::onEditRelationsButton);
@@ -36,7 +37,7 @@ void PersonRelations::showData()
      {
          qlonglong rowid_a = data.at(i)["rowid_people_a"].toLongLong();
          qlonglong rowid_b = data.at(i)["rowid_people_b"].toLongLong();
-         qlonglong rowid_peoples_relations = data.at(i)["rowid_peoples_relations"].toLongLong();
+         qlonglong rowid_peoples_relations = data.at(i)["rowid_people_relations"].toLongLong();
          QString name = "";
          if (rowid_a == this->rowid_people)
          {
@@ -46,7 +47,7 @@ void PersonRelations::showData()
          {
              name = data.at(i)["name_a"].toString();
          }
-         QString name_relation = data.at(i)["label"].toString();
+         QString name_relation = data.at(i)["name"].toString();
          
          QPushButton *button_delete = new QPushButton();
          button_delete->setIcon(QIcon::fromTheme("edit-delete"));
@@ -74,7 +75,37 @@ void PersonRelations::onDeleteButtonClicked(qlonglong rowid_a, qlonglong rowid_b
     }
 }
 
+void PersonRelations::addPersonToRelation(qlonglong rowid_relations)
+{
+    QString relation_str = this->combo_relations->currentText();
+    this->relation_selected = this->group_data_map[relation_str];
+    
+    PeopleSelector *selector = new PeopleSelector(this->db);
+    connect(selector, &PeopleSelector::personSelected, this, &PersonRelations::onSaveRelation);
+    
+    this->dialog_select_spouse = new QDialog();
+    QVBoxLayout *layout_dialog = new QVBoxLayout;
+    layout_dialog->setMargin(0);
+    this->dialog_select_spouse->setLayout(layout_dialog);
+    layout_dialog->addWidget(selector);
+    
+    this->dialog_select_spouse->exec();
+    
+    blockSignals(true);
+    this->combo_relations->blockSignals(true);
+    this->combo_relations->setCurrentIndex(0);
+    this->combo_relations->blockSignals(false);
+    blockSignals(false);
+}
 
+void PersonRelations::onSaveRelation(qlonglong rowid, QString /*name*/)
+{
+    this->dialog_select_spouse->close();
+    
+    this->db->relationMatrixInsert(this->rowid_people, rowid, this->relation_selected);
+    
+    showData();
+}
 
 void PersonRelations::loadRelationsComboData()
 {

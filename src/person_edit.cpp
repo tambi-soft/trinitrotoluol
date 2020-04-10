@@ -123,7 +123,7 @@ void PersonEdit::drawGUI()
     this->grid->addWidget(new QLabel("Relations"), 15, 0);
     this->grid->addWidget(new QLabel("Groups"), 16, 0);
     
-    loadGroupsComboData();
+    //loadGroupsComboData();
     loadData();
     
     QList<QCheckBox*> allCheckboxesToAutosave;
@@ -139,7 +139,7 @@ void PersonEdit::drawGUI()
         connect(item, &QLineEdit::textChanged, this, &PersonEdit::saveData);
     }
     
-    connect(combo_group, qOverload<int>(&QComboBox::currentIndexChanged), this, &PersonEdit::saveDataWithInt);
+    //connect(combo_group, qOverload<int>(&QComboBox::currentIndexChanged), this, &PersonEdit::saveDataWithInt);
     connect(edit_notes, &QTextEdit::textChanged, this, &PersonEdit::saveData);
                                
     //this->grid->setRowStretch(14, 100);
@@ -184,6 +184,7 @@ void PersonEdit::loadData()
     this->edit_notes->setText(person["notes"].toString());
 }
 
+/*
 void PersonEdit::loadGroupsComboData()
 {
     this->group_data = this->db->selectGroups();
@@ -200,6 +201,7 @@ void PersonEdit::loadGroupsComboData()
     
     this->combo_group->addItems(gr);
 }
+*/
 
 QMap<QString,QVariant> PersonEdit::collectSaveData()
 {
