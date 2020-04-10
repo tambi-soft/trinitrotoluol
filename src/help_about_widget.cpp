@@ -19,8 +19,9 @@ void HelpAboutWidget::showAbout()
 {
     QTextEdit *text = new QTextEdit();
     text->setText("Trinitrotoluol - Database Application for managing your supporters and contacts\n\n\
-    (c) 2019-2020 The Trinitrotoluol Author(s)\n\n\
-    http://tambi-soft.github.io");
+- Early Alpha Version -\n\n\
+(c) 2019-2020 The Trinitrotoluol Author(s)\n\n\
+http://tambi-soft.github.io");
     
     text->setReadOnly(true);
     this->tab_widget->addTab(text, "About");
@@ -30,7 +31,8 @@ void HelpAboutWidget::showLibraries()
 {
     QTextEdit *text = new QTextEdit();
     text->setText("Qt (5.11.0)\n\
-sqlite");
+sqlite\n\
+curl");
     
     text->setReadOnly(true);
     this->tab_widget->addTab(text, "Libraries");
