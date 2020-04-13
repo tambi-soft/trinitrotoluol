@@ -60,7 +60,7 @@ void GroupsAndRelationsEdit::showData()
         this->grid->addWidget(button_edit, i+1, 1);
         this->grid->addWidget(button_color, i+1, 2);
         this->grid->addWidget(label_name, i+1, 3);
-        this->grid->addWidget(new QLabel(data.at(i)["count_people"].toString()), i+1, 4);
+        this->grid->addWidget(new QLabel(data.at(i)["count"].toString()), i+1, 4);
     }
 }
 

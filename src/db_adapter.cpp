@@ -375,7 +375,7 @@ QList<QMap<QString,QVariant>> DbAdapter::selectMailsForPerson(qlonglong rowid_pe
 
 QList<QMap<QString,QVariant>> DbAdapter::selectGroups()
 {
-    QSqlQuery query("SELECT people_groups.rowid, people_groups.name, people_groups.color, COUNT(rowid_people) AS count_people"
+    QSqlQuery query("SELECT people_groups.rowid, people_groups.name, people_groups.color, COUNT(rowid_people) AS count"
                     " FROM people_groups"
                     " LEFT JOIN people_groups_matrix ON people_groups_matrix.rowid_groups=people_groups.rowid"
                     " GROUP BY people_groups.rowid", this->db);
@@ -981,7 +981,7 @@ QList<QMap<QString,QVariant>> DbAdapter::relationsMatrixSelect(qlonglong rowid_p
 
 QList<QMap<QString,QVariant>> DbAdapter::selectRelations()
 {
-    QSqlQuery query("SELECT people_relations.rowid, people_relations.name, people_relations.color, COUNT(m1.rowid_people_relations) AS count_relations"
+    QSqlQuery query("SELECT people_relations.rowid, people_relations.name, people_relations.color, COUNT(m1.rowid_people_relations) AS count"
                     " FROM people_relations"
                     " LEFT JOIN people_relations_matrix AS m1 ON m1.rowid_people_relations=people_relations.rowid"
                     " GROUP BY people_relations.rowid", this->db);
