@@ -23,9 +23,7 @@ void RelationsEdit::updateTableEntry(qlonglong rowid, QString name, QColor color
 // overloaded
 void RelationsEdit::deleteTableEntry(qlonglong rowid)
 {
-    //this->db->deleteGroup(group_id);
     this->db->relationDelete(rowid);
-    //this->db->relationDelete(rowid_people_a, rowid_people_b_, rowid_relations);
 }
 
 // overloaded

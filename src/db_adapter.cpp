@@ -397,6 +397,11 @@ void DbAdapter::deleteGroup(qlonglong rowid)
     query.prepare("DELETE FROM people_groups WHERE rowid=:rowid");
     query.bindValue(":rowid", rowid);
     query.exec();
+    
+    QSqlQuery quer(this->db);
+    quer.prepare("DELETE FROM people_groups_matrix WHERE rowid_groups=:rowid");
+    quer.bindValue(":rowid", rowid);
+    quer.exec();
 }
 
 void DbAdapter::updateGroup(qlonglong rowid, QString name, QString color)
@@ -932,6 +937,11 @@ void DbAdapter::relationDelete(qlonglong rowid)
     query.prepare("DELETE FROM people_relations WHERE rowid=:rowid");
     query.bindValue(":rowid", rowid);
     query.exec();
+    
+    QSqlQuery quer(this->db);
+    quer.prepare("DELETE FROM people_relations_matrix WHERE rowid_people_relations=:rowid");
+    quer.bindValue(":rowid", rowid);
+    quer.exec();
 }
 
 void DbAdapter::relationMatrixInsert(qlonglong rowid_person_a, qlonglong rowid_person_b, qlonglong rowid_relations)

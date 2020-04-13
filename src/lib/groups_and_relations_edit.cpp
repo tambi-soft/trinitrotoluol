@@ -70,7 +70,7 @@ void GroupsAndRelationsEdit::onDeleteButtonClicked(qlonglong group_id, QString g
     
     if (people_count == 0)
     {
-        int reply = QMessageBox::question(this, "Delete "+group_name, "Really delete \""+group_name+"\"?", QMessageBox::Yes, QMessageBox::No);
+        int reply = QMessageBox::question(this, "Delete "+group_name, "Really delete \""+group_name+"\"?\nThis will also delete every entry for this group!", QMessageBox::Yes, QMessageBox::No);
         if (reply == QMessageBox::Yes)
         {
             //this->db->deleteGroup(group_id);
