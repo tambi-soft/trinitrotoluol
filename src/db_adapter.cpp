@@ -417,7 +417,9 @@ void DbAdapter::updateGroup(qlonglong rowid, QString name, QString color)
 void DbAdapter::groupMatrixInsert(qlonglong rowid_people, qlonglong rowid_groups)
 {
     QSqlQuery query(this->db);
-    query.prepare("INSERT INTO people_groups_matrix (rowid_people, rowid_groups) VALUES (:rowid_people, :rowid_groups)");
+    query.prepare("INSERT INTO people_groups_matrix (rowid_people, rowid_groups) "
+                  "SELECT :rowid_people, :rowid_groups "
+                  "WHERE NOT EXISTS (SELECT 1 FROM people_groups_matrix WHERE rowid_people=:rowid_people AND rowid_groups=:rowid_groups)");
     query.bindValue(":rowid_people", rowid_people);
     query.bindValue(":rowid_groups", rowid_groups);
     query.exec();
@@ -947,7 +949,9 @@ void DbAdapter::relationDelete(qlonglong rowid)
 void DbAdapter::relationMatrixInsert(qlonglong rowid_person_a, qlonglong rowid_person_b, qlonglong rowid_relations)
 {
     QSqlQuery query(this->db);
-    query.prepare("INSERT INTO people_relations_matrix (rowid_people_a, rowid_people_b, rowid_people_relations) VALUES (:rowid_person_a, :rowid_person_b, :rowid_relations)");
+    query.prepare("INSERT INTO people_relations_matrix (rowid_people_a, rowid_people_b, rowid_people_relations) "
+                  "SELECT :rowid_person_a, :rowid_person_b, :rowid_relations "
+                  "WHERE NOT EXISTS (SELECT 1 FROM people_relations_matrix WHERE rowid_people_a=:rowid_person_a AND rowid_people_b=:rowid_person_b AND rowid_people_relations=:rowid_relations)");
     query.bindValue(":rowid_person_a", rowid_person_a);
     query.bindValue(":rowid_person_b", rowid_person_b);
     query.bindValue(":rowid_relations", rowid_relations);
