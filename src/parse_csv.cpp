@@ -105,6 +105,6 @@ QStringList ParseCSV::processCSVLine(QString line_input)
         //qDebug() << line;
     }
     */
-    
+    qDebug() << splitted;
     return splitted;
 }

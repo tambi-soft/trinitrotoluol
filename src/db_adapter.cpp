@@ -366,7 +366,8 @@ QList<QMap<QString,QVariant>> DbAdapter::selectMailsForPerson(qlonglong rowid_pe
     query.prepare("SELECT mail_sent.date, mail.number "
                   "FROM mail_sent "
                   "JOIN mail ON mail.rowid=rowid_mail "
-                  "WHERE mail_sent.rowid_people=:rowid_people");
+                  "WHERE mail_sent.rowid_people=:rowid_people "
+                  "ORDER BY mail_sent.date DESC");
     query.bindValue(":rowid_people", rowid_person);
     query.exec();
     
@@ -508,7 +509,7 @@ QMap<QString,QVariant> DbAdapter::selectMail(qlonglong rowid)
 
 QList<QMap<QString,QVariant>> DbAdapter::selectAllMails()
 {
-    QSqlQuery query("SELECT rowid, number, subject, cover, content_path, date, date_last_edit FROM mail ORDER BY number", this->db);
+    QSqlQuery query("SELECT rowid, number, subject, cover, content_path, date, date_last_edit FROM mail ORDER BY number DESC", this->db);
     
     return dbIteratorToMapList(query);
 }
@@ -746,7 +747,8 @@ QList<QMap<QString,QVariant>> DbAdapter::selectExpenses()
     QSqlQuery query(this->db);
     query.prepare("SELECT expenses.rowid, name, amount, cost_one, currencies.code AS currency_code, date, expenses.notes, flag_settled "
                   "FROM expenses "
-                  "LEFT JOIN currencies ON rowid_currency=currencies.rowid");
+                  "LEFT JOIN currencies ON rowid_currency=currencies.rowid "
+                  "ORDER BY date DESC");
     query.exec();
     
     return dbIteratorToMapList(query);
@@ -864,7 +866,8 @@ QList<QMap<QString,QVariant>> DbAdapter::donationsSelect()
     QSqlQuery query("SELECT name, people_donations.rowid, rowid_people, amount, currencies.code, rowid_currencies, people_donations.date "
                   "FROM people_donations "
                   "LEFT JOIN people ON rowid_people=people.rowid "
-                  "LEFT JOIN currencies ON rowid_currencies=currencies.rowid", this->db);
+                  "LEFT JOIN currencies ON rowid_currencies=currencies.rowid "
+                  "ORDER BY date DESC", this->db);
     
     return dbIteratorToMapList(query);
 }
@@ -876,7 +879,8 @@ QList<QMap<QString,QVariant>> DbAdapter::donationsSelectForPerson(qlonglong rowi
                   " FROM people_donations"
                   " LEFT JOIN people ON rowid_people=people.rowid"
                   " LEFT JOIN currencies ON rowid_currencies=currencies.rowid"
-                  " WHERE rowid_people=:rowid_people");
+                  " WHERE rowid_people=:rowid_people"
+                  " ORDER BY people_donations.date DESC");
     query.bindValue(":rowid_people", rowid_people);
     query.exec();
     
