@@ -11,10 +11,16 @@ PersonRelations::PersonRelations(DbAdapter *db, qlonglong rowid, GridWidget *par
     QPushButton *button_edit = new QPushButton("Edit Relations");
     connect(button_edit, &QPushButton::clicked, this, &PersonRelations::onEditRelationsButton);
     
+    QPushButton *button_help = new QPushButton;
+    button_help->setIcon(QIcon::fromTheme("dialog-question"));
+    button_help->setFixedWidth(25);
+    connect(button_help, &QPushButton::clicked, this, []{ new HelpMessage(":help_relations"); });
+    
     QHBoxLayout *layout_controls = new QHBoxLayout;
     //layout_controls->addWidget(button_new);
     layout_controls->addWidget(this->combo_relations);
     layout_controls->addWidget(button_edit);
+    layout_controls->addWidget(button_help);
     
     this->layout->addLayout(layout_controls);
     

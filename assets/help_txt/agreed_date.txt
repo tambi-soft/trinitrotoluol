@@ -1,1 +1,0 @@
-Probably you want to store the date of the according email from this supporter, or the name of a scanned file, or some other hint to find the actual agreement easily.

@@ -19,6 +19,7 @@
 #include "lib/grid_widget.h"
 #include "db_adapter.h"
 #include "groups_edit.h"
+#include "help_message.h"
 
 class PersonGroups : public GridWidget
 {

@@ -11,10 +11,16 @@ PersonGroups::PersonGroups(DbAdapter *db, qlonglong rowid_people, GridWidget *pa
     QPushButton *button_edit_groups = new QPushButton("Edit Groups");
     connect(button_edit_groups, &QPushButton::clicked, this, &PersonGroups::onEditGroupsButton);
     
+    QPushButton *button_help = new QPushButton;
+    button_help->setIcon(QIcon::fromTheme("dialog-question"));
+    button_help->setFixedWidth(25);
+    connect(button_help, &QPushButton::clicked, this, []{ new HelpMessage(":help_groups"); });
+    
     QHBoxLayout *layout_controls = new QHBoxLayout;
     
     layout_controls->addWidget(this->combo_group);
     layout_controls->addWidget(button_edit_groups);
+    layout_controls->addWidget(button_help);
     
     this->layout->addLayout(layout_controls);
     
@@ -85,7 +91,7 @@ void PersonGroups::onEditGroupsButton()
 {
     GroupsEdit *edit = new GroupsEdit(this->db);
     //connect(edit, &CurrenciesEdit::signalUpdate, this, &CurrenciesList::updateView);
-
+    
     QDialog *dialog = new QDialog();
     QVBoxLayout *layout_dialog = new QVBoxLayout;
     layout_dialog->setMargin(0);

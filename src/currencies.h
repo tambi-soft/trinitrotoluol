@@ -12,9 +12,11 @@
 #include <QComboBox>
 #include <QPushButton>
 #include <QLabel>
+#include <QTextEdit>
 
 #include "db_adapter.h"
 #include "lib/grid_widget.h"
+#include "lib/growing_text_edit.h"
 
 class CurrenciesList : public GridWidget
 {
@@ -23,6 +25,7 @@ public:
     explicit CurrenciesList(DbAdapter *db, GridWidget *parent = nullptr);
     
     void showData();
+    QTextEdit *showHelp();
     void onUpdateSignaled();
     
 private:

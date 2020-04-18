@@ -74,7 +74,13 @@ void PersonEdit::drawGUI()
     this->grid->addWidget(check_todo, 0, 1);
     this->grid->addWidget(check_waiting, 1, 1);
     
-    this->grid->addWidget(edit_tnt_id, 2, 1, 1, 3);
+    QPushButton *button_tnt_help = new QPushButton;
+    button_tnt_help->setIcon(QIcon::fromTheme("dialog-question"));
+    connect(button_tnt_help, &QPushButton::clicked, this, []{ new HelpMessage(":help_tntware"); });
+    
+    this->grid->addWidget(edit_tnt_id, 2, 1, 1, 2);
+    this->grid->addWidget(button_tnt_help, 2, 3);
+    
     this->grid->addWidget(edit_name, 3, 1, 1, 3);
     this->grid->addWidget(edit_email, 4, 1, 1, 3);
     this->grid->addWidget(edit_address, 5, 1, 1, 3);
@@ -88,7 +94,7 @@ void PersonEdit::drawGUI()
     connect(button_agreement_today, &QPushButton::clicked, this, &PersonEdit::onInsertAgreementDateButton);
     QPushButton *button_agreement_help = new QPushButton;
     button_agreement_help->setIcon(QIcon::fromTheme("dialog-question"));
-    connect(button_agreement_help, &QPushButton::clicked, this, &PersonEdit::helpAgreed);
+    connect(button_agreement_help, &QPushButton::clicked, this, []{ new HelpMessage(":help_agreed_date"); });
     this->grid->addWidget(button_agreement_today, 10, 2);
     this->grid->addWidget(button_agreement_help, 10, 3);
     
@@ -105,7 +111,7 @@ void PersonEdit::drawGUI()
     
     this->grid->addWidget(new QLabel("ToDo"), 0, 0);
     this->grid->addWidget(new QLabel("Waiting"), 1, 0);
-    this->grid->addWidget(new QLabel("TNT-Number"), 2, 0);
+    this->grid->addWidget(new QLabel("TntWare-Number"), 2, 0);
     this->grid->addWidget(new QLabel("Name"), 3, 0);
     this->grid->addWidget(new QLabel("Email"), 4, 0);
     this->grid->addWidget(new QLabel("Address"), 5, 0);
@@ -207,7 +213,23 @@ QMap<QString,QVariant> PersonEdit::collectSaveData()
 
 void PersonEdit::onInsertAgreementDateButton()
 {
-    this->edit_agreement->setText(QDate::currentDate().toString("yyyy-MM-dd"));
+    QString current_date = QDate::currentDate().toString("yyyy-MM-dd");
+    if (this->edit_agreement->text().length() <= 0)
+    {
+        this->edit_agreement->setText(current_date);
+    }
+    else
+    {
+        QMessageBox msgBox;
+        msgBox.setText("Overwrite current Value \""+this->edit_agreement->text()+"\" with \""+current_date+"\"?");
+        msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        
+        int ret = msgBox.exec();
+        if (ret == QMessageBox::Yes)
+        {
+            this->edit_agreement->setText(current_date);
+        }
+    }
 }
 
 void PersonEdit::saveDataWithInt(int /*param just for compat*/)
@@ -220,12 +242,6 @@ void PersonEdit::saveData()
     this->db->updatePerson(this->rowid, data);
     
     emit dataChanged();
-}
-
-void PersonEdit::helpAgreed()
-{
-    HelpMessage *help = new HelpMessage(":help_agreed_date");
-    help->exec();
 }
 
 

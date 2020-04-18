@@ -15,6 +15,7 @@
 #include <QDate>
 #include <QScrollArea>
 #include <QSizePolicy>
+#include <QMessageBox>
 
 #include "db_adapter.h"
 #include "person_groups.h"
@@ -85,7 +86,6 @@ private slots:
     void onInsertAgreementDateButton();
     void saveDataWithInt(int /* param just for compat */);
     void saveData();
-    void helpAgreed();
     
 signals:
     void dataChanged();

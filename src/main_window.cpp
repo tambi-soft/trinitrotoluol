@@ -183,7 +183,7 @@ void QTNTMainWindow::addDonationsListTab()
     DonationsList *don = new DonationsList(this->db);
     connect(don, &DonationsList::signalImportDonations, this, &QTNTMainWindow::addDonationsImportTab);
     
-    QIcon *icon = new QIcon(":money_receive");
+    QIcon *icon = new QIcon(":icon_money_receive");
     createSingleTab("Donations", don, icon);
 }
 

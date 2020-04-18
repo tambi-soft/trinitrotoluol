@@ -8,16 +8,10 @@ CurrenciesList::CurrenciesList(DbAdapter *db, GridWidget *parent) : GridWidget(p
     QPushButton *button_new_currency = new QPushButton("add new Currency");
     connect(button_new_currency, &QPushButton::clicked, this, &CurrenciesList::onNewButtonClicked);
     
-    //this->layout->addWidget(new QLabel("default Currency"));
-    //this->layout->addWidget(this->combo_default_currency);
-    this->layout->insertWidget(0, new QLabel("• The default-Currency should have an Exchange-Rate of 1"));
-    this->layout->insertWidget(1, new QLabel("• The Exchange-Rate of any other currency should be specified as a multiplicator in relation to the default Currency"));
-    this->layout->insertWidget(2, new QLabel("\t Example:\n\t If 1 USD = 0.91 EUR, and USD is your default Currency,\n\t USD would have an Exchange-Rate of 1,\n\t EUR would have an Exchange-Rate of 0.91"));
-    this->layout->insertWidget(3, new QLabel("• If no Currency has an Exchange-Rate of 1, the uppermost entry is taken as the default one"));
-    this->layout->insertWidget(4, new QLabel("• If more than one Currency has an Exchange-Rate of 1, the uppermost entry with an Exchange-Rate of 1 would be the default one"));
+    QTextEdit *help = showHelp();
+    this->layout->insertWidget(0, help);
     this->layout->addWidget(button_new_currency);
     
-    // iso-4217
     showData();
 }
 
@@ -91,6 +85,32 @@ void CurrenciesList::onUpdateSignaled()
 {
     showData();
 }
+
+QTextEdit* CurrenciesList::showHelp()
+{
+    QFile file(":help_currencies");
+    
+    QString lines;
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        QTextStream stream(&file);
+        while (!stream.atEnd())
+        {
+            lines.append(stream.readLine() + "\n");
+        }
+    }
+    file.close();
+    
+    //QTextEdit *text = new QTextEdit(this);
+    GrowingTextEdit *text = new GrowingTextEdit;
+    text->setText(lines);
+    
+    text->setReadOnly(true);
+    
+    return text;
+}
+
+
 
 
 

@@ -58,6 +58,7 @@ HEADERS += \
     src/lib/db_merge.h \
     src/lib/grid_widget.h \
     src/lib/groups_and_relations_edit.h \
+    src/lib/growing_text_edit.h \
     src/mail_edit.h \
     src/mail_list.h \
     src/mail_message.h \
@@ -103,6 +104,7 @@ SOURCES += \
     src/lib/db_merge.cpp \
     src/lib/grid_widget.cpp \
     src/lib/groups_and_relations_edit.cpp \
+    src/lib/growing_text_edit.cpp \
     src/mail_edit.cpp \
     src/mail_list.cpp \
     src/mail_message.cpp \

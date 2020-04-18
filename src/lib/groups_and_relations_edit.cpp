@@ -49,7 +49,7 @@ void GroupsAndRelationsEdit::showData()
         connect(button_edit, &QPushButton::clicked, this, [this, rowid, group_name, color]{ GroupsAndRelationsEdit::onGroupEditNameButton(rowid, group_name, color); });
         
         QPushButton *button_color = new QPushButton();
-        button_color->setIcon(QIcon(":color"));
+        button_color->setIcon(QIcon(":icon_color"));
         button_color->setToolTip("change color");
         connect(button_color, &QPushButton::clicked, this, [this, rowid, group_name, color]{ GroupsAndRelationsEdit::onGroupColorButton(rowid, group_name, color); });
         

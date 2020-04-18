@@ -12,6 +12,7 @@
 #include "db_adapter.h"
 #include "relations_edit.h"
 #include "people_selector.h"
+#include "help_message.h"
 
 class PersonRelations : public GridWidget
 {

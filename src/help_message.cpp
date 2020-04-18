@@ -2,6 +2,10 @@
 
 HelpMessage::HelpMessage(QString filename, QDialog *parent) : QDialog(parent)
 {
+    //320 500
+    setMinimumWidth(320);
+    setMinimumHeight(500);
+    
     QVBoxLayout *layout = new QVBoxLayout;
     setLayout(layout);
     
@@ -28,4 +32,6 @@ HelpMessage::HelpMessage(QString filename, QDialog *parent) : QDialog(parent)
     QPushButton *button_close = new QPushButton("ok");
     connect(button_close, &QPushButton::clicked, this, [this]{ this->close(); });
     layout->addWidget(button_close);
+    
+    exec();
 }

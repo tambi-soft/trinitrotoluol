@@ -61,7 +61,7 @@ void MenuBar::addToolsMenu()
     //connect(expensesListAction, &QAction::triggered, this, &MenuBar::expensesList);
     connect(expensesListAction, &QAction::triggered, this, &MenuBar::signalExpensesList);
     
-    QAction *sqlEditorAction = new QAction(QIcon(":sqlite-logo"), "SQL-Editor");
+    QAction *sqlEditorAction = new QAction(QIcon(":icon_sqlite-logo"), "SQL-Editor");
     //connect(sqlEditorAction, &QAction::triggered, this, &MenuBar::showSQLEditor);
     connect(sqlEditorAction, &QAction::triggered, this, &MenuBar::signalSQLEditor);
     
@@ -69,7 +69,7 @@ void MenuBar::addToolsMenu()
     //connect(currenciesAction, &QAction::triggered, this, &MenuBar::currencies);
     connect(currenciesAction, &QAction::triggered, this, &MenuBar::signalCurrencies);
     
-    QAction *donationsAction = new QAction(QIcon(":money_receive"), "Donations");
+    QAction *donationsAction = new QAction(QIcon(":icon_money_receive"), "Donations");
     connect(donationsAction, &QAction::triggered, this, &MenuBar::signalDonations);
     
     QAction *settingsAction = new QAction(QIcon::fromTheme("applications-system"), "&Settings");
@@ -79,7 +79,7 @@ void MenuBar::addToolsMenu()
     menu->addAction(mailListAction);
     menu->addAction(journeyListAction);
     menu->addAction(expensesListAction);
-    menu->addAction(sqlEditorAction);
+    //menu->addAction(sqlEditorAction);
     menu->addAction(currenciesAction);
     menu->addAction(donationsAction);
     menu->addAction(settingsAction);
