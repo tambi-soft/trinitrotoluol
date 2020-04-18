@@ -8,5 +8,6 @@
         <file alias="icon_currencies">assets/currencies.png</file>
         <file alias="sqlite-logo">assets/sqlite-logo.jpg</file>
         <file alias="color">assets/color_picker.jpg</file>
+        <file alias="help_agreed_date">assets/help_txt/agreed_date.txt</file>
     </qresource>
 </RCC>

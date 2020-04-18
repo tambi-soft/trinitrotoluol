@@ -17,10 +17,10 @@
 #include <QSizePolicy>
 
 #include "db_adapter.h"
-#include "people_selector.h" // for selecting the spouse
 #include "person_groups.h"
 #include "person_visits.h"
 #include "person_relations.h"
+#include "help_message.h"
 
 class PersonDetails : public QWidget
 {
@@ -34,6 +34,8 @@ private slots:
 signals:
     void dataChanged();
 };
+
+
 
 class PersonEdit : public QWidget
 {
@@ -83,6 +85,7 @@ private slots:
     void onInsertAgreementDateButton();
     void saveDataWithInt(int /* param just for compat */);
     void saveData();
+    void helpAgreed();
     
 signals:
     void dataChanged();

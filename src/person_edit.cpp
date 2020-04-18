@@ -74,11 +74,11 @@ void PersonEdit::drawGUI()
     this->grid->addWidget(check_todo, 0, 1);
     this->grid->addWidget(check_waiting, 1, 1);
     
-    this->grid->addWidget(edit_tnt_id, 2, 1, 1, 2);
-    this->grid->addWidget(edit_name, 3, 1, 1, 2);
-    this->grid->addWidget(edit_email, 4, 1, 1, 2);
-    this->grid->addWidget(edit_address, 5, 1, 1, 2);
-    this->grid->addWidget(edit_phone, 6, 1, 1, 2);
+    this->grid->addWidget(edit_tnt_id, 2, 1, 1, 3);
+    this->grid->addWidget(edit_name, 3, 1, 1, 3);
+    this->grid->addWidget(edit_email, 4, 1, 1, 3);
+    this->grid->addWidget(edit_address, 5, 1, 1, 3);
+    this->grid->addWidget(edit_phone, 6, 1, 1, 3);
     
     this->grid->addWidget(check_agreed_mail, 8, 1);
     this->grid->addWidget(check_agreed_prayer, 9, 1);
@@ -86,24 +86,22 @@ void PersonEdit::drawGUI()
     this->grid->addWidget(edit_agreement, 10, 1);
     QPushButton *button_agreement_today = new QPushButton("insert today");
     connect(button_agreement_today, &QPushButton::clicked, this, &PersonEdit::onInsertAgreementDateButton);
+    QPushButton *button_agreement_help = new QPushButton;
+    button_agreement_help->setIcon(QIcon::fromTheme("dialog-question"));
+    connect(button_agreement_help, &QPushButton::clicked, this, &PersonEdit::helpAgreed);
     this->grid->addWidget(button_agreement_today, 10, 2);
-    this->edit_agreement->setToolTip("probably you want to store the date of the according email from this supporter, or the name of a scanned file, or some other hint to find the actual agreement easily");
+    this->grid->addWidget(button_agreement_help, 10, 3);
     
-    this->grid->addWidget(edit_donations_monthly, 11, 1, 1, 2);
-    this->grid->addWidget(edit_donations_monthly_promised, 12, 1, 1, 2);
+    this->grid->addWidget(edit_donations_monthly, 11, 1, 1, 3);
+    this->grid->addWidget(edit_donations_monthly_promised, 12, 1, 1, 3);
     
-    //QPushButton *button_select_spouse = new QPushButton("Select Spouse");
-    //connect(button_select_spouse, &QPushButton::clicked, this, &PersonEdit::onSelectSpouseButton);
-    //this->grid->addWidget(edit_spouse, 13, 1);
-    //this->grid->addWidget(button_select_spouse, 13, 2);
-    
-    this->grid->addWidget(edit_notes, 14, 1, 1, 2);
+    this->grid->addWidget(edit_notes, 14, 1, 1, 3);
     
     this->relations = new PersonRelations(this->db, this->rowid);
-    this->grid->addWidget(this->relations, 15, 1, 1, 2);
+    this->grid->addWidget(this->relations, 15, 1, 1, 3);
     
     this->groups = new PersonGroups(this->db, this->rowid);
-    this->grid->addWidget(this->groups, 16, 1, 1, 2);
+    this->grid->addWidget(this->groups, 16, 1, 1, 3);
     
     this->grid->addWidget(new QLabel("ToDo"), 0, 0);
     this->grid->addWidget(new QLabel("Waiting"), 1, 0);
@@ -222,6 +220,12 @@ void PersonEdit::saveData()
     this->db->updatePerson(this->rowid, data);
     
     emit dataChanged();
+}
+
+void PersonEdit::helpAgreed()
+{
+    HelpMessage *help = new HelpMessage(":help_agreed_date");
+    help->exec();
 }
 
 
