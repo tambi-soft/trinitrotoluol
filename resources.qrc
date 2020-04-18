@@ -1,13 +1,13 @@
 <RCC>
     <qresource prefix="/">
-        <file alias="logo">assets/logo2.png</file>
+        <file alias="logo">assets/icons/logo2.png</file>
         <file alias="gpl">LICENSE.txt</file>
-        <file alias="money_receive">assets/money_receive.svg</file>
-        <file alias="icon_expenses">assets/expenses.png</file>
-        <file alias="icon_journey">assets/journey.png</file>
-        <file alias="icon_currencies">assets/currencies.png</file>
-        <file alias="sqlite-logo">assets/sqlite-logo.jpg</file>
-        <file alias="color">assets/color_picker.jpg</file>
+        <file alias="money_receive">assets/icons/money_receive.svg</file>
+        <file alias="icon_expenses">assets/icons/expenses.png</file>
+        <file alias="icon_journey">assets/icons/journey.png</file>
+        <file alias="icon_currencies">assets/icons/currencies.png</file>
+        <file alias="sqlite-logo">assets/icons/sqlite-logo.jpg</file>
+        <file alias="color">assets/icons/color_picker.jpg</file>
         <file alias="help_agreed_date">assets/help_txt/agreed_date.txt</file>
     </qresource>
 </RCC>
