@@ -11,12 +11,12 @@ MenuBar::MenuBar(QMenuBar *parent) : QMenuBar(parent)
 
 void MenuBar::addFileMenu()
 {
-    QAction *importDonationsAction = new QAction(QIcon::fromTheme("emblem-downloads"), "&Import Donations");
+    QAction *importDonationsAction = new QAction(QIcon::fromTheme("emblem-downloads"), "&Import Donations from CSV");
     importDonationsAction->setStatusTip("Import a CSV-File from TNT Connect");
     connect(importDonationsAction, &QAction::triggered, this, &MenuBar::signalImportDonations);
     
-    QAction *mergeDatabaseAction = new QAction(QIcon::fromTheme("emblem-downloads"), "Merge from other Database");
-    connect(mergeDatabaseAction, &QAction::triggered, this, &MenuBar::signalMergeDatabase);
+    //QAction *mergeDatabaseAction = new QAction(QIcon::fromTheme("emblem-downloads"), "Merge from other Database");
+    //connect(mergeDatabaseAction, &QAction::triggered, this, &MenuBar::signalMergeDatabase);
     
     QAction *exitAction = new QAction(QIcon::fromTheme("application-exit"), "&Exit");
     exitAction->setShortcut(QKeySequence::fromString("Ctrl+Q"));
@@ -25,7 +25,7 @@ void MenuBar::addFileMenu()
     
     QMenu *menu = addMenu("&File");
     menu->addAction(importDonationsAction);
-    menu->addAction(mergeDatabaseAction);
+    //menu->addAction(mergeDatabaseAction);
     menu->addAction(exitAction);
 }
 

@@ -1,4 +1,4 @@
-#include "donations_import.h"
+    #include "donations_import.h"
 
 DonationsImport::DonationsImport(DbAdapter *db, QWidget *parent) : QWidget(parent)
 {
@@ -8,11 +8,10 @@ DonationsImport::DonationsImport(DbAdapter *db, QWidget *parent) : QWidget(paren
     
     this->layout->addWidget(this->stack);
     
-    this->stack_select_source = stackSelectSourceFormat();
-    
-    this->stack->addWidget(this->stack_select_source);
-    
-    
+    /* == Bypassing the selectSourceFormat, as we currently only support CSV == */
+    //this->stack_select_source = stackSelectSourceFormat();
+    //this->stack->addWidget(this->stack_select_source);
+    showCSVFileDialog();
 }
 
 QWidget *DonationsImport::stackSelectSourceFormat()
