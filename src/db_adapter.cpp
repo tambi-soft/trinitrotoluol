@@ -152,6 +152,10 @@ void DbAdapter::initializeTables()
                                             "rowid INTEGER PRIMARY KEY AUTOINCREMENT,"
                                             " name TEXT,"
                                             " color TEXT)", this->db);
+    
+    QSqlQuery query_people_import_map("CREATE TABLE IF NOT EXISTS people_import_map ("
+                                      "tnt_name TEXT,"
+                                      "rowid_people INTEGER)", this->db);
 
     //qDebug() << this->db.lastError();
     //qDebug() << query_sent_mail.lastQuery();
@@ -1003,6 +1007,14 @@ QList<QMap<QString,QVariant>> DbAdapter::selectRelations()
                     " FROM people_relations"
                     " LEFT JOIN people_relations_matrix AS m1 ON m1.rowid_people_relations=people_relations.rowid"
                     " GROUP BY people_relations.rowid", this->db);
+    
+    return dbIteratorToMapList(query);
+}
+
+QList<QMap<QString,QVariant>> DbAdapter::SelectTableNames()
+{
+    QSqlQuery query("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'", this->db);
+    //query.exec();
     
     return dbIteratorToMapList(query);
 }

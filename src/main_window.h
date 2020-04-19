@@ -28,6 +28,7 @@
 #include "donations_list.h"
 #include "donations_import.h"
 #include "merge_database_widget.h"
+#include "export.h"
 
 class QTNTMainWindow : public QMainWindow
 {
@@ -70,6 +71,7 @@ private slots:
     
     void addDonationsListTab();
     void addDonationsImportTab();
+    void addExportTab();
     void addMergeDatabaseTab();
     void addMailListTab();
     void addMailEditTab(qlonglong rowid, QString name);

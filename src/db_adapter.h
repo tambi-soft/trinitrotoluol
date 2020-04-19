@@ -107,6 +107,8 @@ public:
     QList<QMap<QString,QVariant>> relationsMatrixSelect(qlonglong rowid_people);
     QList<QMap<QString,QVariant>> selectRelations();
     
+    QList<QMap<QString,QVariant>> SelectTableNames();
+    
 private:
     QSqlDatabase db;
     

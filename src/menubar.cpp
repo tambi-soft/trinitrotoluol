@@ -15,6 +15,9 @@ void MenuBar::addFileMenu()
     importDonationsAction->setStatusTip("Import a CSV-File from TNT Connect");
     connect(importDonationsAction, &QAction::triggered, this, &MenuBar::signalImportDonations);
     
+    QAction *exportDonationsAction = new QAction(QIcon::fromTheme("document-save-as"), "&Export");
+    connect(exportDonationsAction, &QAction::triggered, this, &MenuBar::signalExport);
+    
     //QAction *mergeDatabaseAction = new QAction(QIcon::fromTheme("emblem-downloads"), "Merge from other Database");
     //connect(mergeDatabaseAction, &QAction::triggered, this, &MenuBar::signalMergeDatabase);
     
@@ -25,6 +28,7 @@ void MenuBar::addFileMenu()
     
     QMenu *menu = addMenu("&File");
     menu->addAction(importDonationsAction);
+    menu->addAction(exportDonationsAction);
     //menu->addAction(mergeDatabaseAction);
     menu->addAction(exitAction);
 }
