@@ -33,6 +33,7 @@ SelectDatabase::SelectDatabase(QWidget *parent) : QWidget(parent)
 
 void SelectDatabase::showFileSelectDialog()
 {
+    /* We use this for opening a new or existing database */
     QString dir_new = QFileDialog::getSaveFileName(this,
                                                    "Select Database",
                                                    QDir::homePath(),
@@ -40,7 +41,7 @@ void SelectDatabase::showFileSelectDialog()
                                                    new QString(),
                                                    QFileDialog::DontConfirmOverwrite);
     
-    // if the user hit "cancel", we have an empty string here
+    // if the user hits "cancel", we have an empty string here
     if (!dir_new.isEmpty() || !dir_new.isNull())
     {
         emit this->databasePathSelected(dir_new);
