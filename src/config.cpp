@@ -25,20 +25,16 @@ Config::Config(QObject *parent) : QObject(parent)
         }
     }
         
-    config_file->setFileName(config_dir->absolutePath() + "/" + "config.ini");
+    config_file->setFileName(config_dir->absolutePath() + "/config.ini");
+    this->settings = new QSettings(config_file->fileName(), QSettings::IniFormat);
     if (! config_file->exists())
     {
-        QFile::copy(":default_config", config_dir->absolutePath() + "/config.ini");
-        QFile::setPermissions(config_file->fileName(),
-                              QFileDevice::ReadOwner |
-                              QFileDevice::ReadGroup |
-                              QFileDevice::ReadOther |
-                              QFileDevice::WriteOwner);
+        FirstRun *run = new FirstRun();
+        connect(run, &FirstRun::databasePathSelected, this, &Config::setDbPath);
+        run->exec();
     }
     
-    this->settings = new QSettings(config_file->fileName(), QSettings::IniFormat);
-    
-    initializeWithDefaultValues(config_dir);
+    //initializeWithDefaultValues(config_dir);
 }
 
 void Config::initializeWithDefaultValues(QDir *config_dir)

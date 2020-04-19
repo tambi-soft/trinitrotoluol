@@ -150,8 +150,8 @@ void DbAdapter::initializeTables()
                                      " rowid_people_relations)", this->db);
     QSqlQuery query_people_relatives_labels("CREATE TABLE IF NOT EXISTS people_relations ("
                                             "rowid INTEGER PRIMARY KEY AUTOINCREMENT,"
-                                            " label TEXT UNIQUE,"
-                                            " translation TEXT)", this->db);
+                                            " name TEXT,"
+                                            " color TEXT)", this->db);
 
     //qDebug() << this->db.lastError();
     //qDebug() << query_sent_mail.lastQuery();

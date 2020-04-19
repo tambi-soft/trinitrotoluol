@@ -11,6 +11,8 @@
 
 #include <QDebug>
 
+#include "firstrun.h"
+
 class Config : public QObject
 {
     Q_OBJECT

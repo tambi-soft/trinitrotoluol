@@ -131,7 +131,6 @@ void SettingsWidget::showFileSelectDialog()
     QString dir_old = this->edit_path->text();
     QString dir_new = QFileDialog::getOpenFileName(this, tr("Select Directory"), dir_old);
     
-    //qDebug() << "DIR:" << dir_new;
     // if the user hit "cancel", we have an empty string here
     if (!dir_new.isEmpty() || !dir_new.isNull())
     {
