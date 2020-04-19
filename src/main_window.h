@@ -25,7 +25,8 @@
 #include "currencies.h"
 #include "expenses_list.h"
 #include "help_about_widget.h"
-#include "donations_list.h"
+#include "donations.h"
+//#include "donations_list.h"
 #include "donations_import.h"
 #include "merge_database_widget.h"
 #include "export.h"
@@ -69,7 +70,8 @@ private slots:
     void addPeopleTab();
     void onPeopleDataChanged();
     
-    void addDonationsListTab();
+    void addDonationsTab();
+    //void addDonationsListTab();
     void addDonationsImportTab();
     void addExportTab();
     void addMergeDatabaseTab();

@@ -933,6 +933,16 @@ bool DbAdapter::donationDoesEntryAlreadyExist(QString person_name, QString amoun
     }
 }
 
+QList<QMap<QString,QVariant>> DbAdapter::donationsByMonth()
+{
+    QSqlQuery query("SELECT SUM(people_donations.amount) AS amount, strftime('%Y-%m', people_donations.date) as 'year-month' "
+                    "FROM people_donations "
+                    "GROUP BY strftime('%Y-%m', people_donations.date) "
+                    "ORDER BY 'year-month' ASC", this->db);
+    
+    return dbIteratorToMapList(query);
+}
+
 qlonglong DbAdapter::relationInsert()
 {
     QSqlQuery query("INSERT INTO people_relations DEFAULT VALUES", this->db);

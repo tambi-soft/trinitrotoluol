@@ -14,7 +14,8 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
     
     this->menu_bar = new MenuBar();
     setMenuBar(this->menu_bar);
-    connect(this->menu_bar, &MenuBar::signalDonations, this, &QTNTMainWindow::addDonationsListTab);
+    //connect(this->menu_bar, &MenuBar::signalDonations, this, &QTNTMainWindow::addDonationsListTab);
+    connect(this->menu_bar, &MenuBar::signalDonations, this, &QTNTMainWindow::addDonationsTab);
     connect(this->menu_bar, &MenuBar::signalImportDonations, this, &QTNTMainWindow::addDonationsImportTab);
     connect(this->menu_bar, &MenuBar::signalExport, this, &QTNTMainWindow::addExportTab);
     connect(this->menu_bar, &MenuBar::signalMergeDatabase, this, &QTNTMainWindow::addMergeDatabaseTab);
@@ -179,6 +180,14 @@ void QTNTMainWindow::onPeopleDataChanged()
     this->people_list->dataChanged();
 }
 
+void QTNTMainWindow::addDonationsTab()
+{
+    Donations *don = new Donations(this->db);
+    QIcon *icon = new QIcon(":icon_money_receive");
+    createSingleTab("Donations", don, icon);
+}
+
+/*
 void QTNTMainWindow::addDonationsListTab()
 {
     DonationsList *don = new DonationsList(this->db);
@@ -187,6 +196,7 @@ void QTNTMainWindow::addDonationsListTab()
     QIcon *icon = new QIcon(":icon_money_receive");
     createSingleTab("Donations", don, icon);
 }
+*/
 
 void QTNTMainWindow::addDonationsImportTab()
 {

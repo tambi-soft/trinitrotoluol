@@ -36,12 +36,14 @@ CONFIG += qt debug #release
 #CONFIG += qt release
 QT += widgets \
     sql \
-    webenginewidgets
+    webenginewidgets\
+    charts
 
 # Input
 HEADERS += \
     src/combo_currencies.h \
     src/currencies.h \
+    src/donations.h \
     src/donations_import.h \
     src/donations_import_matrix.h \
     src/donations_import_progress.h \
@@ -90,6 +92,7 @@ HEADERS += \
 SOURCES += \
     src/combo_currencies.cpp \
     src/currencies.cpp \
+    src/donations.cpp \
     src/donations_import.cpp \
     src/donations_import_matrix.cpp \
     src/donations_import_progress.cpp \
