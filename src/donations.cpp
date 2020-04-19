@@ -21,6 +21,7 @@ DonationsChart::DonationsChart(DbAdapter *db, QWidget *parent) : QWidget(parent)
     setLayout(new QVBoxLayout);
     
     QList<QMap<QString,QVariant>> data = this->db->donationsByMonth();
+    QString currency_code = this->db->currencySelectDefault()["code"].toString();
     
     QLineSeries *series = new QLineSeries;
     for (int i=0; i < data.length(); i++)
@@ -40,7 +41,7 @@ DonationsChart::DonationsChart(DbAdapter *db, QWidget *parent) : QWidget(parent)
     chart->setTitle("Donations / Month");
     
     QDateTimeAxis *axisX = new QDateTimeAxis;
-    axisX->setTickCount(10);
+    //axisX->setTickCount(20);
     axisX->setFormat("MMM yyyy");
     axisX->setTitleText("Date");
     chart->addAxis(axisX, Qt::AlignBottom);
@@ -48,7 +49,7 @@ DonationsChart::DonationsChart(DbAdapter *db, QWidget *parent) : QWidget(parent)
     
     QValueAxis *axisY = new QValueAxis;
     axisY->setLabelFormat("%i");
-    axisY->setTitleText("EUR");
+    axisY->setTitleText(currency_code);
     chart->addAxis(axisY, Qt::AlignLeft);
     series->attachAxis(axisY);
     
