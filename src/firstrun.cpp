@@ -26,7 +26,7 @@ SelectDatabase::SelectDatabase(QWidget *parent) : QWidget(parent)
 {
     setLayout(new QHBoxLayout);
     
-    QPushButton *button_select_db = new QPushButton("select / create new Database");
+    QPushButton *button_select_db = new QPushButton("select existing / create new Database");
     connect(button_select_db, &QPushButton::clicked, this, &SelectDatabase::showFileSelectDialog);
     layout()->addWidget(button_select_db);
 }
