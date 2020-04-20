@@ -7,7 +7,7 @@ Donations::Donations(DbAdapter *db, QTabWidget *parent) : QTabWidget(parent)
     DonationsList *donations_list = new DonationsList(db);
     DonationsChart *donations_chart = new DonationsChart(db);
     
-    addTab(donations_chart, "Charts Monthly");
+    addTab(donations_chart, "Charts");
     addTab(donations_list, "List");
 }
 
@@ -20,74 +20,113 @@ DonationsChart::DonationsChart(DbAdapter *db, QWidget *parent) : QWidget(parent)
     
     setLayout(new QVBoxLayout);
     
-    this->data = this->db->donationsByMonth();
+    this->data_monthly = this->db->donationsByMonth();
+    this->data_full = this->db->donationsSelect();
     this->currency_code = this->db->currencySelectDefault()["code"].toString();
     
-    QLineSeries *series = new QLineSeries;
-    series->setPointsVisible(true);
-    series->setColor(Qt::darkGreen);
-    //series->setPen(QPen(Qt::darkBlue, 3));
+    QLineSeries *series_monthly = new QLineSeries;
+    series_monthly->setColor(Qt::darkGreen);
     
-    this->scatter = new QScatterSeries;
-    
-    
-    for (int i=0; i < this->data.length(); i++)
+    int max = 0;
+    this->scatter_monthly = new QScatterSeries;
+    this->scatter_monthly->setColor(Qt::darkGreen);
+    this->scatter_monthly->setName("Monthly Sum");
+    for (int i=0; i < this->data_monthly.length(); i++)
     {
-        int amount = this->data.at(i)["amount"].toInt();
-        QString date_str = this->data.at(i)["year-month"].toString();
-        QDate date = QDate::fromString(date_str, "yyyy-MM");
+        int amount = this->data_monthly.at(i)["amount"].toInt();
+        if (amount > max)
+        {
+            max = amount;
+        }
+        
+        QString date_str = this->data_monthly.at(i)["year-month"].toString();
+        QDate date = QDate::fromString(date_str+"-15", "yyyy-MM-dd");
         QDateTime datetime;
         datetime.setDate(date);
         
-        series->append(datetime.toMSecsSinceEpoch(), amount);
-        this->scatter->append(datetime.toMSecsSinceEpoch(), amount);
+        series_monthly->append(datetime.toMSecsSinceEpoch(), amount);
+        this->scatter_monthly->append(datetime.toMSecsSinceEpoch(), amount);
     }
-    connect(this->scatter, &QLineSeries::hovered, this, &DonationsChart::onLineHover);
+    connect(this->scatter_monthly, &QLineSeries::hovered, this, &DonationsChart::onMonthlyHover);
     
-    QChart *chart = new QChart;
-    chart->legend()->hide();
-    chart->addSeries(series);
-    chart->addSeries(this->scatter);
-    //chart->createDefaultAxes();
-    chart->setTitle("Donations / Month");
+    
+    QLineSeries *series_full = new QLineSeries;
+    
+    this->scatter_full = new QScatterSeries;
+    this->scatter_full->setColor(Qt::darkBlue);
+    this->scatter_full->setMarkerSize(10);
+    this->scatter_full->setName("All Donations");
+    for (int i=0; i < this->data_full.length(); i++)
+    {
+        int amount = this->data_full.at(i)["amount"].toInt();
+        QString date_str = this->data_full.at(i)["date"].toString();
+        QDate date = QDate::fromString(date_str, "yyyy-MM-dd");
+        QDateTime datetime;
+        datetime.setDate(date);
+        
+        series_full->append(datetime.toMSecsSinceEpoch(), amount);
+        this->scatter_full->append(datetime.toMSecsSinceEpoch(), amount);
+    }
+    connect(this->scatter_full, &QLineSeries::hovered, this, &DonationsChart::onFullHover);
     
     QDateTimeAxis *axisX = new QDateTimeAxis;
-    //axisX->setTickCount(20);
-    axisX->setFormat("MMM yyyy");
+    axisX->setFormat("yyyy-MM-dd");
     axisX->setTitleText("Date");
-    chart->addAxis(axisX, Qt::AlignBottom);
-    series->attachAxis(axisX);
+    
+    // data_full is ORDER BY date DESC, so the last element is the oldest
+    axisX->setMin(QDateTime::fromString(data_full.at(data_full.length()-1)["date"].toString(), "yyyy-MM-dd"));
+    axisX->setMax(QDateTime::fromString("2020-04-20", "yyyy-MM-dd"));
     
     QValueAxis *axisY = new QValueAxis;
-    //axisY->setMin(0);
-    //axisY->setMax(3000);
     axisY->setLabelFormat("%i");
     axisY->setTitleText(currency_code);
-    chart->addAxis(axisY, Qt::AlignLeft);
-    series->attachAxis(axisY);
+    axisY->setMin(0);
+    axisY->setMax(max);
+    axisY->setMinorTickCount(5);
+    
+    this->chart->addAxis(axisX, Qt::AlignBottom);
+    this->chart->addAxis(axisY, Qt::AlignLeft);
+    
+    this->chart->addSeries(series_full);
+    this->chart->addSeries(this->scatter_full);
+    this->chart->addSeries(series_monthly);
+    this->chart->addSeries(this->scatter_monthly);
+    this->chart->setTitle("Donations / Month");
+    
+    this->chart->legend()->markers(series_monthly)[0]->setVisible(false);
+    this->chart->legend()->markers(series_full)[0]->setVisible(false);
     
     QChartView *chartView = new QChartView(chart);
     chartView->setRenderHint(QPainter::Antialiasing);
+    
+    series_monthly->attachAxis(axisX);
+    series_monthly->attachAxis(axisY);
+    this->scatter_monthly->attachAxis(axisX);
+    this->scatter_monthly->attachAxis(axisY);
+    
+    series_full->attachAxis(axisX);
+    series_full->attachAxis(axisY);
+    this->scatter_full->attachAxis(axisX);
+    this->scatter_full->attachAxis(axisY);
     
     this->layout()->addWidget(chartView);
     this->layout()->addWidget(this->label_value);
     this->label_value->setAlignment(Qt::AlignCenter);
 }
 
-void DonationsChart::onLineHover(QPointF pos, bool state)
+void DonationsChart::onMonthlyHover(QPointF pos, bool state)
 {
     if (state)
     {
-        QList<QPointF> points = this->scatter->points();
+        QList<QPointF> points = this->scatter_monthly->points();
         for (int i=0; i < points.length(); i++)
         {
             if (points.at(i) == pos)
             {
-                QMap<QString,QVariant> value = this->data.at(i);
+                QMap<QString,QVariant> value = this->data_monthly.at(i);
                 QString date = value["year-month"].toString();
                 QString amount = value["amount"].toString();
                 
-                //setToolTip(date + ": " + amount +" "+ this->currency_code);
                 this->label_value->setText(date + ": " + amount +" "+ this->currency_code);
             }
         }
@@ -96,4 +135,48 @@ void DonationsChart::onLineHover(QPointF pos, bool state)
     {
         this->label_value->setText("");
     }
+}
+
+void DonationsChart::onFullHover(QPointF pos, bool state)
+{
+    if (state)
+    {
+        QList<QPointF> points = this->scatter_full->points();
+        for (int i=0; i < points.length(); i++)
+        {
+            if (points.at(i) == pos)
+            {
+                QMap<QString,QVariant> value = this->data_full.at(i);
+                QString name = value["name"].toString();
+                QString date = value["date"].toString();
+                QString amount = value["amount"].toString();
+                
+                this->label_value->setText(name + ": " + amount + " " + this->currency_code + " (" +date +")");
+            }
+        }
+    }
+    else
+    {
+        this->label_value->setText("");
+    }
+}
+
+void DonationsChart::wheelEvent(QWheelEvent *event)
+{
+    qreal factor = event->angleDelta().y() > 0? 0.9 : 1.1;
+    //this->chart->zoom(factor);
+    QRectF rect = this->chart->plotArea();
+    qreal width_original = rect.width();
+    rect.setWidth(width_original / factor);
+    
+    qreal xcenter = event->pos().x() - this->chart->plotArea().x();
+    qreal center_scale = xcenter / width_original;
+    
+    qreal left_offset = xcenter - (rect.width() * center_scale);
+    rect.moveLeft(rect.x() + left_offset);
+    this->chart->zoomIn(rect);
+    
+    event->accept();
+    
+    QWidget::wheelEvent(event);
 }

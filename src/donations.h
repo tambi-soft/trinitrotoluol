@@ -32,6 +32,7 @@ signals:
 #include <QPen>
 #include <QToolTip>
 #include <QLabel>
+#include <QWheelEvent>
 
 class DonationsChart : public QWidget
 {
@@ -41,15 +42,23 @@ public:
     
 private:
     DbAdapter *db;
-    QScatterSeries *scatter;
     
-    QList<QMap<QString,QVariant>> data;
+    QChart *chart = new QChart;
+    QScatterSeries *scatter_monthly;
+    QScatterSeries *scatter_full;
+    
+    QList<QMap<QString,QVariant>> data_monthly;
+    QList<QMap<QString,QVariant>> data_full;
     QString currency_code;
     
     QLabel *label_value = new QLabel;
     
+protected:
+    void wheelEvent(QWheelEvent *event);
+    
 private slots:
-    void onLineHover(QPointF pos, bool state);
+    void onMonthlyHover(QPointF pos, bool state);
+    void onFullHover(QPointF pos, bool state);
     
 signals:
     
