@@ -27,6 +27,11 @@ signals:
 
 #include <QtCharts>
 #include <QLineSeries>
+#include <QScatterSeries>
+#include <QPointF>
+#include <QPen>
+#include <QToolTip>
+#include <QLabel>
 
 class DonationsChart : public QWidget
 {
@@ -36,6 +41,15 @@ public:
     
 private:
     DbAdapter *db;
+    QScatterSeries *scatter;
+    
+    QList<QMap<QString,QVariant>> data;
+    QString currency_code;
+    
+    QLabel *label_value = new QLabel;
+    
+private slots:
+    void onLineHover(QPointF pos, bool state);
     
 signals:
     
