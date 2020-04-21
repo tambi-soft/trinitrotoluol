@@ -51,6 +51,7 @@ DonationsChart::DonationsChart(DbAdapter *db, QWidget *parent) : QWidget(parent)
     
     
     QLineSeries *series_full = new QLineSeries;
+    series_full->setName("All Donations");
     
     this->scatter_full = new QScatterSeries;
     this->scatter_full->setColor(Qt::darkBlue);
@@ -94,7 +95,8 @@ DonationsChart::DonationsChart(DbAdapter *db, QWidget *parent) : QWidget(parent)
     this->chart->setTitle("Donations / Month");
     
     this->chart->legend()->markers(series_monthly)[0]->setVisible(false);
-    this->chart->legend()->markers(series_full)[0]->setVisible(false);
+    //this->chart->legend()->markers(series_full)[0]->setVisible(false);
+    this->chart->legend()->markers(scatter_full)[0]->setVisible(false);
     
     QChartView *chartView = new QChartView(chart);
     chartView->setRenderHint(QPainter::Antialiasing);
