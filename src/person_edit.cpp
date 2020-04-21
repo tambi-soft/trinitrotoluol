@@ -4,6 +4,9 @@ PersonDetails::PersonDetails(DbAdapter *db, qlonglong rowid, QWidget *parent) : 
 {
     QGridLayout *grid = new QGridLayout;
     setLayout(grid);
+    //grid->setColumnStretch(0, 100000);
+    //grid->setColumnStretch(1, 0);
+    
     
     PersonEdit *edit = new PersonEdit(db, rowid);
     connect(edit, &PersonEdit::dataChanged, this, &PersonDetails::onDataChanged);
@@ -11,10 +14,10 @@ PersonDetails::PersonDetails(DbAdapter *db, qlonglong rowid, QWidget *parent) : 
     PersonMails *mails = new PersonMails(db, rowid);
     PersonDonations *donations = new PersonDonations(db, rowid);
     
-    QGroupBox *group_data = new QGroupBox("Data");
-    QGroupBox *group_visits = new QGroupBox("Visits");
-    QGroupBox *group_mails = new QGroupBox("Mails");
-    QGroupBox *group_donations = new QGroupBox("Donations");
+    this->group_data = new QGroupBox("Data");
+    this->group_visits = new QGroupBox("Visits");
+    this->group_mails = new QGroupBox("Mails");
+    this->group_donations = new QGroupBox("Donations");
     
     QVBoxLayout *layout_data = new QVBoxLayout;
     QVBoxLayout *layout_visits = new QVBoxLayout;
@@ -50,6 +53,17 @@ PersonDetails::PersonDetails(DbAdapter *db, qlonglong rowid, QWidget *parent) : 
 void PersonDetails::onDataChanged()
 {
     emit dataChanged();
+}
+
+void PersonDetails::resizeEvent(QResizeEvent *event)
+{
+    int width = this->width();
+    this->group_data->setMaximumWidth(width/2);
+    this->group_visits->setMaximumWidth(width/2);
+    this->group_mails->setMaximumWidth(width/2);
+    this->group_donations->setMaximumWidth(width/2);
+    
+    QWidget::resizeEvent(event);
 }
 
 

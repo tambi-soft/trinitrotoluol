@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QWidget>
 #include <QGridLayout>
+#include <QResizeEvent>
 #include <QGroupBox>
 #include <QLineEdit>
 #include <QTextEdit>
@@ -29,8 +30,15 @@ class PersonDetails : public QWidget
 public:
     explicit PersonDetails(DbAdapter *db, qlonglong rowid, QWidget *parent = nullptr);
     
+private:
+    QGroupBox *group_data;
+    QGroupBox *group_visits;
+    QGroupBox *group_mails;
+    QGroupBox *group_donations;
+    
 private slots:
     void onDataChanged();
+    void resizeEvent(QResizeEvent *event);
     
 signals:
     void dataChanged();
