@@ -12,7 +12,7 @@
 #include <QProcess>
 #include <QDateTime>
 
-#include <curl/curl.h>
+//#include <curl/curl.h>
 #include <stdio.h>
 #include <iostream>
 

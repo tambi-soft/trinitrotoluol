@@ -52,6 +52,8 @@ private:
     QString currency_code;
     
     QLabel *label_value = new QLabel;
+
+    void drawChart();
     
 protected:
     void wheelEvent(QWheelEvent *event);

@@ -23,7 +23,15 @@ DonationsChart::DonationsChart(DbAdapter *db, QWidget *parent) : QWidget(parent)
     this->data_monthly = this->db->donationsByMonth();
     this->data_full = this->db->donationsSelect();
     this->currency_code = this->db->currencySelectDefault()["code"].toString();
-    
+
+    if (this->data_monthly.length() > 0 && this->data_full.length() > 0)
+    {
+        drawChart();
+    }
+}
+
+void DonationsChart::drawChart()
+{
     QLineSeries *series_monthly = new QLineSeries;
     series_monthly->setColor(Qt::darkGreen);
     
