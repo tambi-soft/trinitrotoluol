@@ -9,6 +9,7 @@ QList<QMap<QString,QString>> ParseCSV::processCSVFile(QString importfile_path)
 {
     QList<QMap<QString,QString>> data;
     QStringList headers;
+    QStringList line_last;
     
     QFile file(importfile_path);
     if (!file.open(QIODevice::ReadOnly)) {
@@ -16,8 +17,10 @@ QList<QMap<QString,QString>> ParseCSV::processCSVFile(QString importfile_path)
     }
     else
     {
+        QString line_last;
+        bool line_with_linebreak = false;
         int x = -1;
-        while (!file.atEnd())
+        while (! file.atEnd())
         {
             x++;
             
@@ -25,7 +28,11 @@ QList<QMap<QString,QString>> ParseCSV::processCSVFile(QString importfile_path)
             QString line_input = QString(line_input_b);
             
             QStringList splitted = processCSVLine(line_input);
-            //QStringList splitted = line_input.split(',');
+            
+            if (line_with_linebreak)
+            {
+                splitted = processCSVLine(line_last.replace("\n", "") + line_input);
+            }
             
             if (x == 0)
             {
@@ -33,12 +40,32 @@ QList<QMap<QString,QString>> ParseCSV::processCSVFile(QString importfile_path)
             }
             else
             {
-                QMap<QString,QString> line;
-                for (int y=0; y < splitted.length(); y++)
+                if (splitted.length() == headers.length())
                 {
-                    line[headers.at(y)] = splitted.at(y);
+                    // everything (hopefully) OK
+                    QMap<QString,QString> line;
+                    for (int y=0; y < splitted.length(); y++)
+                    {
+                        line[headers.at(y)] = splitted.at(y);
+                    }
+                    data.append(line);
+                    
+                    line_with_linebreak = false;
                 }
-                data.append(line);
+                // problem: there can be line-breaks in the data fooling the "line-by-line" logic
+                // we assume we do not have such an issue at the header, and take this length as the correct one
+                else if (splitted.length() < headers.length())
+                {
+                    line_with_linebreak = true;
+                    line_last = line_input;
+                    continue;
+                }
+                else
+                {
+                    qDebug() << "ERROR: csv is really messed up!";
+                    qDebug() << splitted;
+                    break;
+                }
             }
         }
     }
@@ -57,6 +84,13 @@ QStringList ParseCSV::processCSVLine(QString line_input)
     QString line;
     for (int i=0; i < line_input.length(); ++i)
     {
+        // assuming we have a linebreak in midst of the payload
+        if (i == 0 && line_input.at(0) != "\"")
+        {
+            //linebreak_in_the_middle = true;
+            in_quotation = true;
+        }
+        
         if (line_input.at(i) == "\"")
         {
             // flip the boolean
@@ -64,12 +98,7 @@ QStringList ParseCSV::processCSVLine(QString line_input)
             
             if (! in_quotation)
             {
-                // we have just flipped from true to false
-                //if (line.length() > 0)
-                //{
-                    splitted.append(line);
-                    //qDebug() << line;
-                //}
+                splitted.append(line);
                 line = "";
             }
         }
@@ -81,30 +110,10 @@ QStringList ParseCSV::processCSVLine(QString line_input)
                 line.append(line_input.at(i));
             }
         }
-        /*
-        else
-        {
-            if (line_input.at(i) == ",")
-            {
-                if (line.length() > 0)
-                {
-                    // this seems never to happen
-                    splitted.append(line);
-                    //qDebug() << line;
-                }
-                line = "";
-            }
-        }
-        */
     }
-    /*
-    if (line.length() > 0)
-    {
-        // this seems never to happen
-        splitted.append(line);
-        //qDebug() << line;
-    }
-    */
-    qDebug() << splitted;
+    
+    // maybe the line ends with an inner linebreak, so just to be shure, we dont miss anything
+    splitted.append(line);
+    //qDebug() << splitted;
     return splitted;
 }

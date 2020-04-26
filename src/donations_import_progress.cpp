@@ -44,16 +44,16 @@ DonationsImportProgress::DonationsImportProgress(DbAdapter *db, QList<QMap<QStri
         // check, if person already exists in database
         if (this->rowid_people < 1)
         {
-            edit_log->append("Person not recognized in the database: "+this->person_name+" ("+this->memo+"). Please create this person now!");
-            
             // check, if person is found in the map
-            QMap<QString,QVariant> person_found = this->db->personSelectDonationsMap(this->person_name);
+            QMap<QString,QVariant> person_found = this->db->personSelectDonationsMap(this->memo);
             if (person_found.size() > 0 && person_found["rowid_people"].toLongLong() != 999)
             {
+                edit_log->append("Person not recognized in the database: "+this->person_name+" ("+this->memo+"), but found assosiation to a person in the cache!");
                 this->rowid_people = person_found["rowid_people"].toLongLong();
             }
             else
             {
+                edit_log->append("Person not recognized in the database: "+this->person_name+" ("+this->memo+"). Please create this person now!");
                 // select person manually (and probably store him in the map)
                 selectPerson(this->person_name, this->memo);
             }   
@@ -123,7 +123,7 @@ void DonationsImportProgress::selectPerson(QString name, QString memo)
 
 void DonationsImportProgress::onPersonSelected(qlonglong rowid_person, QString name_person)
 {
-    int reply = QMessageBox::question(this, "Select Person", "Do you really want to associate <br>"+this->person_name+" ("+this->memo+")</b> from tnt<br>With "+name_person+"?", QMessageBox::Yes, QMessageBox::No);
+    int reply = QMessageBox::question(this, "Select Person", "Do you really want to associate <br><b>"+this->person_name+" ("+this->memo+")</b> from tnt<br>With <b>"+name_person+"</b>?", QMessageBox::Yes, QMessageBox::No);
     if (reply == QMessageBox::Yes)
     {
         if (this->tnt_donor_code.toInt() != 999)
@@ -134,7 +134,7 @@ void DonationsImportProgress::onPersonSelected(qlonglong rowid_person, QString n
         // save this assignment to people_donations_map for caching this information for further use
         if (this->check_save_selection->checkState() == Qt::CheckState::Checked)
         {
-            this->db->personInsertDonationsMap(rowid_person, name_person);
+            this->db->personInsertDonationsMap(rowid_person, this->memo);
         }
         
         this->rowid_people = rowid_person;

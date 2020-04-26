@@ -232,7 +232,7 @@ void DbAdapter::personInsertDonationsMap(qlonglong rowid_people, QString tnt_nam
 QMap<QString,QVariant> DbAdapter::personSelectDonationsMap(QString tnt_name)
 {
     QSqlQuery query(this->db);
-    query.prepare("SELECT rowid_people FROM people_donations_map WHERE tnt_name=:tnt_name");
+    query.prepare("SELECT rowid_people FROM people_donations_map WHERE tnt_name=:tnt_name LIMIT 1");
     query.bindValue(":tnt_name", tnt_name);
     query.exec();
     
