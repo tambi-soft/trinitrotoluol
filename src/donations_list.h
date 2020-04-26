@@ -7,6 +7,7 @@
 #include <QScrollArea>
 #include <QPushButton>
 #include <QLabel>
+#include <QDate>
 
 #include "db_adapter.h"
 

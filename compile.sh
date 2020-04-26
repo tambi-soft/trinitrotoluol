@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 qmake-qt5 -o Makefile trinitrotoluol.pro
-make
+make -j $(nproc)
 
 if [ $? -eq 0 ]
 then
