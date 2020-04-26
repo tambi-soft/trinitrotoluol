@@ -23,7 +23,9 @@ public:
     
     QSqlQuery bindPersonParams(QSqlQuery query, QMap<QString, QVariant> data);
     qlonglong insertNewPerson();
-    void personInsertTNTID(qlonglong rowid, QString tnt_id);
+    void personInsertTNTID(qlonglong rowid_person, QString tnt_id);
+    QMap<QString,QVariant> personSelectDonationsMap(QString tnt_name);
+    void personInsertDonationsMap(qlonglong rowid_people, QString tnt_name);
     //qlonglong insertNewPerson(QMap<QString, QVariant> data);
     void updatePerson(qlonglong rowid, QMap<QString,QVariant> data);
     void deletePerson(qlonglong rowid);

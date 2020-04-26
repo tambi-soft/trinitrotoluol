@@ -13,6 +13,7 @@
 #include <QDialog>
 #include <QGroupBox>
 #include <QMessageBox>
+#include <QCheckBox>
 
 #include <QDate>
 
@@ -39,13 +40,15 @@ private:
     
     QTextEdit *edit_log = new QTextEdit;
     
+    QCheckBox *check_save_selection;
+    
     void selectPerson(QString name, QString memo);
     QDialog *dialog_select_person;
     
 signals:
     
 private slots:
-    void onPersonSelected(qlonglong rowid, QString name);
+    void onPersonSelected(qlonglong rowid_person, QString name_person);
     
 };
 

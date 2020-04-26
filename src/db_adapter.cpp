@@ -153,7 +153,7 @@ void DbAdapter::initializeTables()
                                             " name TEXT,"
                                             " color TEXT)", this->db);
     
-    QSqlQuery query_people_import_map("CREATE TABLE IF NOT EXISTS people_import_map ("
+    QSqlQuery query_people_import_map("CREATE TABLE IF NOT EXISTS people_donations_map ("
                                       "tnt_name TEXT,"
                                       "rowid_people INTEGER)", this->db);
 
@@ -210,14 +210,33 @@ qlonglong DbAdapter::insertNewPerson()
     return query.lastInsertId().toLongLong();
 }
 
-void DbAdapter::personInsertTNTID(qlonglong rowid, QString tnt_id)
+void DbAdapter::personInsertTNTID(qlonglong rowid_person, QString tnt_id)
 {
     QSqlQuery query(this->db);
     query.prepare("UPDATE people SET tnt_id=:tnt_id WHERE rowid=:rowid");
     query.bindValue(":tnt_id", tnt_id);
-    query.bindValue(":rowid", rowid);
+    query.bindValue(":rowid", rowid_person);
     query.exec();
     this->db.commit();
+}
+
+void DbAdapter::personInsertDonationsMap(qlonglong rowid_people, QString tnt_name)
+{
+    QSqlQuery query(this->db);
+    query.prepare("INSERT INTO people_donations_map (tnt_name, rowid_people) VALUES (:tnt_name, :rowid_people)");
+    query.bindValue(":rowid_people", rowid_people);
+    query.bindValue(":tnt_name", tnt_name);
+    query.exec();
+}
+
+QMap<QString,QVariant> DbAdapter::personSelectDonationsMap(QString tnt_name)
+{
+    QSqlQuery query(this->db);
+    query.prepare("SELECT rowid_people FROM people_donations_map WHERE tnt_name=:tnt_name");
+    query.bindValue(":tnt_name", tnt_name);
+    query.exec();
+    
+    return dbIteratorToMap(query);
 }
 
 /*

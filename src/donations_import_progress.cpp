@@ -44,9 +44,19 @@ DonationsImportProgress::DonationsImportProgress(DbAdapter *db, QList<QMap<QStri
         // check, if person already exists in database
         if (this->rowid_people < 1)
         {
-            edit_log->append("Person not recognized in the database: "+this->person_name+" ("+this->memo+"). please create this person now!");
+            edit_log->append("Person not recognized in the database: "+this->person_name+" ("+this->memo+"). Please create this person now!");
             
-            selectPerson(this->person_name, this->memo);
+            // check, if person is found in the map
+            QMap<QString,QVariant> person_found = this->db->personSelectDonationsMap(this->person_name);
+            if (person_found.size() > 0 && person_found["rowid_people"].toLongLong() != 999)
+            {
+                this->rowid_people = person_found["rowid_people"].toLongLong();
+            }
+            else
+            {
+                // select person manually (and probably store him in the map)
+                selectPerson(this->person_name, this->memo);
+            }   
         }
         
         // check, if currency already exists in database
@@ -80,6 +90,9 @@ void DonationsImportProgress::selectPerson(QString name, QString memo)
     PeopleSelector *selector = new PeopleSelector(this->db);
     connect(selector, &PeopleSelector::personSelected, this, &DonationsImportProgress::onPersonSelected);
     
+    this->check_save_selection = new QCheckBox("Save Assignment for future Imports");
+    this->check_save_selection->setCheckState(Qt::CheckState::Checked);
+    
     this->dialog_select_person = new QDialog();
     QGridLayout *layout_dialog = new QGridLayout;
     this->dialog_select_person->setLayout(layout_dialog);
@@ -96,8 +109,9 @@ void DonationsImportProgress::selectPerson(QString name, QString memo)
     group_person_create->setLayout(layout_group_create);
     
     layout_group_select->addWidget(selector);
-    layout_group_create->addWidget(button_person_create);
+    layout_group_select->addWidget(this->check_save_selection);
     
+    layout_group_create->addWidget(button_person_create);
     
     layout_dialog->addWidget(new QLabel("Person not recognized in the database:<br><b>"+name+" ("+memo+").</b><br>Please select manually or create a new person!"), 0, 0, 1, 3, Qt::AlignCenter);
     layout_dialog->addWidget(group_person_select, 2, 0);
@@ -107,16 +121,23 @@ void DonationsImportProgress::selectPerson(QString name, QString memo)
     this->dialog_select_person->exec();
 }
 
-void DonationsImportProgress::onPersonSelected(qlonglong rowid, QString name)
+void DonationsImportProgress::onPersonSelected(qlonglong rowid_person, QString name_person)
 {
-    int reply = QMessageBox::question(this, "Select Person", "Do you really want to associate <br>"+this->person_name+" ("+this->memo+")</b> from tnt<br>With "+name+"?", QMessageBox::Yes, QMessageBox::No);
+    int reply = QMessageBox::question(this, "Select Person", "Do you really want to associate <br>"+this->person_name+" ("+this->memo+")</b> from tnt<br>With "+name_person+"?", QMessageBox::Yes, QMessageBox::No);
     if (reply == QMessageBox::Yes)
     {
         if (this->tnt_donor_code.toInt() != 999)
         {
-            this->db->personInsertTNTID(rowid, this->tnt_donor_code);
+            this->db->personInsertTNTID(rowid_person, this->tnt_donor_code);
         }
-        this->rowid_people = rowid;
+        
+        // save this assignment to people_donations_map for caching this information for further use
+        if (this->check_save_selection->checkState() == Qt::CheckState::Checked)
+        {
+            this->db->personInsertDonationsMap(rowid_person, name_person);
+        }
+        
+        this->rowid_people = rowid_person;
         
         this->dialog_select_person->close();
     }
