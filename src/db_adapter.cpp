@@ -220,12 +220,29 @@ void DbAdapter::personInsertTNTID(qlonglong rowid_person, QString tnt_id)
     this->db.commit();
 }
 
+void DbAdapter::personUpdateDonationsMap(qlonglong rowid_people, QString tnt_name)
+{
+    QSqlQuery query(this->db);
+    query.prepare("UPDATE people_donations_map SET rowid_people=:rowid_people WHERE tnt_name=:tnt_name");
+    query.bindValue(":rowid_people", rowid_people);
+    query.bindValue(":tnt_name", tnt_name);
+    query.exec();
+}
+
 void DbAdapter::personInsertDonationsMap(qlonglong rowid_people, QString tnt_name)
 {
     QSqlQuery query(this->db);
     query.prepare("INSERT INTO people_donations_map (tnt_name, rowid_people) VALUES (:tnt_name, :rowid_people)");
     query.bindValue(":rowid_people", rowid_people);
     query.bindValue(":tnt_name", tnt_name);
+    query.exec();
+}
+
+void DbAdapter::personDeleteDonationsMap(qlonglong rowid_people)
+{
+    QSqlQuery query(this->db);
+    query.prepare("DELETE FROM people_donations_map WHERE rowid_people=:rowid_people");
+    query.bindValue(":rowid_people", rowid_people);
     query.exec();
 }
 

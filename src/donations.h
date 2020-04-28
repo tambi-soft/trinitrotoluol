@@ -70,9 +70,12 @@ signals:
 
 
 
-#import <QMessageBox>
+#include <QMessageBox>
+#include <QDialog>
 
-#import "lib/grid_widget.h"
+#include "lib/grid_widget.h"
+#include "people_selector.h"
+#include "lib/growing_text_edit.h"
 
 class DonationsMapEdit : public GridWidget
 {
@@ -81,13 +84,17 @@ public:
     explicit DonationsMapEdit(DbAdapter *db, GridWidget *parent = nullptr);
     
     void showData();
+    GrowingTextEdit *showHelp();
     
 private:
     DbAdapter *db;
+    QDialog *dialog_select_person = new QDialog;
+    QString tnt_name;
     
 private slots:
     void onDeleteButtonClicked(qlonglong rowid_person, QString name);
     void onEditButtonClicked(QString tnt_name);
+    void onPersonSelected(qlonglong rowid, QString name);
 };
 
 #endif // DONATIONS_H

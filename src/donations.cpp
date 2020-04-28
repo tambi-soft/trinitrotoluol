@@ -202,6 +202,10 @@ DonationsMapEdit::DonationsMapEdit(DbAdapter *db, GridWidget *parent) : GridWidg
 {
     this->db = db;
     
+    GrowingTextEdit *help = showHelp();
+    //help->show();
+    this->layout->insertWidget(0, help);
+    
     showData();
 }
 
@@ -209,8 +213,8 @@ void DonationsMapEdit::showData()
 {
     recreateView();
     
-    this->grid->addWidget(new QLabel("<b>Name</b>"), 0, 2);
-    this->grid->addWidget(new QLabel("<b>TNT Memo</b>"), 0, 3);
+    this->grid->addWidget(new QLabel("<b>Name</b>"), 1, 2);
+    this->grid->addWidget(new QLabel("<b>TNT Memo</b>"), 1, 3);
     
     QList<QMap<QString,QVariant>> data = this->db->personSelectDonationsMap();
     
@@ -228,11 +232,11 @@ void DonationsMapEdit::showData()
         button_edit->setIcon(QIcon::fromTheme("document-properties"));
         connect(button_edit, &QPushButton::clicked, this, [this, tnt_name]{ DonationsMapEdit::onEditButtonClicked(tnt_name); });
         
-        this->grid->addWidget(button_delete, i+1, 0);
-        this->grid->addWidget(button_edit, i+1, 1);
+        this->grid->addWidget(button_delete, i+2, 0);
+        this->grid->addWidget(button_edit, i+2, 1);
         
-        this->grid->addWidget(new QLabel(name), i+1, 2);
-        this->grid->addWidget(new QLabel(tnt_name), i+1, 3);
+        this->grid->addWidget(new QLabel(name), i+2, 2);
+        this->grid->addWidget(new QLabel(tnt_name), i+2, 3);
     }
 }
 
@@ -241,7 +245,7 @@ void DonationsMapEdit::onDeleteButtonClicked(qlonglong rowid_people, QString nam
     int reply = QMessageBox::question(this, "Delete Mapping for "+name, "Really delete Mapping for \""+name+"\"?", QMessageBox::Yes, QMessageBox::No);
     if (reply == QMessageBox::Yes)
     {
-        //this->db->deleteCurrency(rowid_people);
+        this->db->personDeleteDonationsMap(rowid_people);
         
         showData();
     }
@@ -249,5 +253,49 @@ void DonationsMapEdit::onDeleteButtonClicked(qlonglong rowid_people, QString nam
 
 void DonationsMapEdit::onEditButtonClicked(QString tnt_name)
 {
+    this->tnt_name = tnt_name;
     
+    PeopleSelector *selector = new PeopleSelector(this->db);
+    selector->setDescription("Who is <b>"+tnt_name+"</b> in your database?");
+    connect(selector, &PeopleSelector::personSelected, this, &DonationsMapEdit::onPersonSelected);
+    
+    this->dialog_select_person = new QDialog();
+    QVBoxLayout *layout_dialog = new QVBoxLayout;
+    layout_dialog->setMargin(0);
+    this->dialog_select_person->setLayout(layout_dialog);
+    layout_dialog->addWidget(selector);
+    
+    this->dialog_select_person->exec();
+}
+
+void DonationsMapEdit::onPersonSelected(qlonglong rowid, QString name)
+{
+    this->db->personUpdateDonationsMap(rowid, this->tnt_name);
+    
+    this->dialog_select_person->close();
+    
+    showData();
+}
+
+GrowingTextEdit* DonationsMapEdit::showHelp()
+{
+    QFile file(":help_currencies");
+    
+    QString lines;
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        QTextStream stream(&file);
+        while (!stream.atEnd())
+        {
+            lines.append(stream.readLine() + "\n");
+        }
+    }
+    file.close();
+    
+    GrowingTextEdit *text = new GrowingTextEdit;
+    text->setText(lines);
+    
+    text->setReadOnly(true);
+    
+    return text;
 }

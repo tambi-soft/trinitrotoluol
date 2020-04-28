@@ -1,6 +1,6 @@
 #include "growing_text_edit.h"
 
-GrowingTextEdit::GrowingTextEdit(QTextEdit *parent)
+GrowingTextEdit::GrowingTextEdit(QTextEdit *parent) : QTextEdit(parent)
 {
     connect(document(), SIGNAL(contentsChanged()), this, SLOT(sizeChanged()));
     connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(sizeChanged()));
