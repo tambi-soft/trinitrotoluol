@@ -66,4 +66,28 @@ signals:
     
 };
 
+
+
+
+
+#import <QMessageBox>
+
+#import "lib/grid_widget.h"
+
+class DonationsMapEdit : public GridWidget
+{
+    Q_OBJECT
+public:
+    explicit DonationsMapEdit(DbAdapter *db, GridWidget *parent = nullptr);
+    
+    void showData();
+    
+private:
+    DbAdapter *db;
+    
+private slots:
+    void onDeleteButtonClicked(qlonglong rowid_person, QString name);
+    void onEditButtonClicked(QString tnt_name);
+};
+
 #endif // DONATIONS_H

@@ -239,6 +239,17 @@ QMap<QString,QVariant> DbAdapter::personSelectDonationsMap(QString tnt_name)
     return dbIteratorToMap(query);
 }
 
+QList<QMap<QString,QVariant>> DbAdapter::personSelectDonationsMap()
+{
+    QSqlQuery query(this->db);
+    query.prepare("SELECT people_donations_map.rowid_people, people.name, tnt_name "
+                  "FROM people_donations_map "
+                  "JOIN people ON people_donations_map.rowid_people = people.rowid");
+    query.exec();
+    
+    return dbIteratorToMapList(query);
+}
+
 /*
 qlonglong DbAdapter::insertNewPerson(QMap<QString,QVariant> data)
 {

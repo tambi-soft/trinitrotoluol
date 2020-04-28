@@ -6,9 +6,11 @@ Donations::Donations(DbAdapter *db, QTabWidget *parent) : QTabWidget(parent)
     
     DonationsList *donations_list = new DonationsList(db);
     DonationsChart *donations_chart = new DonationsChart(db);
+    DonationsMapEdit *donations_map_edit = new DonationsMapEdit(db);
     
     addTab(donations_chart, "Charts");
     addTab(donations_list, "List");
+    addTab(donations_map_edit, "Import Map");
 }
 
 
@@ -189,4 +191,63 @@ void DonationsChart::wheelEvent(QWheelEvent *event)
     event->accept();
     
     QWidget::wheelEvent(event);
+}
+
+
+
+
+
+
+DonationsMapEdit::DonationsMapEdit(DbAdapter *db, GridWidget *parent) : GridWidget(parent)
+{
+    this->db = db;
+    
+    showData();
+}
+
+void DonationsMapEdit::showData()
+{
+    recreateView();
+    
+    this->grid->addWidget(new QLabel("<b>Name</b>"), 0, 2);
+    this->grid->addWidget(new QLabel("<b>TNT Memo</b>"), 0, 3);
+    
+    QList<QMap<QString,QVariant>> data = this->db->personSelectDonationsMap();
+    
+    for (int i=0; i < data.length(); i++)
+    {
+        QString name = data.at(i)["name"].toString();
+        qlonglong rowid_people = data.at(i)["rowid_people"].toLongLong();
+        QString tnt_name = data.at(i)["tnt_name"].toString();
+        
+        QPushButton *button_delete = new QPushButton();
+        button_delete->setIcon(QIcon::fromTheme("edit-delete"));
+        connect(button_delete, &QPushButton::clicked, this, [this, rowid_people, name]{ DonationsMapEdit::onDeleteButtonClicked(rowid_people, name); });
+        
+        QPushButton *button_edit = new QPushButton();
+        button_edit->setIcon(QIcon::fromTheme("document-properties"));
+        connect(button_edit, &QPushButton::clicked, this, [this, tnt_name]{ DonationsMapEdit::onEditButtonClicked(tnt_name); });
+        
+        this->grid->addWidget(button_delete, i+1, 0);
+        this->grid->addWidget(button_edit, i+1, 1);
+        
+        this->grid->addWidget(new QLabel(name), i+1, 2);
+        this->grid->addWidget(new QLabel(tnt_name), i+1, 3);
+    }
+}
+
+void DonationsMapEdit::onDeleteButtonClicked(qlonglong rowid_people, QString name)
+{
+    int reply = QMessageBox::question(this, "Delete Mapping for "+name, "Really delete Mapping for \""+name+"\"?", QMessageBox::Yes, QMessageBox::No);
+    if (reply == QMessageBox::Yes)
+    {
+        //this->db->deleteCurrency(rowid_people);
+        
+        showData();
+    }
+}
+
+void DonationsMapEdit::onEditButtonClicked(QString tnt_name)
+{
+    
 }

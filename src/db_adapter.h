@@ -25,6 +25,7 @@ public:
     qlonglong insertNewPerson();
     void personInsertTNTID(qlonglong rowid_person, QString tnt_id);
     QMap<QString,QVariant> personSelectDonationsMap(QString tnt_name);
+    QList<QMap<QString,QVariant>> personSelectDonationsMap();
     void personInsertDonationsMap(qlonglong rowid_people, QString tnt_name);
     //qlonglong insertNewPerson(QMap<QString, QVariant> data);
     void updatePerson(qlonglong rowid, QMap<QString,QVariant> data);
