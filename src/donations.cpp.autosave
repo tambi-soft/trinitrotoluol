@@ -135,9 +135,6 @@ void DonationsChart::drawChart()
     layout_controls->addWidget(button_zoom_reset);
     
     this->layout()->addWidget(controls);
-    
-    //this->label_value->setAlignment(Qt::AlignCenter);
-    //this->layout()->addWidget(button_zoom_reset);
 }
 
 void DonationsChart::onMonthlyHover(QPointF pos, bool state)

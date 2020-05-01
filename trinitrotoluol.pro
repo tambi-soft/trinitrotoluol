@@ -58,6 +58,7 @@ HEADERS += \
     src/journey_tickets.h \
     src/journey_visits.h \
     src/journey_visits_edit.h \
+    src/lib/chartview.h \
     src/lib/db_access.h \
     src/lib/db_merge.h \
     src/lib/grid_widget.h \
@@ -107,6 +108,7 @@ SOURCES += \
     src/journey_tickets.cpp \
     src/journey_visits.cpp \
     src/journey_visits_edit.cpp \
+    src/lib/chartview.cpp \
     src/lib/db_access.cpp \
     src/lib/db_merge.cpp \
     src/lib/grid_widget.cpp \
