@@ -24,7 +24,6 @@ signals:
 
 
 
-
 #include <QtCharts>
 #include <QLineSeries>
 #include <QScatterSeries>
@@ -33,6 +32,8 @@ signals:
 #include <QToolTip>
 #include <QLabel>
 #include <QWheelEvent>
+
+#include "lib/chartview.h"
 
 class DonationsChart : public QWidget
 {
