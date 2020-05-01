@@ -5,8 +5,6 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
     : QMainWindow(parent)
     , tab_widget (new QTabWidget)
 {
-    resize(1080, 1080);
-    
     this->config = new Config();
     this->db = new DbAdapter(this->config);
     
@@ -39,6 +37,28 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
     //addMailListTab();
     
     deactivateCloseButtons();
+    
+    calculateWindowSize();
+}
+
+void QTNTMainWindow::calculateWindowSize()
+{
+    int height_ = 1080;
+    int width_ = 1080;
+    
+    QScreen* pScreen = QGuiApplication::screenAt(this->mapToGlobal({this->width()/2,0}));
+    QRect rec = pScreen->availableGeometry();
+    if  (rec.height() < height_)
+    {
+        height_ = rec.height();
+    }
+    if (rec.width() < width_)
+    {
+        width_ = rec.width();
+    }
+    int title_bar_height = QApplication::style()->pixelMetric(QStyle::PM_TitleBarHeight);
+    
+    resize(width_,  height_ - title_bar_height);
 }
 
 void QTNTMainWindow::onTabMoved(int from, int to)

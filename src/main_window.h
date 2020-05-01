@@ -1,5 +1,6 @@
 
 #include <QMainWindow>
+#include <QGuiApplication>
 #include <QTabWidget>
 #include <QTabBar>
 #include <QDir>
@@ -37,6 +38,8 @@ class QTNTMainWindow : public QMainWindow
     
 public:
     QTNTMainWindow(QWidget *parent = nullptr);
+    
+    void calculateWindowSize();
     
 protected:
     void closeEvent(QCloseEvent *event) override;
