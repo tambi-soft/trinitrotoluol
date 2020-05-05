@@ -3,6 +3,17 @@
 ######################################################################
 
 TEMPLATE = app
+
+CONFIG += qt debug release
+
+CONFIG( debug, debug|release ) {
+    # debug
+    DEPLOY_TARGET = $$shell_quote($$shell_path($${OUT_PWD}/debug/$${TARGET}$${TARGET_CUSTOM_EXT}))
+} else {
+    # release
+    DEPLOY_TARGET = $$shell_quote($$shell_path($${OUT_PWD}/release/$${TARGET}$${TARGET_CUSTOM_EXT}))
+}
+
 TARGET = trinitrotoluol
 
 linux-g++ | linux-g++-64 | linux-g++-32 {
@@ -21,6 +32,12 @@ win32 {
     #LIBS += -lqwindows
     
     DEPLOY_COMMAND = $$(QTDIR)\bin\windeployqt
+ 
+    # Uncomment the following line to help debug the deploy command when running qmake
+    warning($${DEPLOY_COMMAND} $${DEPLOY_TARGET})
+
+    # Use += instead of = if you use multiple QMAKE_POST_LINKs
+    QMAKE_POST_LINK = $${DEPLOY_COMMAND} $${DEPLOY_TARGET}
 }
 macx {
     DEPLOY_COMMAND = macdeployqt
@@ -36,23 +53,6 @@ isEmpty(TARGET_EXT) {
 } else {
     TARGET_CUSTOM_EXT = $${TARGET_EXT}
 }
-
-CONFIG += qt debug release
-
-CONFIG( debug, debug|release ) {
-    # debug
-    DEPLOY_TARGET = $$shell_quote($$shell_path($${OUT_PWD}/debug/$${TARGET}$${TARGET_CUSTOM_EXT}))
-} else {
-    # release
-    DEPLOY_TARGET = $$shell_quote($$shell_path($${OUT_PWD}/release/$${TARGET}$${TARGET_CUSTOM_EXT}))
-}
-
-#  # Uncomment the following line to help debug the deploy command when running qmake
-warning($${DEPLOY_COMMAND} $${DEPLOY_TARGET})
-
-# Use += instead of = if you use multiple QMAKE_POST_LINKs
-QMAKE_POST_LINK = $${DEPLOY_COMMAND} $${DEPLOY_TARGET}
-
 
 # The following define makes your compiler warn you if you use any
 # feature of Qt which has been marked as deprecated (the exact warnings
