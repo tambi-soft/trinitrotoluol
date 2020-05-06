@@ -90,6 +90,7 @@ void PersonEdit::drawGUI()
     
     QPushButton *button_tnt_help = new QPushButton;
     button_tnt_help->setIcon(QIcon::fromTheme("dialog-question"));
+    button_tnt_help->setToolTip("help");
     connect(button_tnt_help, &QPushButton::clicked, this, []{ new HelpMessage(":help_tntware"); });
     
     this->grid->addWidget(edit_tnt_id, 2, 1, 1, 2);
@@ -108,6 +109,7 @@ void PersonEdit::drawGUI()
     connect(button_agreement_today, &QPushButton::clicked, this, &PersonEdit::onInsertAgreementDateButton);
     QPushButton *button_agreement_help = new QPushButton;
     button_agreement_help->setIcon(QIcon::fromTheme("dialog-question"));
+    button_agreement_help->setToolTip("help");
     connect(button_agreement_help, &QPushButton::clicked, this, []{ new HelpMessage(":help_agreed_date"); });
     this->grid->addWidget(button_agreement_today, 10, 2);
     this->grid->addWidget(button_agreement_help, 10, 3);
