@@ -14,7 +14,7 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
     setMenuBar(this->menu_bar);
     //connect(this->menu_bar, &MenuBar::signalDonations, this, &QTNTMainWindow::addDonationsListTab);
     connect(this->menu_bar, &MenuBar::signalDonations, this, &QTNTMainWindow::addDonationsTab);
-    connect(this->menu_bar, &MenuBar::signalImportDonations, this, &QTNTMainWindow::addDonationsImportTab);
+    connect(this->menu_bar, &MenuBar::signalImportDonationsTntWareCSV, this, &QTNTMainWindow::addDonationsImportTntWareCSVTab);
     connect(this->menu_bar, &MenuBar::signalExport, this, &QTNTMainWindow::addExportTab);
     connect(this->menu_bar, &MenuBar::signalMergeDatabase, this, &QTNTMainWindow::addMergeDatabaseTab);
     connect(this->menu_bar, &MenuBar::signalMailList, this, &QTNTMainWindow::addMailListTab);
@@ -218,7 +218,7 @@ void QTNTMainWindow::addDonationsListTab()
 }
 */
 
-void QTNTMainWindow::addDonationsImportTab()
+void QTNTMainWindow::addDonationsImportTntWareCSVTab()
 {
     DonationsImport *don = new DonationsImport(this->db);
     QIcon *icon = new QIcon(QIcon::fromTheme("emblem-downloads"));

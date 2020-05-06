@@ -75,7 +75,7 @@ private slots:
     
     void addDonationsTab();
     //void addDonationsListTab();
-    void addDonationsImportTab();
+    void addDonationsImportTntWareCSVTab();
     void addExportTab();
     void addMergeDatabaseTab();
     void addMailListTab();

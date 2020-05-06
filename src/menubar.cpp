@@ -11,9 +11,9 @@ MenuBar::MenuBar(QMenuBar *parent) : QMenuBar(parent)
 
 void MenuBar::addFileMenu()
 {
-    QAction *importDonationsAction = new QAction(QIcon::fromTheme("emblem-downloads"), "&Import Donations from CSV");
-    importDonationsAction->setStatusTip("Import a CSV-File from TNT Connect");
-    connect(importDonationsAction, &QAction::triggered, this, &MenuBar::signalImportDonations);
+    QAction *importDonationsTntWareCSVAction = new QAction(QIcon::fromTheme("emblem-downloads"), "&Import Donations from TntWare (CSV)");
+    importDonationsTntWareCSVAction->setStatusTip("Import a CSV-File from TNT Connect");
+    connect(importDonationsTntWareCSVAction, &QAction::triggered, this, &MenuBar::signalImportDonationsTntWareCSV);
     
     QAction *exportDonationsAction = new QAction(QIcon::fromTheme("document-save-as"), "&Export");
     connect(exportDonationsAction, &QAction::triggered, this, &MenuBar::signalExport);
@@ -27,8 +27,9 @@ void MenuBar::addFileMenu()
     connect(exitAction, &QAction::triggered, this, &MenuBar::quitApplication);
     
     QMenu *menu = addMenu("&File");
-    menu->addAction(importDonationsAction);
+    menu->addAction(importDonationsTntWareCSVAction);
     menu->addAction(exportDonationsAction);
+    menu->addSeparator();
     //menu->addAction(mergeDatabaseAction);
     menu->addAction(exitAction);
 }
