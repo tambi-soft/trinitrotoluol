@@ -129,6 +129,7 @@ void DonationsChart::drawChart()
     controls->setLayout(layout_controls);
     
     QPushButton *button_zoom_reset = new QPushButton("reset zoom");
+    connect(button_zoom_reset, &QPushButton::clicked, this, [chartView]{ chartView->resetZoomAndMove(); });
     button_zoom_reset->setMaximumWidth(100);
     
     layout_controls->addWidget(this->label_value);
@@ -185,26 +186,6 @@ void DonationsChart::onFullHover(QPointF pos, bool state)
     {
         this->label_value->setText("");
     }
-}
-
-void DonationsChart::wheelEvent(QWheelEvent *event)
-{
-    qreal factor = event->angleDelta().y() > 0? 0.9 : 1.1;
-    //this->chart->zoom(factor);
-    QRectF rect = this->chart->plotArea();
-    qreal width_original = rect.width();
-    rect.setWidth(width_original / factor);
-    
-    qreal xcenter = event->pos().x() - this->chart->plotArea().x();
-    qreal center_scale = xcenter / width_original;
-    
-    qreal left_offset = xcenter - (rect.width() * center_scale);
-    rect.moveLeft(rect.x() + left_offset);
-    this->chart->zoomIn(rect);
-    
-    event->accept();
-    
-    QWidget::wheelEvent(event);
 }
 
 

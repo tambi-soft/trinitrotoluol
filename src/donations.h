@@ -57,7 +57,7 @@ private:
     void drawChart();
     
 protected:
-    void wheelEvent(QWheelEvent *event);
+    
     
 private slots:
     void onMonthlyHover(QPointF pos, bool state);
