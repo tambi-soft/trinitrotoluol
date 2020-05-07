@@ -75,6 +75,11 @@ PersonDonationsChart::PersonDonationsChart(DbAdapter *db, qlonglong rowid_person
     
     setLayout(new QVBoxLayout);
     
+    this->chart->setContentsMargins(0, 0, 0, 0);
+    this->chart->setBackgroundRoundness(0);
+    this->chart->setMargins({0, 0, 0, 0});
+    this->chart->setMinimumHeight(200);
+    
     this->currency_code = this->db->currencySelectDefault()["code"].toString();
     this->data = this->db->donationsSelectForPerson(this->rowid_person);
     
