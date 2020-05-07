@@ -86,7 +86,7 @@ void DonationsChart::drawChart()
     
     // data_full is ORDER BY date DESC, so the last element is the oldest
     axisX->setMin(QDateTime::fromString(data_full.at(data_full.length()-1)["date"].toString(), "yyyy-MM-dd"));
-    axisX->setMax(QDateTime::fromString("2020-04-20", "yyyy-MM-dd"));
+    axisX->setMax(QDateTime::currentDateTime());
     
     QValueAxis *axisY = new QValueAxis;
     axisY->setLabelFormat("%i");

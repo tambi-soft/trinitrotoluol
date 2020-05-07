@@ -109,6 +109,7 @@ HEADERS += \
     src/parse_csv.h \
     src/people_list.h \
     src/people_selector.h \
+    src/person_donations.h \
     src/person_edit.h \
     src/person_groups.h \
     src/person_relations.h \
@@ -156,6 +157,7 @@ SOURCES += \
     src/parse_csv.cpp \
     src/people_list.cpp \
     src/people_selector.cpp \
+    src/person_donations.cpp \
     src/person_edit.cpp \
     src/person_groups.cpp \
     src/person_relations.cpp \
