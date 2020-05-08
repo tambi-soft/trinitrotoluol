@@ -86,7 +86,9 @@ void DonationsChart::drawChart()
     
     // data_full is ORDER BY date DESC, so the last element is the oldest
     axisX->setMin(QDateTime::fromString(data_full.at(data_full.length()-1)["date"].toString(), "yyyy-MM-dd"));
-    axisX->setMax(QDateTime::currentDateTime());
+    // to make shure we see the last scatter-item in any case
+    int days = QDateTime::currentDateTime().date().day();
+    axisX->setMax(days > 15 ? QDateTime::currentDateTime() : QDateTime::currentDateTime().addDays(15));
     
     QValueAxis *axisY = new QValueAxis;
     axisY->setLabelFormat("%i");

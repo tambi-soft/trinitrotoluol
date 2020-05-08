@@ -31,6 +31,7 @@ QWidget *DonationsImport::stackSelectSourceFormat()
     
     lay->addWidget(help);
     lay->addWidget(button_import_csv);
+    lay->addStretch(100);
     
     return widget;
 }
