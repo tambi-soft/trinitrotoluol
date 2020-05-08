@@ -25,7 +25,7 @@ private:
     
 private slots:
     void onDeleteButtonClicked(qlonglong rowid, QString name);
-    void onEditButtonClicked(qlonglong rowid);
+    void onEditButtonClicked(qlonglong rowid_visits);
     void onNewButtonClicked();
     
 };

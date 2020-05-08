@@ -10,7 +10,6 @@ JourneyVisitsEdit::JourneyVisitsEdit(qlonglong rowid_visits, DbAdapter *db, QStr
 
 JourneyVisitsEdit::JourneyVisitsEdit(qlonglong rowid_visits, qlonglong rowid_person, DbAdapter *db, QString date_hint, QWidget *parent) : QWidget(parent)
 {
-    qDebug() << rowid_person;
     this->rowid_visits = rowid_visits;
     this->rowid_person = rowid_person;
     this->db = db;
@@ -84,8 +83,6 @@ void JourneyVisitsEdit::onPersonSelected(qlonglong rowid, QString name)
 
 void JourneyVisitsEdit::saveData()
 {
-    qDebug() << this->rowid_person;
-    
     QString date = this->edit_date->date().toString("yyyy-MM-dd");
     QString notes = this->edit_notes->toPlainText();
     

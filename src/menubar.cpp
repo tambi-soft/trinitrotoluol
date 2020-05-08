@@ -11,8 +11,8 @@ MenuBar::MenuBar(QMenuBar *parent) : QMenuBar(parent)
 
 void MenuBar::addFileMenu()
 {
-    QAction *importDonationsTntWareCSVAction = new QAction(QIcon::fromTheme("emblem-downloads"), "&Import Donations from TntWare (CSV)");
-    importDonationsTntWareCSVAction->setStatusTip("Import a CSV-File from TNT Connect");
+    QAction *importDonationsTntWareCSVAction = new QAction(QIcon::fromTheme("emblem-downloads"), "&Import Donations from TntWare");
+    importDonationsTntWareCSVAction->setStatusTip("Import Donations from TNT Connect");
     connect(importDonationsTntWareCSVAction, &QAction::triggered, this, &MenuBar::signalImportDonationsTntWareCSV);
     
     QAction *exportDonationsAction = new QAction(QIcon::fromTheme("document-save-as"), "&Export");

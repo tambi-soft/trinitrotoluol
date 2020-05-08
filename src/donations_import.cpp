@@ -9,9 +9,9 @@ DonationsImport::DonationsImport(DbAdapter *db, QWidget *parent) : QWidget(paren
     this->layout->addWidget(this->stack);
     
     /* == Bypassing the selectSourceFormat, as we currently only support CSV == */
-    //this->stack_select_source = stackSelectSourceFormat();
-    //this->stack->addWidget(this->stack_select_source);
-    showCSVFileDialog();
+    this->stack_select_source = stackSelectSourceFormat();
+    this->stack->addWidget(this->stack_select_source);
+    //showCSVFileDialog();
 }
 
 QWidget *DonationsImport::stackSelectSourceFormat()
@@ -21,14 +21,42 @@ QWidget *DonationsImport::stackSelectSourceFormat()
     QVBoxLayout *lay = new QVBoxLayout;
     widget->setLayout(lay);
     
+    QTextEdit *help = showHelp();
+    
+    
     // multiple file open dialog with filter "csv"
     // (more formats maybe later)
     QPushButton *button_import_csv = new QPushButton("import CSV");
     connect(button_import_csv, &QPushButton::clicked, this, &DonationsImport::showCSVFileDialog);
     
+    lay->addWidget(help);
     lay->addWidget(button_import_csv);
     
     return widget;
+}
+
+QTextEdit *DonationsImport::showHelp()
+{
+    QFile file(":help_tntware_import");
+    
+    QString lines;
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        QTextStream stream(&file);
+        while (!stream.atEnd())
+        {
+            lines.append(stream.readLine() + "\n");
+        }
+    }
+    file.close();
+    
+    //QTextEdit *text = new QTextEdit(this);
+    GrowingTextEdit *text = new GrowingTextEdit;
+    text->setText(lines);
+    
+    text->setReadOnly(true);
+    
+    return text;
 }
 
 void DonationsImport::showCSVFileDialog()
