@@ -41,10 +41,11 @@ void DonationsImport::showCSVFileDialog()
 {
     QString last_import_path = this->db->selectSettings("last_csv_import_path");
     QString url_csv = QFileDialog::getOpenFileName(this, "Please select a CSV-File", last_import_path, "csv(*.csv *.CSV)");
-    this->db->insertSettings("last_csv_import_path", url_csv);
     
     if (url_csv != nullptr)
-    {   
+    {
+        this->db->insertSettings("last_csv_import_path", url_csv);
+        
         ParseCSV *parser = new ParseCSV;
         QList<QMap<QString,QString>> data = parser->processCSVFile(url_csv);
         
