@@ -21,12 +21,13 @@ QWidget *DonationsImport::stackSelectSourceFormat()
     QVBoxLayout *lay = new QVBoxLayout;
     widget->setLayout(lay);
     
-    QTextEdit *help = showHelp();
+    GrowingTextEdit *help = new GrowingTextEdit;
+    help->loadTextFromAssets(":help_tntware_import");
     
     
     // multiple file open dialog with filter "csv"
     // (more formats maybe later)
-    QPushButton *button_import_csv = new QPushButton("import CSV");
+    QPushButton *button_import_csv = new QPushButton("import CSV from TntWare");
     connect(button_import_csv, &QPushButton::clicked, this, &DonationsImport::showCSVFileDialog);
     
     lay->addWidget(help);
@@ -34,30 +35,6 @@ QWidget *DonationsImport::stackSelectSourceFormat()
     lay->addStretch(100);
     
     return widget;
-}
-
-QTextEdit *DonationsImport::showHelp()
-{
-    QFile file(":help_tntware_import");
-    
-    QString lines;
-    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        QTextStream stream(&file);
-        while (!stream.atEnd())
-        {
-            lines.append(stream.readLine() + "\n");
-        }
-    }
-    file.close();
-    
-    //QTextEdit *text = new QTextEdit(this);
-    GrowingTextEdit *text = new GrowingTextEdit;
-    text->setText(lines);
-    
-    text->setReadOnly(true);
-    
-    return text;
 }
 
 void DonationsImport::showCSVFileDialog()

@@ -199,11 +199,14 @@ DonationsMapEdit::DonationsMapEdit(DbAdapter *db, GridWidget *parent) : GridWidg
 {
     this->db = db;
     
-    GrowingTextEdit *help = showHelp();
-    //help->show();
+    GrowingTextEdit *help = new GrowingTextEdit;
+    help->loadTextFromAssets(":help_currencies");
+    
     this->layout->insertWidget(0, help);
     
     showData();
+    
+    help->sizeChanged();
 }
 
 void DonationsMapEdit::showData()
@@ -272,27 +275,4 @@ void DonationsMapEdit::onPersonSelected(qlonglong rowid, QString name)
     this->dialog_select_person->close();
     
     showData();
-}
-
-GrowingTextEdit* DonationsMapEdit::showHelp()
-{
-    QFile file(":help_currencies");
-    
-    QString lines;
-    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        QTextStream stream(&file);
-        while (!stream.atEnd())
-        {
-            lines.append(stream.readLine() + "\n");
-        }
-    }
-    file.close();
-    
-    GrowingTextEdit *text = new GrowingTextEdit();
-    text->setText(lines);
-    
-    text->setReadOnly(true);
-    
-    return text;
 }

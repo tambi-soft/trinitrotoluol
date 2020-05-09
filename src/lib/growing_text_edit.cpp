@@ -24,3 +24,22 @@ void GrowingTextEdit::sizeChanged()
         setFixedHeight(docHeight + 2);
     }
 }
+
+void GrowingTextEdit::loadTextFromAssets(QString asset_name)
+{
+    QFile file(asset_name);
+    
+    QString lines;
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        QTextStream stream(&file);
+        while (!stream.atEnd())
+        {
+            lines.append(stream.readLine() + "\n");
+        }
+    }
+    file.close();
+    
+    setHtml(lines);
+    setReadOnly(true);
+}

@@ -8,7 +8,9 @@ CurrenciesList::CurrenciesList(DbAdapter *db, GridWidget *parent) : GridWidget(p
     QPushButton *button_new_currency = new QPushButton("add new Currency");
     connect(button_new_currency, &QPushButton::clicked, this, &CurrenciesList::onNewButtonClicked);
     
-    QTextEdit *help = showHelp();
+    GrowingTextEdit *help = new GrowingTextEdit;
+    help->loadTextFromAssets(":help_currencies");
+    
     this->layout->insertWidget(0, help);
     this->layout->addWidget(button_new_currency);
     
@@ -84,30 +86,6 @@ void CurrenciesList::onDeleteButtonClicked(qlonglong rowid, QString code)
 void CurrenciesList::onUpdateSignaled()
 {
     showData();
-}
-
-QTextEdit* CurrenciesList::showHelp()
-{
-    QFile file(":help_currencies");
-    
-    QString lines;
-    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        QTextStream stream(&file);
-        while (!stream.atEnd())
-        {
-            lines.append(stream.readLine() + "\n");
-        }
-    }
-    file.close();
-    
-    //QTextEdit *text = new QTextEdit(this);
-    GrowingTextEdit *text = new GrowingTextEdit;
-    text->setText(lines);
-    
-    text->setReadOnly(true);
-    
-    return text;
 }
 
 

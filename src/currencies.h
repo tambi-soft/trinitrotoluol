@@ -25,7 +25,6 @@ public:
     explicit CurrenciesList(DbAdapter *db, GridWidget *parent = nullptr);
     
     void showData();
-    QTextEdit *showHelp();
     void onUpdateSignaled();
     
 private:

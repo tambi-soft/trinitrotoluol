@@ -85,7 +85,6 @@ public:
     explicit DonationsMapEdit(DbAdapter *db, GridWidget *parent = nullptr);
     
     void showData();
-    GrowingTextEdit *showHelp();
     
 private:
     DbAdapter *db;

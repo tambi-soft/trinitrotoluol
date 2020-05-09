@@ -30,7 +30,6 @@ private:
     DbAdapter *db;
     QVBoxLayout *layout = new QVBoxLayout;
     QStackedWidget *stack = new QStackedWidget;
-    QTextEdit *showHelp();
     
     QWidget *stackSelectSourceFormat();
     
