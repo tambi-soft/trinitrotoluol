@@ -25,12 +25,12 @@ void GrowingTextEdit::sizeChanged()
     }
 }
 
-void GrowingTextEdit::focusInEvent(QFocusEvent *e)
+void GrowingTextEdit::focusInEvent(QFocusEvent */*e*/)
 {
     sizeChanged();
 }
 
-void GrowingTextEdit::showEvent(QShowEvent *e)
+void GrowingTextEdit::showEvent(QShowEvent */*e*/)
 {
     sizeChanged();
 }

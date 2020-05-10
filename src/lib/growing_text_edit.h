@@ -33,8 +33,8 @@ private:
     
 public slots:
     void sizeChanged();
-    void focusInEvent(QFocusEvent *e);
-    void showEvent(QShowEvent *e);
+    void focusInEvent(QFocusEvent */*e*/);
+    void showEvent(QShowEvent */*e*/);
 };
 
 #endif // GROWINGTEXTEDIT_H
