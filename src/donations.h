@@ -91,6 +91,8 @@ private:
     QDialog *dialog_select_person = new QDialog;
     QString tnt_name;
     
+    GrowingTextEdit *help;
+    
 private slots:
     void onDeleteButtonClicked(qlonglong rowid_person, QString name);
     void onEditButtonClicked(QString tnt_name);

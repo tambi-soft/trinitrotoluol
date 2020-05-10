@@ -25,6 +25,16 @@ void GrowingTextEdit::sizeChanged()
     }
 }
 
+void GrowingTextEdit::focusInEvent(QFocusEvent *e)
+{
+    sizeChanged();
+}
+
+void GrowingTextEdit::showEvent(QShowEvent *e)
+{
+    sizeChanged();
+}
+
 void GrowingTextEdit::loadTextFromAssets(QString asset_name)
 {
     QFile file(asset_name);

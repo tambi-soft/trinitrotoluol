@@ -199,14 +199,12 @@ DonationsMapEdit::DonationsMapEdit(DbAdapter *db, GridWidget *parent) : GridWidg
 {
     this->db = db;
     
-    GrowingTextEdit *help = new GrowingTextEdit;
-    help->loadTextFromAssets(":help_currencies");
+    this->help = new GrowingTextEdit;
+    this->help->loadTextFromAssets(":help_import_map");
     
-    this->layout->insertWidget(0, help);
+    this->layout->insertWidget(0, this->help);
     
     showData();
-    
-    help->sizeChanged();
 }
 
 void DonationsMapEdit::showData()

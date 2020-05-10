@@ -7,6 +7,10 @@
 #include <QTimer>
 #include <QFile>
 #include <QTextStream>
+#include <QMouseEvent>
+#include <QEvent>
+
+#include <QDebug>
 
 /*
  * A QTextEdit which is resizing itself to its content.
@@ -29,6 +33,8 @@ private:
     
 public slots:
     void sizeChanged();
+    void focusInEvent(QFocusEvent *e);
+    void showEvent(QShowEvent *e);
 };
 
 #endif // GROWINGTEXTEDIT_H
