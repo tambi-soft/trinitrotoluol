@@ -7,9 +7,11 @@ PersonDonations::PersonDonations(DbAdapter *db, qlonglong rowid_person, QTabWidg
     
     PersonDonationsChart *donations_chart = new PersonDonationsChart(db, rowid_person);
     PersonDonationsList *donations_list = new PersonDonationsList(db, rowid_person);
+    PersonDonationsPromises *donations_promises = new PersonDonationsPromises(db, rowid_person);
     
     this->addTab(donations_chart, "Chart");
     this->addTab(donations_list, "List");
+    this->addTab(donations_promises, "Promises");
 }
 
 
@@ -185,4 +187,16 @@ void PersonDonationsChart::onScatterHover(QPointF pos, bool state)
     {
         this->label_value->setText("");
     }
+}
+
+
+
+
+
+PersonDonationsPromises::PersonDonationsPromises(DbAdapter *db, qlonglong rowid_person, QWidget *parent) : QWidget(parent)
+{
+    this->db = db;
+    this->rowid_person = rowid_person;
+    
+    
 }

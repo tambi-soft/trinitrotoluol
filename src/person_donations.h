@@ -78,4 +78,21 @@ private slots:
     void onScatterHover(QPointF pos, bool state);
 };
 
+
+
+
+
+class PersonDonationsPromises : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit PersonDonationsPromises(DbAdapter *db, qlonglong rowid_person, QWidget *parent = nullptr);
+    
+private:
+    DbAdapter *db;
+    qlonglong rowid_person;
+    
+    
+};
+
 #endif // PERSONDONATIONS_H
