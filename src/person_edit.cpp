@@ -114,7 +114,6 @@ void PersonEdit::drawGUI()
     this->grid->addWidget(button_agreement_today, 10, 2);
     this->grid->addWidget(button_agreement_help, 10, 3);
     
-    this->grid->addWidget(edit_donations_monthly, 11, 1, 1, 3);
     this->grid->addWidget(edit_donations_monthly_promised, 12, 1, 1, 3);
     
     this->grid->addWidget(edit_notes, 14, 1, 1, 3);

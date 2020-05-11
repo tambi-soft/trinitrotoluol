@@ -198,5 +198,37 @@ PersonDonationsPromises::PersonDonationsPromises(DbAdapter *db, qlonglong rowid_
     this->db = db;
     this->rowid_person = rowid_person;
     
+    setLayout(this->layout);
     
+    QPushButton *button_new = new QPushButton("add new promise");
+    connect(button_new, &QPushButton::clicked, this, &PersonDonationsPromises::onButtonNewClicked);
+    
+    this->layout->addWidget(button_new);
+}
+
+void PersonDonationsPromises::onButtonNewClicked()
+{
+    QWidget *dlg = new QWidget;
+    QGridLayout *layout = new QGridLayout;
+    dlg->setLayout(layout);
+    
+    QRadioButton *radio_monthly = new QRadioButton("monthly");
+    QRadioButton *radio_single = new QRadioButton("single");
+    
+    QLineEdit *line_amount = new QLineEdit;
+    ComboCurrencies *combo_currencies = new ComboCurrencies(this->db);
+    
+    layout->addWidget(radio_monthly, 1, 1);
+    layout->addWidget(radio_single, 2, 1);
+    layout->addWidget(new QLabel("amount"), 3, 0);
+    layout->addWidget(line_amount, 3, 1);
+    layout->addWidget(combo_currencies, 3, 2);
+    
+    QDialog *dialog = new QDialog();
+    QVBoxLayout *layout_dialog = new QVBoxLayout;
+    layout_dialog->setMargin(0);
+    dialog->setLayout(layout_dialog);
+    layout_dialog->addWidget(dlg);
+    
+    dialog->exec();
 }

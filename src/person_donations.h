@@ -82,6 +82,8 @@ private slots:
 
 
 
+#import "combo_currencies.h"
+
 class PersonDonationsPromises : public QWidget
 {
     Q_OBJECT
@@ -92,7 +94,9 @@ private:
     DbAdapter *db;
     qlonglong rowid_person;
     
+    QVBoxLayout *layout = new QVBoxLayout;
     
+    void onButtonNewClicked();
 };
 
 #endif // PERSONDONATIONS_H
