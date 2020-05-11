@@ -41,7 +41,6 @@ void DbAdapter::initializeTables()
         "date_collected  INTEGER, "
         "date_last_changed INTEGER, "
         "notes	TEXT, "
-        "donations_monthly INTEGER DEFAULT 0, "
         "donations_monthly_promised  INTEGER DEFAULT 0, "
         "flag_deactivated     INTEGER DEFAULT 0, "
         "flag_todo       INTEGER DEFAULT 0, "
@@ -267,32 +266,11 @@ QList<QMap<QString,QVariant>> DbAdapter::personSelectDonationsMap()
     return dbIteratorToMapList(query);
 }
 
-/*
-qlonglong DbAdapter::insertNewPerson(QMap<QString,QVariant> data)
-{
-    QSqlQuery query(this->db);
-    query.prepare("INSERT INTO people"
-                  "(tnt_id, name, group_rowid, email, address, phone, agreed_mail, agreed_prayer, agreement, notes, donations_monthly, donations_monthly_promised, flag_todo, flag_waiting, date_collected)"
-                  "VALUES"
-                  "(:tnt_id, :name, :group, :email, :address, :phone, :agreed_mail, :agreed_prayer, :agreement, :notes, :donations_monthly, :donations_monthly_promised, :flag_todo, :flag_waiting, CURRENT_TIMESTAMP)");
-    
-    query = bindPersonParams(query, data);
-    
-    query.exec();
-    
-    //qDebug() << this->db.lastError();
-    //qDebug() << query.lastQuery();
-    
-    this->db.commit();
-    
-    return query.lastInsertId().toLongLong();
-}
-*/
 void DbAdapter::updatePerson(qlonglong rowid, QMap<QString,QVariant> data)
 {
     QSqlQuery query(this->db);
     query.prepare("UPDATE people SET "
-                  "tnt_id=:tnt_id, name=:name, email=:email, address=:address, phone=:phone, agreed_mail=:agreed_mail, agreed_prayer=:agreed_prayer, agreement=:agreement, notes=:notes, donations_monthly=:donations_monthly, donations_monthly_promised=:donations_monthly_promised, flag_todo=:flag_todo, flag_waiting=:flag_waiting, date_last_changed=CURRENT_TIMESTAMP"
+                  "tnt_id=:tnt_id, name=:name, email=:email, address=:address, phone=:phone, agreed_mail=:agreed_mail, agreed_prayer=:agreed_prayer, agreement=:agreement, notes=:notes, donations_monthly_promised=:donations_monthly_promised, flag_todo=:flag_todo, flag_waiting=:flag_waiting, date_last_changed=CURRENT_TIMESTAMP"
                   " WHERE rowid=:rowid");
     
     query = bindPersonParams(query, data);
@@ -304,7 +282,7 @@ void DbAdapter::updatePerson(qlonglong rowid, QMap<QString,QVariant> data)
 QMap<QString,QVariant> DbAdapter::selectPerson(qlonglong rowid)
 {
     QSqlQuery query(this->db);
-    query.prepare("SELECT a.tnt_id, a.name, a.email, a.address, a.phone, a.agreed_mail, a.agreed_prayer, a.agreement, a.notes, a.donations_monthly, a.donations_monthly_promised, a.flag_todo, a.flag_waiting "
+    query.prepare("SELECT a.tnt_id, a.name, a.email, a.address, a.phone, a.agreed_mail, a.agreed_prayer, a.agreement, a.notes, a.donations_monthly_promised, a.flag_todo, a.flag_waiting "
         "FROM people a "
         "WHERE a.rowid=:rowid");
     query.bindValue(":rowid", rowid);
@@ -330,7 +308,7 @@ QList<QMap<QString,QVariant>> DbAdapter::selectAllPersonsFiltered(int todo, int 
     query.prepare("SELECT people.rowid, people.name, email, "
                   "GROUP_CONCAT(DISTINCT people_groups.name) AS groups_names, "
                   "GROUP_CONCAT(DISTINCT people_groups.color) AS groups_colors, "
-                  "agreed_mail, agreed_prayer, agreement, flag_todo, flag_waiting, donations_monthly, donations_monthly_promised, people_donations.amount AS donations_received "
+                  "agreed_mail, agreed_prayer, agreement, flag_todo, flag_waiting, donations_monthly_promised, people_donations.amount AS donations_received "
                   "FROM people "
                   "LEFT JOIN people_donations ON people.rowid=people_donations.rowid_people "
                   "LEFT JOIN people_groups_matrix ON people_groups_matrix.rowid_people=people.rowid "
@@ -339,31 +317,31 @@ QList<QMap<QString,QVariant>> DbAdapter::selectAllPersonsFiltered(int todo, int 
                   "CASE "
                       "WHEN (:todo=0) THEN flag_todo = 0 OR flag_todo IS NULL "
                       "WHEN (:todo=1) THEN flag_todo = 1 "
-                      "ELSE (flag_todo = flag_todo) OR flag_todo IS NULL "
+                      "ELSE (true) "
                   "END "
                   "AND "
                   "CASE "
                       "WHEN (:waiting=0) THEN flag_waiting = 0 OR flag_waiting IS NULL "
                       "WHEN (:waiting=1) THEN flag_waiting = 1 "
-                      "ELSE (flag_waiting = flag_waiting) OR flag_waiting IS NULL "
+                      "ELSE (true) "
                   "END "
                   "AND "
                   "CASE "
-                      "WHEN (:donating=0) THEN (donations_monthly = 0 AND donations_monthly_promised = 0) "
-                      "WHEN (:donating=1) THEN (donations_monthly > 0 OR donations_monthly_promised > 0) "
-                      "ELSE (donations_monthly = donations_monthly) "
+                      "WHEN (:donating=0) THEN (people_donations.amount = 0 OR people_donations.amount IS NULL AND donations_monthly_promised = 0) "
+                      "WHEN (:donating=1) THEN (people_donations.amount > 0 OR donations_monthly_promised > 0) "
+                      "ELSE (true) "
                   "END "
                   "AND "
                   "CASE "
                       "WHEN (:deactivated=0) THEN flag_deactivated = 0 OR flag_deactivated IS NULL "
                       "WHEN (:deactivated=1) THEN flag_deactivated = 1 "
-                      "ELSE (flag_deactivated = flag_deactivated) OR flag_deactivated IS NULL "
+                      "ELSE (true) "
                   "END "
                   "AND "
                   "CASE "
                       "WHEN (:agreed_mail=0) THEN agreed_mail = 0 "
                       "WHEN (:agreed_mail=1) THEN agreed_mail = 1 "
-                      "ELSE agreed_mail = agreed_mail "
+                      "ELSE true "
                   "END "
                   "AND (people_groups.name LIKE :group OR people_groups.name IS NULL) "
                   "AND (people.name LIKE :name OR people.name IS NULL) "

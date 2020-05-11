@@ -136,7 +136,6 @@ void PersonEdit::drawGUI()
     this->grid->addWidget(new QLabel("agreed mail"), 8, 0);
     this->grid->addWidget(new QLabel("agreed prayer"), 9, 0);
     this->grid->addWidget(new QLabel("agreement"), 10, 0);
-    this->grid->addWidget(new QLabel("donations monthly"), 11, 0);
     this->grid->addWidget(new QLabel("donations promised"), 12, 0);
     
     this->grid->addWidget(new QLabel("Notes"), 14, 0);
@@ -221,7 +220,6 @@ QMap<QString,QVariant> PersonEdit::collectSaveData()
     data["agreed_prayer"] = this->check_agreed_prayer->isChecked();
     data["agreement"] = this->edit_agreement->text();
     data["notes"] = this->edit_notes->toPlainText();
-    data["donations_monthly"] = this->edit_donations_monthly->text().toInt();
     data["donations_monthly_promised"] = this->edit_donations_monthly_promised->text().toInt();
     
     return data;
