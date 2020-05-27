@@ -26,17 +26,22 @@ SelectDatabase::SelectDatabase(QWidget *parent) : QWidget(parent)
 {
     setLayout(new QHBoxLayout);
     
-    QPushButton *button_select_db = new QPushButton("select existing / create new Database");
-    connect(button_select_db, &QPushButton::clicked, this, &SelectDatabase::showFileSelectDialog);
+    QPushButton *button_select_db = new QPushButton("select existing Database");
+    connect(button_select_db, &QPushButton::clicked, this, [this]{ showFileSelectDialog(""); });
+    
+    QPushButton *button_create_db = new QPushButton("create new Database");
+    connect(button_create_db, &QPushButton::clicked, this, [this]{ showFileSelectDialog("trinitrotoluol.sqlite"); });
+    
     layout()->addWidget(button_select_db);
+    layout()->addWidget(button_create_db);
 }
 
-void SelectDatabase::showFileSelectDialog()
+void SelectDatabase::showFileSelectDialog(QString filename)
 {
     /* We use this for opening a new or existing database */
     QString dir_new = QFileDialog::getSaveFileName(this,
                                                    "Select Database",
-                                                   QDir::homePath(),
+                                                   QDir::homePath() + "/" + filename,
                                                    "",
                                                    new QString(),
                                                    QFileDialog::DontConfirmOverwrite);
