@@ -18,6 +18,7 @@
 #include "donations_import_matrix.h"
 #include "donations_import_progress.h"
 #include "parse_csv.h"
+#include "lib/growing_text_edit.h"
 
 class DonationsImport : public QWidget
 {

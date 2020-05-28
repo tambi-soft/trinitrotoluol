@@ -1,5 +1,6 @@
 
 #include <QMainWindow>
+#include <QGuiApplication>
 #include <QTabWidget>
 #include <QTabBar>
 #include <QDir>
@@ -38,6 +39,8 @@ class QTNTMainWindow : public QMainWindow
 public:
     QTNTMainWindow(QWidget *parent = nullptr);
     
+    void calculateWindowSize();
+    
 protected:
     void closeEvent(QCloseEvent *event) override;
     
@@ -72,7 +75,7 @@ private slots:
     
     void addDonationsTab();
     //void addDonationsListTab();
-    void addDonationsImportTab();
+    void addDonationsImportTntWareCSVTab();
     void addExportTab();
     void addMergeDatabaseTab();
     void addMailListTab();

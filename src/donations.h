@@ -24,7 +24,6 @@ signals:
 
 
 
-
 #include <QtCharts>
 #include <QLineSeries>
 #include <QScatterSeries>
@@ -33,6 +32,8 @@ signals:
 #include <QToolTip>
 #include <QLabel>
 #include <QWheelEvent>
+
+#include "lib/chartview.h"
 
 class DonationsChart : public QWidget
 {
@@ -56,7 +57,7 @@ private:
     void drawChart();
     
 protected:
-    void wheelEvent(QWheelEvent *event);
+    
     
 private slots:
     void onMonthlyHover(QPointF pos, bool state);
@@ -64,6 +65,38 @@ private slots:
     
 signals:
     
+};
+
+
+
+
+
+#include <QMessageBox>
+#include <QDialog>
+
+#include "lib/grid_widget.h"
+#include "people_selector.h"
+#include "lib/growing_text_edit.h"
+
+class DonationsMapEdit : public GridWidget
+{
+    Q_OBJECT
+public:
+    explicit DonationsMapEdit(DbAdapter *db, GridWidget *parent = nullptr);
+    
+    void showData();
+    
+private:
+    DbAdapter *db;
+    QDialog *dialog_select_person = new QDialog;
+    QString tnt_name;
+    
+    GrowingTextEdit *help;
+    
+private slots:
+    void onDeleteButtonClicked(qlonglong rowid_person, QString name);
+    void onEditButtonClicked(QString tnt_name);
+    void onPersonSelected(qlonglong rowid, QString name);
 };
 
 #endif // DONATIONS_H

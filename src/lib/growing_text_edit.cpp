@@ -1,6 +1,6 @@
 #include "growing_text_edit.h"
 
-GrowingTextEdit::GrowingTextEdit(QTextEdit *parent)
+GrowingTextEdit::GrowingTextEdit(QTextEdit *parent) : QTextEdit(parent)
 {
     connect(document(), SIGNAL(contentsChanged()), this, SLOT(sizeChanged()));
     connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(sizeChanged()));
@@ -23,4 +23,33 @@ void GrowingTextEdit::sizeChanged()
     {
         setFixedHeight(docHeight + 2);
     }
+}
+
+void GrowingTextEdit::focusInEvent(QFocusEvent */*e*/)
+{
+    sizeChanged();
+}
+
+void GrowingTextEdit::showEvent(QShowEvent */*e*/)
+{
+    sizeChanged();
+}
+
+void GrowingTextEdit::loadTextFromAssets(QString asset_name)
+{
+    QFile file(asset_name);
+    
+    QString lines;
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        QTextStream stream(&file);
+        while (!stream.atEnd())
+        {
+            lines.append(stream.readLine() + "\n");
+        }
+    }
+    file.close();
+    
+    setHtml(lines);
+    setReadOnly(true);
 }

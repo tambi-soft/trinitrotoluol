@@ -50,6 +50,7 @@ public slots:
     void showEvent(QShowEvent */*event*/);
     /* needed to be able to update these values while the lineedit is edited */
     void onMoneyTargetChanged(QString target);
+    void onMoneyTargetCalculate();
 };
 
 #endif // STATS_H

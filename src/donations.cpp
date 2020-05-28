@@ -6,9 +6,11 @@ Donations::Donations(DbAdapter *db, QTabWidget *parent) : QTabWidget(parent)
     
     DonationsList *donations_list = new DonationsList(db);
     DonationsChart *donations_chart = new DonationsChart(db);
+    DonationsMapEdit *donations_map_edit = new DonationsMapEdit(db);
     
     addTab(donations_chart, "Charts");
     addTab(donations_list, "List");
+    addTab(donations_map_edit, "Import Map");
 }
 
 
@@ -84,7 +86,9 @@ void DonationsChart::drawChart()
     
     // data_full is ORDER BY date DESC, so the last element is the oldest
     axisX->setMin(QDateTime::fromString(data_full.at(data_full.length()-1)["date"].toString(), "yyyy-MM-dd"));
-    axisX->setMax(QDateTime::fromString("2020-04-20", "yyyy-MM-dd"));
+    // to make shure we see the last scatter-item in any case
+    int days = QDateTime::currentDateTime().date().day();
+    axisX->setMax(days > 15 ? QDateTime::currentDateTime() : QDateTime::currentDateTime().addDays(15));
     
     QValueAxis *axisY = new QValueAxis;
     axisY->setLabelFormat("%i");
@@ -106,7 +110,8 @@ void DonationsChart::drawChart()
     //this->chart->legend()->markers(series_full)[0]->setVisible(false);
     this->chart->legend()->markers(scatter_full)[0]->setVisible(false);
     
-    QChartView *chartView = new QChartView(chart);
+    //QChartView *chartView = new QChartView(chart);
+    ChartView *chartView = new ChartView(chart);
     chartView->setRenderHint(QPainter::Antialiasing);
     
     series_monthly->attachAxis(axisX);
@@ -120,8 +125,22 @@ void DonationsChart::drawChart()
     this->scatter_full->attachAxis(axisY);
     
     this->layout()->addWidget(chartView);
-    this->layout()->addWidget(this->label_value);
-    this->label_value->setAlignment(Qt::AlignCenter);
+    
+    QWidget *controls = new QWidget;
+    QHBoxLayout *layout_controls = new QHBoxLayout;
+    controls->setLayout(layout_controls);
+    
+    QPushButton *button_zoom_reset = new QPushButton("reset zoom");
+    connect(button_zoom_reset, &QPushButton::clicked, this, [chartView]{ chartView->resetZoomAndMove(); });
+    button_zoom_reset->setMaximumWidth(100);
+    
+    layout_controls->addWidget(this->label_value);
+    layout_controls->addWidget(button_zoom_reset);
+    
+    this->layout()->addWidget(controls);
+    
+    //this->label_value->setAlignment(Qt::AlignCenter);
+    //this->layout()->addWidget(button_zoom_reset);
 }
 
 void DonationsChart::onMonthlyHover(QPointF pos, bool state)
@@ -171,22 +190,87 @@ void DonationsChart::onFullHover(QPointF pos, bool state)
     }
 }
 
-void DonationsChart::wheelEvent(QWheelEvent *event)
+
+
+
+
+
+DonationsMapEdit::DonationsMapEdit(DbAdapter *db, GridWidget *parent) : GridWidget(parent)
 {
-    qreal factor = event->angleDelta().y() > 0? 0.9 : 1.1;
-    //this->chart->zoom(factor);
-    QRectF rect = this->chart->plotArea();
-    qreal width_original = rect.width();
-    rect.setWidth(width_original / factor);
+    this->db = db;
     
-    qreal xcenter = event->pos().x() - this->chart->plotArea().x();
-    qreal center_scale = xcenter / width_original;
+    this->help = new GrowingTextEdit;
+    this->help->loadTextFromAssets(":help_import_map");
     
-    qreal left_offset = xcenter - (rect.width() * center_scale);
-    rect.moveLeft(rect.x() + left_offset);
-    this->chart->zoomIn(rect);
+    this->layout->insertWidget(0, this->help);
     
-    event->accept();
+    showData();
+}
+
+void DonationsMapEdit::showData()
+{
+    recreateView();
     
-    QWidget::wheelEvent(event);
+    this->grid->addWidget(new QLabel("<b>Name</b>"), 1, 2);
+    this->grid->addWidget(new QLabel("<b>TNT Memo</b>"), 1, 3);
+    
+    QList<QMap<QString,QVariant>> data = this->db->personSelectDonationsMap();
+    
+    for (int i=0; i < data.length(); i++)
+    {
+        QString name = data.at(i)["name"].toString();
+        qlonglong rowid_people = data.at(i)["rowid_people"].toLongLong();
+        QString tnt_name = data.at(i)["tnt_name"].toString();
+        
+        QPushButton *button_delete = new QPushButton();
+        button_delete->setIcon(QIcon::fromTheme("edit-delete"));
+        connect(button_delete, &QPushButton::clicked, this, [this, rowid_people, name]{ DonationsMapEdit::onDeleteButtonClicked(rowid_people, name); });
+        
+        QPushButton *button_edit = new QPushButton();
+        button_edit->setIcon(QIcon::fromTheme("document-properties"));
+        connect(button_edit, &QPushButton::clicked, this, [this, tnt_name]{ DonationsMapEdit::onEditButtonClicked(tnt_name); });
+        
+        this->grid->addWidget(button_delete, i+2, 0);
+        this->grid->addWidget(button_edit, i+2, 1);
+        
+        this->grid->addWidget(new QLabel(name), i+2, 2);
+        this->grid->addWidget(new QLabel(tnt_name), i+2, 3);
+    }
+}
+
+void DonationsMapEdit::onDeleteButtonClicked(qlonglong rowid_people, QString name)
+{
+    int reply = QMessageBox::question(this, "Delete Mapping for "+name, "Really delete Mapping for \""+name+"\"?", QMessageBox::Yes, QMessageBox::No);
+    if (reply == QMessageBox::Yes)
+    {
+        this->db->personDeleteDonationsMap(rowid_people);
+        
+        showData();
+    }
+}
+
+void DonationsMapEdit::onEditButtonClicked(QString tnt_name)
+{
+    this->tnt_name = tnt_name;
+    
+    PeopleSelector *selector = new PeopleSelector(this->db);
+    selector->setDescription("Who is <b>"+tnt_name+"</b> in your database?");
+    connect(selector, &PeopleSelector::personSelected, this, &DonationsMapEdit::onPersonSelected);
+    
+    this->dialog_select_person = new QDialog();
+    QVBoxLayout *layout_dialog = new QVBoxLayout;
+    layout_dialog->setMargin(0);
+    this->dialog_select_person->setLayout(layout_dialog);
+    layout_dialog->addWidget(selector);
+    
+    this->dialog_select_person->exec();
+}
+
+void DonationsMapEdit::onPersonSelected(qlonglong rowid, QString name)
+{
+    this->db->personUpdateDonationsMap(rowid, this->tnt_name);
+    
+    this->dialog_select_person->close();
+    
+    showData();
 }

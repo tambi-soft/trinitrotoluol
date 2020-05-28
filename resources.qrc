@@ -15,5 +15,7 @@
         <file alias="help_relations">assets/help_txt/relations.html</file>
         <file alias="help_tntware">assets/help_txt/tntware.html</file>
         <file alias="help_currencies">assets/help_txt/currencies.html</file>
+        <file alias="help_tntware_import">assets/help_txt/tntware_import.html</file>
+        <file alias="help_import_map">assets/help_txt/import_map.html</file>
     </qresource>
 </RCC>

@@ -20,11 +20,14 @@ class PeopleSelector : public QWidget
 public:
     explicit PeopleSelector(DbAdapter *db, QWidget *parent = nullptr);
     
+    void setDescription(QString description);
+    
 private:
     DbAdapter *db;
     QVBoxLayout *layout;
     QComboBox *filter_group;
     QLineEdit *filter_name;
+    QLabel *label_description = new QLabel;
     QScrollArea *scroll_area;
     
     void drawData();

@@ -23,6 +23,7 @@
 #include "person_visits.h"
 #include "person_relations.h"
 #include "help_message.h"
+#include "person_donations.h"
 
 class PersonDetails : public QWidget
 {
@@ -116,22 +117,6 @@ private:
     qlonglong rowid_person;
     
     void showData();
-};
-
-
-
-class PersonDonations : public GridWidget
-{
-    Q_OBJECT
-public:
-    explicit PersonDonations(DbAdapter *db, qlonglong rowid, GridWidget *parent = nullptr);
-    
-private:
-    DbAdapter *db;
-    qlonglong rowid_person;
-    
-    void showData();
-    
 };
 
 #endif // PERSON_EDIT_H

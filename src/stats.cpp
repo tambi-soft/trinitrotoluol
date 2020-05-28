@@ -121,9 +121,17 @@ void Stats::addRemainingStats()
     connect(this->edit_money_needed, &QLineEdit::textChanged, this, &Stats::onMoneyTargetChanged);
     
     //onMoneyTargetChanged(needed_money);
+    onMoneyTargetCalculate();
 }
 
 void Stats::onMoneyTargetChanged(QString target)
+{
+    this->db->insertSettings("money_target", target);
+    
+    onMoneyTargetCalculate();
+}
+
+void Stats::onMoneyTargetCalculate()
 {
     QMap<QString,QVariant> money = this->db->selectMoneyStats();
     int monthly_sum = money["monthly_sum"].toInt();
@@ -132,8 +140,6 @@ void Stats::onMoneyTargetChanged(QString target)
     QMap<QString,QVariant> data = this->db->selectPeopleStats();
     int dp = data["donation_partners"].toInt();
     int dpp = data["donation_partners_promised"].toInt();
-    
-    this->db->insertSettings("money_target", target);
     
     this->label_need_remaining->setText(QString::number( this->edit_money_needed->text().toInt() - monthly_sum - monthly_sum_promised ));
     

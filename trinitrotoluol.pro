@@ -3,6 +3,17 @@
 ######################################################################
 
 TEMPLATE = app
+
+CONFIG += qt debug release
+
+CONFIG( debug, debug|release ) {
+    # debug
+    DEPLOY_TARGET = $$shell_quote($$shell_path($${OUT_PWD}/debug/$${TARGET}$${TARGET_CUSTOM_EXT}))
+} else {
+    # release
+    DEPLOY_TARGET = $$shell_quote($$shell_path($${OUT_PWD}/release/$${TARGET}$${TARGET_CUSTOM_EXT}))
+}
+
 TARGET = trinitrotoluol
 
 linux-g++ | linux-g++-64 | linux-g++-32 {
@@ -12,13 +23,35 @@ linux-g++ | linux-g++-64 | linux-g++-32 {
 win32 {
     RC_ICONS += ./assets/logo.ico
     
-    CONFIG += static
+    #CONFIG += static
 
     INCLUDEPATH += "assets/windows/"
     INCLUDEPATH += "assets/windows/"
     
     #LIBS += -lqminimal
     #LIBS += -lqwindows
+    
+    DEPLOY_COMMAND = $$(QTDIR)\bin\windeployqt
+ 
+    # Uncomment the following line to help debug the deploy command when running qmake
+    warning($${DEPLOY_COMMAND} $${DEPLOY_TARGET})
+
+    # Use += instead of = if you use multiple QMAKE_POST_LINKs
+    QMAKE_POST_LINK = $${DEPLOY_COMMAND} $${DEPLOY_TARGET}
+}
+macx {
+    DEPLOY_COMMAND = macdeployqt
+}
+
+isEmpty(TARGET_EXT) {
+    win32 {
+        TARGET_CUSTOM_EXT = .exe
+    }
+    macx {
+        TARGET_CUSTOM_EXT = .app
+    }
+} else {
+    TARGET_CUSTOM_EXT = $${TARGET_EXT}
 }
 
 # The following define makes your compiler warn you if you use any
@@ -32,8 +65,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-CONFIG += qt debug #release
-#CONFIG += qt release
+
 QT += widgets \
     sql \
     webenginewidgets\
@@ -58,6 +90,7 @@ HEADERS += \
     src/journey_tickets.h \
     src/journey_visits.h \
     src/journey_visits_edit.h \
+    src/lib/chartview.h \
     src/lib/db_access.h \
     src/lib/db_merge.h \
     src/lib/grid_widget.h \
@@ -76,6 +109,7 @@ HEADERS += \
     src/parse_csv.h \
     src/people_list.h \
     src/people_selector.h \
+    src/person_donations.h \
     src/person_edit.h \
     src/person_groups.h \
     src/person_relations.h \
@@ -107,6 +141,7 @@ SOURCES += \
     src/journey_tickets.cpp \
     src/journey_visits.cpp \
     src/journey_visits_edit.cpp \
+    src/lib/chartview.cpp \
     src/lib/db_access.cpp \
     src/lib/db_merge.cpp \
     src/lib/grid_widget.cpp \
@@ -122,6 +157,7 @@ SOURCES += \
     src/parse_csv.cpp \
     src/people_list.cpp \
     src/people_selector.cpp \
+    src/person_donations.cpp \
     src/person_edit.cpp \
     src/person_groups.cpp \
     src/person_relations.cpp \

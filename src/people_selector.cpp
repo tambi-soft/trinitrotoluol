@@ -9,7 +9,8 @@ PeopleSelector::PeopleSelector(DbAdapter *db, QWidget *parent)
     this->db = db;
     
     setLayout(this->layout);
-    
+    this->layout->addWidget(this->label_description);
+    this->label_description->hide();
     this->layout->addWidget(filter_name);
     this->filter_name->setPlaceholderText("filter for name");
     connect(this->filter_name, &QLineEdit::textChanged, this, &PeopleSelector::filterChanged);
@@ -17,9 +18,14 @@ PeopleSelector::PeopleSelector(DbAdapter *db, QWidget *parent)
     drawData();
 }
 
+void PeopleSelector::setDescription(QString description)
+{
+    this->label_description->setText(description);
+    this->label_description->show();
+}
+
 void PeopleSelector::drawData()
 {
-    
     QVBoxLayout *scroll_layout = new QVBoxLayout;
     this->scroll_area = new QScrollArea;
     QWidget *scroll_widget = new QWidget;

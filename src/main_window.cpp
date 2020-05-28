@@ -5,8 +5,6 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
     : QMainWindow(parent)
     , tab_widget (new QTabWidget)
 {
-    resize(1080, 1080);
-    
     this->config = new Config();
     this->db = new DbAdapter(this->config);
     
@@ -16,7 +14,7 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
     setMenuBar(this->menu_bar);
     //connect(this->menu_bar, &MenuBar::signalDonations, this, &QTNTMainWindow::addDonationsListTab);
     connect(this->menu_bar, &MenuBar::signalDonations, this, &QTNTMainWindow::addDonationsTab);
-    connect(this->menu_bar, &MenuBar::signalImportDonations, this, &QTNTMainWindow::addDonationsImportTab);
+    connect(this->menu_bar, &MenuBar::signalImportDonationsTntWareCSV, this, &QTNTMainWindow::addDonationsImportTntWareCSVTab);
     connect(this->menu_bar, &MenuBar::signalExport, this, &QTNTMainWindow::addExportTab);
     connect(this->menu_bar, &MenuBar::signalMergeDatabase, this, &QTNTMainWindow::addMergeDatabaseTab);
     connect(this->menu_bar, &MenuBar::signalMailList, this, &QTNTMainWindow::addMailListTab);
@@ -39,6 +37,28 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
     //addMailListTab();
     
     deactivateCloseButtons();
+    
+    calculateWindowSize();
+}
+
+void QTNTMainWindow::calculateWindowSize()
+{
+    int height_ = 1080;
+    int width_ = 1080;
+    
+    QScreen* pScreen = QGuiApplication::screenAt(this->mapToGlobal({this->width()/2,0}));
+    QRect rec = pScreen->availableGeometry();
+    if  (rec.height() < height_)
+    {
+        height_ = rec.height();
+    }
+    if (rec.width() < width_)
+    {
+        width_ = rec.width();
+    }
+    int title_bar_height = QApplication::style()->pixelMetric(QStyle::PM_TitleBarHeight);
+    
+    resize(width_,  height_ - title_bar_height);
 }
 
 void QTNTMainWindow::onTabMoved(int from, int to)
@@ -198,7 +218,7 @@ void QTNTMainWindow::addDonationsListTab()
 }
 */
 
-void QTNTMainWindow::addDonationsImportTab()
+void QTNTMainWindow::addDonationsImportTntWareCSVTab()
 {
     DonationsImport *don = new DonationsImport(this->db);
     QIcon *icon = new QIcon(QIcon::fromTheme("emblem-downloads"));

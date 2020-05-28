@@ -32,7 +32,7 @@ private:
     
 signals:
     void signalDonations();
-    void signalImportDonations();
+    void signalImportDonationsTntWareCSV();
     void signalExport();
     void signalMergeDatabase();
     void signalMailList();

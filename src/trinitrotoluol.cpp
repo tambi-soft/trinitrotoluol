@@ -22,5 +22,8 @@ int main(int argc, char *argv[])
     
     mainWin.setWindowIcon(QIcon(":logo"));
     mainWin.show();
+
+    //mainWin.resize(1080, 1080);
+
     return app.exec();
 }

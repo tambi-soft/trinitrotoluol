@@ -13,6 +13,7 @@ PersonRelations::PersonRelations(DbAdapter *db, qlonglong rowid, GridWidget *par
     
     QPushButton *button_help = new QPushButton;
     button_help->setIcon(QIcon::fromTheme("dialog-question"));
+    button_help->setToolTip("help");
     button_help->setFixedWidth(25);
     connect(button_help, &QPushButton::clicked, this, []{ new HelpMessage(":help_relations"); });
     
