@@ -17,7 +17,9 @@ class FirstRun : public QDialog
 {
     Q_OBJECT
 public:
-    explicit FirstRun(QDialog *parent = nullptr);
+    explicit FirstRun(QString message, QDialog *parent = nullptr);
+    
+    void setMessage(QString message);
     
 private:
     void emitDatabaseSelected(QString db_path);
@@ -28,12 +30,17 @@ signals:
 
 
 #include <QFileDialog>
+#include <QLabel>
 
 class SelectDatabase : public QWidget
 {
     Q_OBJECT
 public:
     explicit SelectDatabase(QWidget *parent = nullptr);
+    
+public:
+    QLabel *label_message = new QLabel();
+    void setMessage(QString message);
     
 private:
     

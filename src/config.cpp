@@ -29,7 +29,15 @@ Config::Config(QObject *parent) : QObject(parent)
     this->settings = new QSettings(config_file->fileName(), QSettings::IniFormat);
     if (! config_file->exists())
     {
-        FirstRun *run = new FirstRun();
+        FirstRun *run = new FirstRun("");
+        connect(run, &FirstRun::databasePathSelected, this, &Config::setDbPath);
+        run->exec();
+    }
+    QString db_path = this->settings->value("tnt/db_path").toString();
+    QFile *database_file = new QFile(db_path);
+    if (! database_file->exists())
+    {
+        FirstRun *run = new FirstRun("The File \""+db_path+"\" could not be found. Please select a valid database file!");
         connect(run, &FirstRun::databasePathSelected, this, &Config::setDbPath);
         run->exec();
     }
@@ -50,7 +58,7 @@ void Config::initializeWithDefaultValues(QDir *config_dir)
 QString Config::getDbPath()
 {
     QString result = this->settings->value("tnt/db_path").toString();
-    //qDebug() << result;
+    
     return result;
 }
 

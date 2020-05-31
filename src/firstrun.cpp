@@ -1,8 +1,9 @@
 #include "firstrun.h"
 
-FirstRun::FirstRun(QDialog *parent) : QDialog(parent)
+FirstRun::FirstRun(QString message, QDialog *parent) : QDialog(parent)
 {
     SelectDatabase *select_database = new SelectDatabase;
+    select_database->setMessage(message);
     connect(select_database, &SelectDatabase::databasePathSelected, this, &FirstRun::emitDatabaseSelected);
     QWidget *setup_name = new SetupName;
     
@@ -24,7 +25,7 @@ void FirstRun::emitDatabaseSelected(QString db_path)
 
 SelectDatabase::SelectDatabase(QWidget *parent) : QWidget(parent)
 {
-    setLayout(new QHBoxLayout);
+    setLayout(new QVBoxLayout);
     
     QPushButton *button_select_db = new QPushButton("select existing Database");
     connect(button_select_db, &QPushButton::clicked, this, [this]{ showFileSelectDialog(""); });
@@ -32,8 +33,14 @@ SelectDatabase::SelectDatabase(QWidget *parent) : QWidget(parent)
     QPushButton *button_create_db = new QPushButton("create new Database");
     connect(button_create_db, &QPushButton::clicked, this, [this]{ showFileSelectDialog("trinitrotoluol.sqlite"); });
     
+    layout()->addWidget(this->label_message);
     layout()->addWidget(button_select_db);
     layout()->addWidget(button_create_db);
+}
+
+void SelectDatabase::setMessage(QString message)
+{
+    this->label_message->setText(message);
 }
 
 void SelectDatabase::showFileSelectDialog(QString filename)
