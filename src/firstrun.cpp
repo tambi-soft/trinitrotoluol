@@ -28,10 +28,10 @@ SelectDatabase::SelectDatabase(QWidget *parent) : QWidget(parent)
     setLayout(new QVBoxLayout);
     
     QPushButton *button_select_db = new QPushButton("select existing Database");
-    connect(button_select_db, &QPushButton::clicked, this, [this]{ showFileSelectDialog(""); });
+    connect(button_select_db, &QPushButton::clicked, this, [this]{ selectExistingFileDialog(); });
     
     QPushButton *button_create_db = new QPushButton("create new Database");
-    connect(button_create_db, &QPushButton::clicked, this, [this]{ showFileSelectDialog("trinitrotoluol.sqlite"); });
+    connect(button_create_db, &QPushButton::clicked, this, [this]{ selectNewFileDialog(); });
     
     layout()->addWidget(this->label_message);
     layout()->addWidget(button_select_db);
@@ -43,12 +43,26 @@ void SelectDatabase::setMessage(QString message)
     this->label_message->setText(message);
 }
 
-void SelectDatabase::showFileSelectDialog(QString filename)
+void SelectDatabase::selectNewFileDialog()
 {
-    /* We use this for opening a new or existing database */
     QString dir_new = QFileDialog::getSaveFileName(this,
                                                    "Select Database",
-                                                   QDir::homePath() + "/" + filename,
+                                                   QDir::homePath() + "/" + "trinitrotoluol.sqlite",
+                                                   "",
+                                                   new QString());
+    
+    // if the user hits "cancel", we have an empty string here
+    if (!dir_new.isEmpty() || !dir_new.isNull())
+    {
+        emit this->databasePathSelected(dir_new);
+    }
+}
+
+void SelectDatabase::selectExistingFileDialog()
+{
+    QString dir_new = QFileDialog::getSaveFileName(this,
+                                                   "Select Database",
+                                                   QDir::homePath(),
                                                    "",
                                                    new QString(),
                                                    QFileDialog::DontConfirmOverwrite);

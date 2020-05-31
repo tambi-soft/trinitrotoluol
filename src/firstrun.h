@@ -48,7 +48,8 @@ signals:
     void databasePathSelected(QString db_path);
     
 public slots:
-    void showFileSelectDialog(QString filename);
+    void selectExistingFileDialog();
+    void selectNewFileDialog();
     
 };
 
