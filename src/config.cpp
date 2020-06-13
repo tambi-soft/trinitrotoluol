@@ -41,6 +41,12 @@ Config::Config(QObject *parent) : QObject(parent)
         connect(run, &FirstRun::databasePathSelected, this, &Config::setDbPath);
         run->exec();
     }
+    if (! database_file->exists())
+    {
+        QCoreApplication::quit();
+        qApp->exit();
+        QApplication::closeAllWindows();
+    }
     
     //initializeWithDefaultValues(config_dir);
 }

@@ -5,7 +5,7 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
     : QMainWindow(parent)
     , tab_widget (new QTabWidget)
 {
-    this->config = new Config();
+    this->config = new Config(this);
     this->db = new DbAdapter(this->config);
     
     connect(this->tab_widget, &QTabWidget::tabCloseRequested, this, &QTNTMainWindow::closeTab);
@@ -43,10 +43,15 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
 
 void QTNTMainWindow::calculateWindowSize()
 {
+    /*
     int height_ = 1080;
     int width_ = 1080;
     
-    QScreen* pScreen = QGuiApplication::screenAt(this->mapToGlobal({this->width()/2,0}));
+    qDebug() << QGuiApplication::screens();
+    qDebug() << QGuiApplication::screenAt({0, 0});
+    //qDebug() << "b " << this->mapToGlobal({this->width(), 0});
+    qDebug() << QGuiApplication::screenAt(this->mapToGlobal({this->width()/2, 0}));
+    QScreen* pScreen = QGuiApplication::screenAt(this->mapToGlobal({this->width()/2, 0}));
     QRect rec = pScreen->availableGeometry();
     if  (rec.height() < height_)
     {
@@ -59,6 +64,9 @@ void QTNTMainWindow::calculateWindowSize()
     int title_bar_height = QApplication::style()->pixelMetric(QStyle::PM_TitleBarHeight);
     
     resize(width_,  height_ - title_bar_height);
+    */
+    
+    resize(1080, 1080);
 }
 
 void QTNTMainWindow::onTabMoved(int from, int to)

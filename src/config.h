@@ -8,6 +8,8 @@
 #include <QSysInfo>
 #include <QSettings>
 #include <QSize>
+#include <QCoreApplication>
+#include <QApplication>
 
 #include <QDebug>
 
