@@ -35,6 +35,7 @@ signals:
     void signalImportDonationsTntWareCSV();
     void signalExport();
     void signalMergeDatabase();
+    void signalUserManagement();
     void signalMailList();
     void signalSettings();
     void signalSQLEditor();

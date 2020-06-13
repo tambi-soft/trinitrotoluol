@@ -18,8 +18,14 @@ void MenuBar::addFileMenu()
     QAction *exportDonationsAction = new QAction(QIcon::fromTheme("document-save-as"), "&Export");
     connect(exportDonationsAction, &QAction::triggered, this, &MenuBar::signalExport);
     
+    QAction *importTNTConnect = new QAction(QIcon::fromTheme("document-save-as"), "Import from TNTConnect");
+    
     //QAction *mergeDatabaseAction = new QAction(QIcon::fromTheme("emblem-downloads"), "Merge from other Database");
     //connect(mergeDatabaseAction, &QAction::triggered, this, &MenuBar::signalMergeDatabase);
+    
+    QAction *userManage = new QAction(QIcon::fromTheme("document-save-as"), "Manage Users");
+    connect(userManage, &QAction::triggered, this, &MenuBar::signalUserManagement);
+    
     
     QAction *exitAction = new QAction(QIcon::fromTheme("application-exit"), "&Exit");
     exitAction->setShortcut(QKeySequence::fromString("Ctrl+Q"));
@@ -29,6 +35,10 @@ void MenuBar::addFileMenu()
     QMenu *menu = addMenu("&File");
     menu->addAction(importDonationsTntWareCSVAction);
     menu->addAction(exportDonationsAction);
+    menu->addSeparator();
+    menu->addAction(importTNTConnect);
+    menu->addSeparator();
+    menu->addAction(userManage);
     menu->addSeparator();
     //menu->addAction(mergeDatabaseAction);
     menu->addAction(exitAction);

@@ -11,9 +11,12 @@
 #include <QCoreApplication>
 #include <QApplication>
 
+#include <QDialog>
+
 #include <QDebug>
 
 #include "firstrun.h"
+#include "user_select.h"
 
 class Config : public QObject
 {
@@ -21,13 +24,24 @@ class Config : public QObject
 public:
     explicit Config(QObject *parent = nullptr);
     
+    void showUsernManagementDialog();
+    
     QString getDbPath();
     void setDbPath(QString path);
     
 private:
     QSettings *settings;
+    QString user_name_active;
     
+    UserSelect *user_select;
+    QDialog *user_select_dialog;
+    
+    void openConfigFile();
     void initializeWithDefaultValues(QDir *config_dir);
+    
+    void userNameSelected(QString user_name);
+    void newUserAdded(QString user_name);
+    void userDeleted(QString user_name);
     
 signals:
     

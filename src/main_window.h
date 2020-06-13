@@ -78,6 +78,7 @@ private slots:
     void addDonationsImportTntWareCSVTab();
     void addExportTab();
     void addMergeDatabaseTab();
+    void showUsernManagementDialog();
     void addMailListTab();
     void addMailEditTab(qlonglong rowid, QString name);
     void addMailSendTab(qlonglong rowid, QString number);

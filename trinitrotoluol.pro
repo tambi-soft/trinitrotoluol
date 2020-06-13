@@ -121,7 +121,8 @@ HEADERS += \
     src/sqlite_sync.h \
     src/stats.h \
     src/tnt_adapter.h \
-    src/help_about_widget.h
+    src/help_about_widget.h \
+    src/user_select.h
     
 SOURCES += \
     src/combo_currencies.cpp \
@@ -173,7 +174,8 @@ SOURCES += \
     src/main_window.cpp \
     src/config.cpp \
     src/db_adapter.cpp \
-    src/help_about_widget.cpp
+    src/help_about_widget.cpp \
+    src/user_select.cpp
 
 RESOURCES += \
     resources.qrc
