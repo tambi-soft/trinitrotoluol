@@ -21,12 +21,16 @@ PeopleList::PeopleList(DbAdapter *db, QWidget *parent)
     
     this->check_todo->setTristate(true);
     this->check_todo->setCheckState(Qt::PartiallyChecked);
+    this->check_todo->setToolTip("Shows all People Who has set the <i>ToDo</i>-Flag, none, or both");
     this->check_waiting->setTristate(true);
     this->check_waiting->setCheckState(Qt::PartiallyChecked);
+    this->check_waiting->setToolTip("Shows all People Who has set the <i>Waiting</i>-Flag, none, or both");
     this->check_donating->setTristate(true);
     this->check_donating->setCheckState(Qt::PartiallyChecked);
+    this->check_donating->setToolTip("Shows all People Who has ever donated, not yet donated, or both");
     this->check_deactivated->setTristate(true);
     this->check_deactivated->setCheckState(Qt::Unchecked);
+    this->check_deactivated->setToolTip("Shows all People Who are deactivated, activaded, or both");
     this->check_mail->setTristate(true);
     this->check_mail->setCheckState(Qt::PartiallyChecked);
     connect(this->check_todo, &QCheckBox::stateChanged, this, &PeopleList::onFilterChanged);
