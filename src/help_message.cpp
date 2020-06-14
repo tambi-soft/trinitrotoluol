@@ -3,8 +3,10 @@
 HelpMessage::HelpMessage(QString filename, QDialog *parent) : QDialog(parent)
 {
     //320 500
-    setMinimumWidth(320);
+    setMinimumWidth(500);
     setMinimumHeight(500);
+    
+    setWindowTitle("trinitrotoluol - help");
     
     QVBoxLayout *layout = new QVBoxLayout;
     setLayout(layout);

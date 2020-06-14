@@ -27,6 +27,9 @@ Config::Config(QObject *parent) : QObject(parent)
     
     config_file->setFileName(config_dir->absolutePath() + "/config.ini");
     this->settings = new QSettings(config_file->fileName(), QSettings::IniFormat);
+    
+    openConfigFile();
+    
     if (! config_file->exists())
     {
         FirstRun *run = new FirstRun("");
@@ -34,7 +37,7 @@ Config::Config(QObject *parent) : QObject(parent)
         run->exec();
     }
     
-    openConfigFile();
+    //openConfigFile();
 }
 
 void Config::openConfigFile()

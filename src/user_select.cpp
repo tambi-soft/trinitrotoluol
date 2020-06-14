@@ -2,10 +2,19 @@
 
 UserSelect::UserSelect(GridWidget *parent) : GridWidget(parent)
 {
+    QHBoxLayout *button_layout = new QHBoxLayout;
+    
+    QPushButton *button_help = new QPushButton();
+    button_help->setIcon(QIcon::fromTheme("dialog-question"));
+    connect(button_help, &QPushButton::clicked, this, []{ new HelpMessage(":help_users"); });
+    
     QPushButton *button_add_new = new QPushButton("Add New User");
     connect(button_add_new, &QPushButton::clicked, this, &UserSelect::onAddNewUser);
     
-    this->layout->insertWidget(0, new QLabel("Please select or add your Identity!"));
+    button_layout->addWidget(new QLabel("Please select or add your Identity!"));
+    button_layout->addWidget(button_help);
+    
+    this->layout->insertLayout(0, button_layout);
     this->layout->insertWidget(100, button_add_new);
 }
 

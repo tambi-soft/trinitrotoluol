@@ -10,10 +10,12 @@
 #include <QRadioButton>
 #include <QDialog>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QLineEdit>
 #include <QMessageBox>
 
 #include "lib/grid_widget.h"
+#include "help_message.h"
 
 class UserSelect : public GridWidget
 {
