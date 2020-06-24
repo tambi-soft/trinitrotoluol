@@ -22,7 +22,11 @@ public:
     void setMessage(QString message);
     
 private:
-    void emitDatabaseSelected(QString db_path);
+    QMap<QString,int> layers;
+    
+    QStackedLayout *stacked_layout;
+    
+    void onDatabaseSelected(QString db_path);
 signals:
     void databasePathSelected(QString db_path);
 };
@@ -60,6 +64,20 @@ class SetupName : public QWidget
     Q_OBJECT
 public:
     explicit SetupName(QWidget *parent = nullptr);
+    
+signals:
+    
+};
+
+
+
+#include "lib/growing_text_edit.h"
+
+class SetupCurrency : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit SetupCurrency(QWidget *parent = nullptr);
     
 signals:
     

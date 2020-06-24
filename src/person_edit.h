@@ -47,6 +47,13 @@ signals:
 
 
 
+
+
+#include <QWidgetItem>
+
+#include "combo_vcard_prop.h"
+#include "line_edit_vcard.h"
+
 class PersonEdit : public QWidget
 {
     Q_OBJECT
@@ -91,8 +98,12 @@ private:
     PersonRelations *relations;
     PersonGroups *groups;
     
+    ComboVCardProp *combo_new_vcard_prop = new ComboVCardProp;
+    
 private slots:
     void onInsertAgreementDateButton();
+    void onInsertVCardLineEdit(QString vcard_item_name);
+    void onDeleteVCardLineEdit(QLabel *label, LineEditVCard *vcard, QPushButton *button);
     void saveDataWithInt(int /* param just for compat */);
     void saveData();
     

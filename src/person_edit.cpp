@@ -124,6 +124,16 @@ void PersonEdit::drawGUI()
     this->groups = new PersonGroups(this->db, this->rowid);
     this->grid->addWidget(this->groups, 16, 1, 1, 3);
     
+    //this->grid->addWidget(new LineEditVCard(this->rowid, this->db, "ADR"), 17, 1, 1, 3);
+    
+    // =========================
+    // 100 - 1000: Area for VCard-LineEdits
+    // =========================
+    
+    this->grid->addWidget(this->combo_new_vcard_prop, 10000, 1, 1, 3); // row 10000 to keep this always at the bottom
+    //connect(this->combo_new_vcard_prop, QOverload<int>::of(&ComboVCardProp::currentIndexChanged), &PersonEdit::onInsertVCardLineEdit);
+    connect(this->combo_new_vcard_prop, &ComboVCardProp::vcardItemSelectedSignal, this, &PersonEdit::onInsertVCardLineEdit);
+    
     this->grid->addWidget(new QLabel("ToDo"), 0, 0);
     this->grid->addWidget(new QLabel("Waiting"), 1, 0);
     this->grid->addWidget(new QLabel("TntWare-Number"), 2, 0);
@@ -140,6 +150,8 @@ void PersonEdit::drawGUI()
     this->grid->addWidget(new QLabel("Notes"), 14, 0);
     this->grid->addWidget(new QLabel("Relations"), 15, 0);
     this->grid->addWidget(new QLabel("Groups"), 16, 0);
+    
+    this->grid->addWidget(new QLabel("Add New Property"), 10000, 0); // row 10000 to keep this always at the bottom
     
     loadData();
     
@@ -158,7 +170,7 @@ void PersonEdit::drawGUI()
     
     //connect(combo_group, qOverload<int>(&QComboBox::currentIndexChanged), this, &PersonEdit::saveDataWithInt);
     connect(edit_notes, &QTextEdit::textChanged, this, &PersonEdit::saveData);
-                               
+    
     //this->grid->setRowStretch(14, 100);
 }
 
@@ -243,6 +255,53 @@ void PersonEdit::onInsertAgreementDateButton()
             this->edit_agreement->setText(current_date);
         }
     }
+}
+
+void PersonEdit::onInsertVCardLineEdit(QString vcard_item_name)
+{
+    int line_pos = 100; // start inserting new LineEdits at grid line 100 (and up to line 1000)
+    for (int i = 1000; i >= 100; --i) // we are counting backwards, because if an item is deleted, we want still insert the next one at the end
+    {
+        if (this->grid->itemAtPosition(i, 1) != nullptr)
+        {
+            line_pos = ++i;
+            break;
+        }
+    }
+    
+    // select the label name (i.e. its position) in english
+    ComboVCardProp *combo = new ComboVCardProp;
+    QStringList list_standard = combo->properties_standard;
+    int pos = 0;
+    for (int i = 0; i < list_standard.length(); i++)
+    {
+        if (list_standard.at(i) == vcard_item_name)
+        {
+            pos = i;
+        }
+    }
+    QStringList list_en = combo->properties_en;
+    QLabel *label = new QLabel(list_en.at(pos));
+    this->grid->addWidget(label, line_pos, 0);
+    
+    LineEditVCard *vcard_edit = new LineEditVCard(this->rowid, this->db, 0, vcard_item_name);
+    this->grid->addWidget(vcard_edit, line_pos, 1, 1, 2);
+    
+    QPushButton *button_delete_vcard = new QPushButton;
+    button_delete_vcard->setIcon(QIcon::fromTheme("edit-delete"));
+    button_delete_vcard->setToolTip("delete this entry");
+    connect(button_delete_vcard, &QPushButton::clicked, this, [this, label, vcard_edit, button_delete_vcard]{ onDeleteVCardLineEdit(label, vcard_edit, button_delete_vcard); });
+    this->grid->addWidget(button_delete_vcard, line_pos, 3);
+}
+void PersonEdit::onDeleteVCardLineEdit(QLabel *label, LineEditVCard *vcard, QPushButton *button)
+{
+    this->grid->removeWidget(label);
+    this->grid->removeWidget(vcard);
+    this->grid->removeWidget(button);
+    
+    label->deleteLater();
+    vcard->deleteLater();
+    button->deleteLater();
 }
 
 void PersonEdit::saveDataWithInt(int /*param just for compat*/)

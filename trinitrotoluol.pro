@@ -74,6 +74,7 @@ QT += widgets \
 # Input
 HEADERS += \
     src/combo_currencies.h \
+    src/combo_vcard_prop.h \
     src/currencies.h \
     src/donations.h \
     src/donations_import.h \
@@ -96,6 +97,7 @@ HEADERS += \
     src/lib/grid_widget.h \
     src/lib/groups_and_relations_edit.h \
     src/lib/growing_text_edit.h \
+    src/line_edit_vcard.h \
     src/mail_edit.h \
     src/mail_list.h \
     src/mail_message.h \
@@ -126,6 +128,7 @@ HEADERS += \
     
 SOURCES += \
     src/combo_currencies.cpp \
+    src/combo_vcard_prop.cpp \
     src/currencies.cpp \
     src/donations.cpp \
     src/donations_import.cpp \
@@ -148,6 +151,7 @@ SOURCES += \
     src/lib/grid_widget.cpp \
     src/lib/groups_and_relations_edit.cpp \
     src/lib/growing_text_edit.cpp \
+    src/line_edit_vcard.cpp \
     src/mail_edit.cpp \
     src/mail_list.cpp \
     src/mail_message.cpp \

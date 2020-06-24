@@ -2,23 +2,36 @@
 
 FirstRun::FirstRun(QString message, QDialog *parent) : QDialog(parent)
 {
+    //setWindowFlags(Qt::WindowTitleHint);
+    //setWindowFlags(Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint);
+    
     SelectDatabase *select_database = new SelectDatabase;
     select_database->setMessage(message);
-    connect(select_database, &SelectDatabase::databasePathSelected, this, &FirstRun::emitDatabaseSelected);
+    connect(select_database, &SelectDatabase::databasePathSelected, this, &FirstRun::onDatabaseSelected);
+    
     QWidget *setup_name = new SetupName;
     
-    QStackedLayout *stacked_layout = new QStackedLayout;
-    stacked_layout->addWidget(select_database);
-    stacked_layout->addWidget(setup_name);
+    QWidget *setup_currency = new SetupCurrency;
     
-    setLayout(stacked_layout);
+    this->stacked_layout = new QStackedLayout;
+    this->stacked_layout->addWidget(select_database);
+    this->stacked_layout->addWidget(setup_name);
+    this->stacked_layout->addWidget(setup_currency);
+    
+    this->layers["SELECT_DATABASE"] = 0;
+    this->layers["SETUP_NAME"] = 1;
+    this->layers["SETUP_CURRENCY"] = 2;
+    
+    setLayout(this->stacked_layout);
 }
 
-void FirstRun::emitDatabaseSelected(QString db_path)
+void FirstRun::onDatabaseSelected(QString db_path)
 {
     emit this->databasePathSelected(db_path);
     
-    close();
+    //close();
+    // switch to the next Widget
+    this->stacked_layout->setCurrentIndex(this->layers["SETUP_CURRENCY"]);
 }
 
 
@@ -78,5 +91,18 @@ void SelectDatabase::selectExistingFileDialog()
 
 SetupName::SetupName(QWidget *parent) : QWidget(parent)
 {
+    
+}
+
+
+
+SetupCurrency::SetupCurrency(QWidget *parent) : QWidget(parent)
+{
+    setLayout(new QVBoxLayout);
+    
+    //GrowingTextEdit *help = new GrowingTextEdit;
+    //help->loadTextFromAssets(":help_currencies");
+    //layout()->addWidget(help);
+    
     
 }
