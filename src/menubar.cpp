@@ -20,6 +20,10 @@ void MenuBar::addFileMenu()
     
     QAction *importTNTConnect = new QAction(QIcon::fromTheme("document-save-as"), "Import Users from TntConnect");
     
+    QAction *importPeopleFromVCard = new QAction("Import People from vCard (.vcf)");
+    
+    QAction *exportPeopleToVCard = new QAction("Export People to vCard (.vcf)");
+    
     //QAction *mergeDatabaseAction = new QAction(QIcon::fromTheme("emblem-downloads"), "Merge from other Database");
     //connect(mergeDatabaseAction, &QAction::triggered, this, &MenuBar::signalMergeDatabase);
     
@@ -35,6 +39,9 @@ void MenuBar::addFileMenu()
     QMenu *menu = addMenu("&File");
     menu->addAction(importDonationsTntWareCSVAction);
     menu->addAction(importTNTConnect);
+    menu->addSeparator();
+    menu->addAction(importPeopleFromVCard);
+    menu->addAction(exportPeopleToVCard);
     menu->addSeparator();
     //menu->addAction(exportDonationsAction);
     menu->addSeparator();
