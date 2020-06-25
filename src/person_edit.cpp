@@ -132,7 +132,7 @@ void PersonEdit::drawGUI()
     
     this->grid->addWidget(this->combo_new_vcard_prop, 10000, 1, 1, 3); // row 10000 to keep this always at the bottom
     //connect(this->combo_new_vcard_prop, QOverload<int>::of(&ComboVCardProp::currentIndexChanged), &PersonEdit::onInsertVCardLineEdit);
-    connect(this->combo_new_vcard_prop, &ComboVCardProp::vcardItemSelectedSignal, this, &PersonEdit::onInsertVCardLineEdit);
+    connect(this->combo_new_vcard_prop, &ComboVCardProp::vcardItemSelectedSignal, this, &PersonEdit::onNewVCardLineEdit);
     
     this->grid->addWidget(new QLabel("ToDo"), 0, 0);
     this->grid->addWidget(new QLabel("Waiting"), 1, 0);
@@ -217,7 +217,9 @@ void PersonEdit::loadData()
     
     for (int i = 0; i < data_vcf.length(); i++)
     {
-        
+        onInsertVCardLineEdit(data_vcf.at(i)["rowid"].toLongLong(),
+                data_vcf.at(i)["key"].toString(),
+                data_vcf.at(i)["value"].toString());
     }
 }
 
@@ -265,10 +267,14 @@ void PersonEdit::onInsertAgreementDateButton()
     }
 }
 
-void PersonEdit::onInsertVCardLineEdit(QString vcard_item_name)
+void PersonEdit::onNewVCardLineEdit(QString vcard_item_name)
 {
     qlonglong rowid_vcard = this->db->personNewVCardEntry(this->rowid, vcard_item_name);
     
+    onInsertVCardLineEdit(rowid_vcard, vcard_item_name, "");
+}
+void PersonEdit::onInsertVCardLineEdit(qlonglong rowid_vcard, QString vcard_item_name, QString text)
+{
     int line_pos = 100; // start inserting new LineEdits at grid line 100 (and up to line 1000)
     for (int i = 1000; i >= 100; --i) // we are counting backwards, because if an item is deleted, we want still insert the next one at the bottom
     {
@@ -295,6 +301,7 @@ void PersonEdit::onInsertVCardLineEdit(QString vcard_item_name)
     this->grid->addWidget(label, line_pos, 0);
     
     LineEditVCard *vcard_edit = new LineEditVCard(this->rowid, this->db, rowid_vcard, vcard_item_name);
+    vcard_edit->setText(text);
     this->grid->addWidget(vcard_edit, line_pos, 1, 1, 2);
     
     QPushButton *button_delete_vcard = new QPushButton;

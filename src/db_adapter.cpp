@@ -336,7 +336,7 @@ void DbAdapter::personUpdateVCardEntry(qlonglong rowid, QString value)
 QList<QMap<QString,QVariant>> DbAdapter::personSelectVCardEntry(qlonglong rowid_person)
 {
     QSqlQuery query(this->db);
-    query.prepare("SELECT key, value FROM people_vcard WHERE rowid_people=:rowid_people");
+    query.prepare("SELECT rowid, key, value FROM people_vcard WHERE rowid_people=:rowid_people");
     query.bindValue(":rowid_people", rowid_person);
     query.exec();
     
