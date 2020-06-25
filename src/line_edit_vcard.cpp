@@ -12,5 +12,5 @@ LineEditVCard::LineEditVCard(qlonglong user_id, DbAdapter *db, qlonglong vcard_i
 
 void LineEditVCard::saveText(QString text)
 {
-    qDebug() << "saving!" << text;
+    this->db->personUpdateVCardEntry(this->vcard_id, text);
 }

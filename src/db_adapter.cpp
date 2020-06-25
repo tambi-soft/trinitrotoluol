@@ -307,6 +307,33 @@ qlonglong DbAdapter::personRowidForTNTCode(QString code)
     return dbIteratorToMap(query)["rowid"].toLongLong();
 }
 
+qlonglong DbAdapter::personNewVCardEntry(qlonglong rowid_person, QString vcard_type)
+{
+    QSqlQuery query(this->db);
+    query.prepare("INSERT INTO people_vcard (rowid_people, key) VALUES (:rowid_people, :key)");
+    query.bindValue(":rowid_people", rowid_person);
+    query.bindValue(":key", vcard_type);
+    query.exec();
+
+    this->db.commit();
+    return query.lastInsertId().toLongLong();
+}
+void DbAdapter::personDeleteVCardEntry(qlonglong rowid)
+{
+    QSqlQuery query(this->db);
+    query.prepare("DELETE FROM people_vcard WHERE rowid=:rowid");
+    query.bindValue(":rowid", rowid);
+    query.exec();
+}
+void DbAdapter::personUpdateVCardEntry(qlonglong rowid, QString value)
+{
+    QSqlQuery query(this->db);
+    query.prepare("UPDATE people_vcard SET value=:value WHERE rowid=:rowid");
+    query.bindValue(":value", value);
+    query.bindValue(":rowid", rowid);
+    query.exec();
+}
+
 QList<QMap<QString,QVariant>> DbAdapter::selectAllPersonsFiltered(int todo, int waiting, int donating, int deactivated, int agreed_mail, QString group, QString name, QString mail)
 {
     QSqlQuery query(this->db);

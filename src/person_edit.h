@@ -103,7 +103,7 @@ private:
 private slots:
     void onInsertAgreementDateButton();
     void onInsertVCardLineEdit(QString vcard_item_name);
-    void onDeleteVCardLineEdit(QLabel *label, LineEditVCard *vcard, QPushButton *button);
+    void onDeleteVCardLineEdit(qlonglong rowid_vcard, QLabel *label, LineEditVCard *vcard, QPushButton *button);
     void saveDataWithInt(int /* param just for compat */);
     void saveData();
     

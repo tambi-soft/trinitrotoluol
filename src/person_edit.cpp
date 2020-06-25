@@ -259,8 +259,10 @@ void PersonEdit::onInsertAgreementDateButton()
 
 void PersonEdit::onInsertVCardLineEdit(QString vcard_item_name)
 {
+    qlonglong rowid_vcard = this->db->personNewVCardEntry(this->rowid, vcard_item_name);
+    
     int line_pos = 100; // start inserting new LineEdits at grid line 100 (and up to line 1000)
-    for (int i = 1000; i >= 100; --i) // we are counting backwards, because if an item is deleted, we want still insert the next one at the end
+    for (int i = 1000; i >= 100; --i) // we are counting backwards, because if an item is deleted, we want still insert the next one at the bottom
     {
         if (this->grid->itemAtPosition(i, 1) != nullptr)
         {
@@ -284,17 +286,19 @@ void PersonEdit::onInsertVCardLineEdit(QString vcard_item_name)
     QLabel *label = new QLabel(list_en.at(pos));
     this->grid->addWidget(label, line_pos, 0);
     
-    LineEditVCard *vcard_edit = new LineEditVCard(this->rowid, this->db, 0, vcard_item_name);
+    LineEditVCard *vcard_edit = new LineEditVCard(this->rowid, this->db, rowid_vcard, vcard_item_name);
     this->grid->addWidget(vcard_edit, line_pos, 1, 1, 2);
     
     QPushButton *button_delete_vcard = new QPushButton;
     button_delete_vcard->setIcon(QIcon::fromTheme("edit-delete"));
     button_delete_vcard->setToolTip("delete this entry");
-    connect(button_delete_vcard, &QPushButton::clicked, this, [this, label, vcard_edit, button_delete_vcard]{ onDeleteVCardLineEdit(label, vcard_edit, button_delete_vcard); });
+    connect(button_delete_vcard, &QPushButton::clicked, this, [this, rowid_vcard, label, vcard_edit, button_delete_vcard]{ onDeleteVCardLineEdit(rowid_vcard, label, vcard_edit, button_delete_vcard); });
     this->grid->addWidget(button_delete_vcard, line_pos, 3);
 }
-void PersonEdit::onDeleteVCardLineEdit(QLabel *label, LineEditVCard *vcard, QPushButton *button)
+void PersonEdit::onDeleteVCardLineEdit(qlonglong rowid_vcard, QLabel *label, LineEditVCard *vcard, QPushButton *button)
 {
+    this->db->personDeleteVCardEntry(rowid_vcard);
+    
     this->grid->removeWidget(label);
     this->grid->removeWidget(vcard);
     this->grid->removeWidget(button);
