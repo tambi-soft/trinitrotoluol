@@ -333,6 +333,15 @@ void DbAdapter::personUpdateVCardEntry(qlonglong rowid, QString value)
     query.bindValue(":rowid", rowid);
     query.exec();
 }
+QList<QMap<QString,QVariant>> DbAdapter::personSelectVCardEntry(qlonglong rowid_person)
+{
+    QSqlQuery query(this->db);
+    query.prepare("SELECT key, value FROM people_vcard WHERE rowid_people=:rowid_people");
+    query.bindValue(":rowid_people", rowid_person);
+    query.exec();
+    
+    return dbIteratorToMapList(query);
+}
 
 QList<QMap<QString,QVariant>> DbAdapter::selectAllPersonsFiltered(int todo, int waiting, int donating, int deactivated, int agreed_mail, QString group, QString name, QString mail)
 {

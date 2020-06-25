@@ -211,6 +211,14 @@ void PersonEdit::loadData()
     this->edit_spouse->setText(person["spouse_name"].toString());
     
     this->edit_notes->setText(person["notes"].toString());
+    
+    
+    QList<QMap<QString,QVariant>> data_vcf = this->db->personSelectVCardEntry(this->rowid);
+    
+    for (int i = 0; i < data_vcf.length(); i++)
+    {
+        
+    }
 }
 
 QMap<QString,QVariant> PersonEdit::collectSaveData()

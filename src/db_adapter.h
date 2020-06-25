@@ -37,6 +37,7 @@ public:
     qlonglong personNewVCardEntry(qlonglong rowid_person, QString vcard_type);
     void personDeleteVCardEntry(qlonglong rowid);
     void personUpdateVCardEntry(qlonglong rowid, QString value);
+    QList<QMap<QString,QVariant>> personSelectVCardEntry(qlonglong rowid_person);
     //QList<QMap<QString, QVariant>> selectAllPersons();
     // "todo", "waiting", "donating" and "mail" are tristate: -1: show both, 0: show 0, 1: show = 1 (or with donating: > 0)
     QList<QMap<QString, QVariant>> selectAllPersonsFiltered(int todo, int waiting, int donating, int deactivated, int agreed_mail, QString group, QString name, QString mail);
