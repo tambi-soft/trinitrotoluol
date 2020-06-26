@@ -18,11 +18,13 @@ void MenuBar::addFileMenu()
     QAction *exportDonationsAction = new QAction(QIcon::fromTheme("document-save-as"), "&Export");
     connect(exportDonationsAction, &QAction::triggered, this, &MenuBar::signalExport);
     
-    QAction *importTNTConnect = new QAction(QIcon::fromTheme("document-save-as"), "Import Users from TntConnect");
+    QAction *importTNTConnect = new QAction(QIcon::fromTheme("document-save-as"), "Import People from TntConnect");
     
     QAction *importPeopleFromVCard = new QAction("Import People from vCard (.vcf)");
+    connect(importTNTConnect, &QAction::triggered, this, &MenuBar::signalImportVCard);
     
     QAction *exportPeopleToVCard = new QAction("Export People to vCard (.vcf)");
+    connect(exportPeopleToVCard, &QAction::triggered, this, &MenuBar::signalExportVCard);
     
     //QAction *mergeDatabaseAction = new QAction(QIcon::fromTheme("emblem-downloads"), "Merge from other Database");
     //connect(mergeDatabaseAction, &QAction::triggered, this, &MenuBar::signalMergeDatabase);

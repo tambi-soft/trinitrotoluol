@@ -34,6 +34,8 @@ signals:
     void signalDonations();
     void signalImportDonationsTntWareCSV();
     void signalExport();
+    void signalImportVCard();
+    void signalExportVCard();
     void signalMergeDatabase();
     void signalUserManagement();
     void signalMailList();
