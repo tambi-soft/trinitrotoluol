@@ -21,7 +21,7 @@ void MenuBar::addFileMenu()
     QAction *importTNTConnect = new QAction(QIcon::fromTheme("document-save-as"), "Import People from TntConnect");
     
     QAction *importPeopleFromVCard = new QAction("Import People from vCard (.vcf)");
-    connect(importTNTConnect, &QAction::triggered, this, &MenuBar::signalImportVCard);
+    connect(importPeopleFromVCard, &QAction::triggered, this, &MenuBar::signalImportVCard);
     
     QAction *exportPeopleToVCard = new QAction("Export People to vCard (.vcf)");
     connect(exportPeopleToVCard, &QAction::triggered, this, &MenuBar::signalExportVCard);

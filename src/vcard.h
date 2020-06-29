@@ -2,12 +2,37 @@
 #define VCARD_H
 
 #include <QObject>
+#include <QWidget>
 
-class vcard : public QObject
+class VCardExport : public QWidget
 {
     Q_OBJECT
 public:
-    explicit vcard(QObject *parent = nullptr);
+    explicit VCardExport(QWidget *parent = nullptr);
+    
+signals:
+    
+};
+
+
+
+class VCardImport : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit VCardImport(QWidget *parent = nullptr);
+    
+signals:
+    
+};
+
+
+
+class VCard : public QObject
+{
+    Q_OBJECT
+public:
+    explicit VCard(QObject *parent = nullptr);
     
 signals:
     

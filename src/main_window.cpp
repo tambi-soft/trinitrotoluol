@@ -136,12 +136,18 @@ void QTNTMainWindow::deactivateCloseButtons()
 
 void QTNTMainWindow::addVcardExportTab()
 {
+    VCardExport *vcard = new VCardExport();
     
+    createSingleTab("Export vCard", vcard);
+    activateNewTab();
 }
 
 void QTNTMainWindow::addVcardImportTab()
 {
+    VCardImport *vcard = new VCardImport();
     
+    createSingleTab("Import vCard", vcard);
+    activateNewTab();
 }
 
 void QTNTMainWindow::addJourneyListTab()

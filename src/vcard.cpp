@@ -1,6 +1,20 @@
 #include "vcard.h"
 
-vcard::vcard(QObject *parent) : QObject(parent)
+VCardExport::VCardExport(QWidget *parent) : QWidget(parent)
+{
+    
+}
+
+
+
+VCardImport::VCardImport(QWidget *parent) : QWidget(parent)
+{
+    
+}
+
+
+
+VCard::VCard(QObject *parent) : QObject(parent)
 {
     
 }
