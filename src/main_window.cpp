@@ -16,6 +16,8 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
     connect(this->menu_bar, &MenuBar::signalDonations, this, &QTNTMainWindow::addDonationsTab);
     connect(this->menu_bar, &MenuBar::signalImportDonationsTntWareCSV, this, &QTNTMainWindow::addDonationsImportTntWareCSVTab);
     connect(this->menu_bar, &MenuBar::signalExport, this, &QTNTMainWindow::addExportTab);
+    connect(this->menu_bar, &MenuBar::signalExportVCard, this, &QTNTMainWindow::addVcardExportTab);
+    connect(this->menu_bar, &MenuBar::signalImportVCard, this, &QTNTMainWindow::addVcardImportTab);
     connect(this->menu_bar, &MenuBar::signalMergeDatabase, this, &QTNTMainWindow::addMergeDatabaseTab);
     connect(this->menu_bar, &MenuBar::signalUserManagement, this, &QTNTMainWindow::showUsernManagementDialog);
     connect(this->menu_bar, &MenuBar::signalMailList, this, &QTNTMainWindow::addMailListTab);
@@ -130,6 +132,16 @@ void QTNTMainWindow::deactivateCloseButtons()
     QTabBar *tb = this->tab_widget->tabBar();
     tb->tabButton(0, QTabBar::RightSide)->hide();
     tb->tabButton(1, QTabBar::RightSide)->hide();
+}
+
+void QTNTMainWindow::addVcardExportTab()
+{
+    
+}
+
+void QTNTMainWindow::addVcardImportTab()
+{
+    
 }
 
 void QTNTMainWindow::addJourneyListTab()

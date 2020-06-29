@@ -31,6 +31,7 @@
 #include "donations_import.h"
 #include "merge_database_widget.h"
 #include "export.h"
+#include "vcard.h"
 
 class QTNTMainWindow : public QMainWindow
 {
@@ -60,6 +61,9 @@ private slots:
     void activateNewTab();
     void closeTab(int tab_id);
     void closeCurrentTab();
+    
+    void addVcardExportTab();
+    void addVcardImportTab();
     
     void addJourneyListTab();
     void addJourneyEditTab(qlonglong rowid, QString name);
