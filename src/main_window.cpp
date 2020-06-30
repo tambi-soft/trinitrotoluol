@@ -136,7 +136,7 @@ void QTNTMainWindow::deactivateCloseButtons()
 
 void QTNTMainWindow::addVcardExportTab()
 {
-    VCardExport *vcard = new VCardExport();
+    VCardExport *vcard = new VCardExport(this->db);
     
     createSingleTab("Export vCard", vcard);
     activateNewTab();
@@ -144,7 +144,7 @@ void QTNTMainWindow::addVcardExportTab()
 
 void QTNTMainWindow::addVcardImportTab()
 {
-    VCardImport *vcard = new VCardImport();
+    VCardImport *vcard = new VCardImport(this->db);
     
     createSingleTab("Import vCard", vcard);
     activateNewTab();

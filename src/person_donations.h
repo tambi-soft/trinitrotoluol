@@ -82,7 +82,7 @@ private slots:
 
 
 
-#import "combo_currencies.h"
+#include "combo_currencies.h"
 
 class PersonDonationsPromises : public QWidget
 {

@@ -3,12 +3,20 @@
 
 #include <QObject>
 #include <QWidget>
+#include <QFileDialog>
+
+#include "db_adapter.h"
 
 class VCardExport : public QWidget
 {
     Q_OBJECT
 public:
-    explicit VCardExport(QWidget *parent = nullptr);
+    explicit VCardExport(DbAdapter *db, QWidget *parent = nullptr);
+    
+    void selectNewFileDialog();
+    
+private:
+    DbAdapter *db;
     
 signals:
     
@@ -20,7 +28,10 @@ class VCardImport : public QWidget
 {
     Q_OBJECT
 public:
-    explicit VCardImport(QWidget *parent = nullptr);
+    explicit VCardImport(DbAdapter *db, QWidget *parent = nullptr);
+    
+private:
+    DbAdapter *db;
     
 signals:
     
@@ -32,7 +43,12 @@ class VCard : public QObject
 {
     Q_OBJECT
 public:
-    explicit VCard(QObject *parent = nullptr);
+    explicit VCard(DbAdapter *db, QObject *parent = nullptr);
+    
+    void exportVCF(QString filepath);
+
+private:
+    DbAdapter *db;
     
 signals:
     
