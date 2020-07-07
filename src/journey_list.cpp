@@ -74,8 +74,8 @@ void JourneyList::showJourneys()
         
         if (!date_already_inserted && (date_from_ <= date_now))
         {
-            this->grid->addWidget(new QLabel("<b><u>today</u></b>"), row, 2);
-            this->grid->addWidget(new QLabel("<b><u>"+date_now.toString()+"</b></u>"), row, 3, Qt::AlignRight);
+            this->grid->addWidget(new QLabel("<b><i>today</i></b>"), row, 2);
+            this->grid->addWidget(new QLabel("<b><i>"+date_now.toString()+"</i></b>"), row, 3, Qt::AlignRight);
             date_already_inserted = true;
             ++row;
         }
