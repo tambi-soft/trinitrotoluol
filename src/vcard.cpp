@@ -4,10 +4,15 @@ VCardExport::VCardExport(DbAdapter *db, QWidget *parent) : QWidget(parent)
 {
     this->db = db;
     
-    selectNewFileDialog();
+    setLayout(new QVBoxLayout);
+    layout()->setAlignment(Qt::AlignHCenter);
+    
+    QString filepath = selectNewFileDialog();
+    
+    layout()->addWidget(new QLabel("Exported to <b>" + filepath + "</b"));
 }
 
-void VCardExport::selectNewFileDialog()
+QString VCardExport::selectNewFileDialog()
 {
     QString dir_new = QFileDialog::getSaveFileName(this,
                                                    "Select Export File",
@@ -21,6 +26,8 @@ void VCardExport::selectNewFileDialog()
         VCard *vcard = new VCard(this->db);
         vcard->exportVCF(dir_new);
     }
+    
+    return dir_new;
 }
 
 
@@ -52,8 +59,6 @@ void VCard::exportVCF(QString filepath)
     {
         QMap<QString,QVariant> person = people.at(i);
         QList<QMap<QString,QVariant>> people_vcf = this->db->personSelectVCardExport(person["rowid"].toLongLong());
-        
-        
         
         QTextStream out(&file);
         out << "BEGIN:VCARD" << "\n" <<

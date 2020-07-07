@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QWidget>
 #include <QFileDialog>
+#include <QVBoxLayout>
+#include <QLabel>
 
 #include "db_adapter.h"
 
@@ -13,7 +15,7 @@ class VCardExport : public QWidget
 public:
     explicit VCardExport(DbAdapter *db, QWidget *parent = nullptr);
     
-    void selectNewFileDialog();
+    QString selectNewFileDialog();
     
 private:
     DbAdapter *db;
