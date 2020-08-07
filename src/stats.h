@@ -39,6 +39,9 @@ private:
     void addRemainingStats();
     void clearLayout(QLayout *layout);
     
+    int calculateAverageMoney();
+    int monthly_sum;
+    
     /* needed to be able to update these values while the lineedit is edited */
     QLineEdit *edit_money_needed;
     QLabel *label_need_remaining;

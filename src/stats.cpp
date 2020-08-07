@@ -45,20 +45,25 @@ void Stats::addMoneyStats()
     QGroupBox* group_money = new QGroupBox("Finances");
     
     QMap<QString,QVariant> money = this->db->selectMoneyStats();
-    int monthly_sum = money["monthly_sum"].toInt();
+    //int monthly_sum = money["monthly_sum"].toInt();
     int monthly_sum_promised = money["monthly_sum_promised"].toInt();
+    
+    int average_money = calculateAverageMoney();
     
     QGridLayout *grid_money = new QGridLayout;
     group_money->setLayout(grid_money);
     this->layout->addWidget(group_money);
     
-    grid_money->addWidget(new QLabel("<b>Monthly Transfers</b>"), 0, 0);
+    grid_money->addWidget(new QLabel("<b>Last Three Month (average)</b>"), 0, 0); //<b>Monthly Transfers</b>
     grid_money->addWidget(new QLabel("<b>Monthly Promised</b>"), 0, 1);
     grid_money->addWidget(new QLabel("<b>Monthly Sum</b>"), 0, 2);
     
-    grid_money->addWidget(new QLabel(QString::number(monthly_sum)), 1, 0);
+    //grid_money->addWidget(new QLabel(QString::number(monthly_sum)), 1, 0);
+    grid_money->addWidget(new QLabel(QString::number(average_money)), 1, 0);
     grid_money->addWidget(new QLabel(QString::number(monthly_sum_promised)), 1, 1);
-    grid_money->addWidget(new QLabel(QString::number(monthly_sum + monthly_sum_promised)), 1, 2);
+    //grid_money->addWidget(new QLabel(QString::number(monthly_sum + monthly_sum_promised)), 1, 2);
+    this->monthly_sum = average_money + monthly_sum_promised;
+    grid_money->addWidget(new QLabel(QString::number(this->monthly_sum)), 1, 2);
     
     // spacer
     grid_money->addWidget(new QLabel(""), 2, 0);
@@ -66,7 +71,7 @@ void Stats::addMoneyStats()
     grid_money->addWidget(new QLabel("<b>Minimum</b>"), 3, 0);
     grid_money->addWidget(new QLabel("<b>Maximum</b>"), 3, 1);
     grid_money->addWidget(new QLabel("<b>Average</b>"), 3, 2);
-    qDebug() << money;
+    //qDebug() << money;
     int donations_min = money["donations_min"].toInt();
     grid_money->addWidget(new QLabel(QString::number(donations_min)), 4, 0);
     
@@ -77,7 +82,7 @@ void Stats::addMoneyStats()
     grid_money->addWidget(new QLabel(QString::number(donations_average)), 4, 2);
     
     QString needed_money = this->db->selectSettings("money_target");
-    double current_percentage = (monthly_sum + monthly_sum_promised) / needed_money.toDouble() * 100;
+    double current_percentage = (this->monthly_sum) / needed_money.toDouble() * 100;
     
     // spacer
     grid_money->addWidget(new QLabel(), 5, 0);
@@ -88,6 +93,32 @@ void Stats::addMoneyStats()
     grid_money->addWidget(percentage, 7, 1);
     percentage->setToolTip("monthly_sum / needed_money * 100");
     
+}
+
+int Stats::calculateAverageMoney()
+{
+    QList<QMap<QString,QVariant>> donations_monthly = this->db->donationsByMonth();
+    int average_money = 0;
+    int month_amount = 0;
+    for (int i = 1; i < 10; i++)
+    {
+        QMap<QString,QVariant> value = donations_monthly.at(donations_monthly.length()-i);
+        
+        // the amount in the current month is probably not complete, so better skip the current month
+        if (QDate::currentDate().month() > QDate::fromString(value["year-month"].toString(), "yyyy-MM").month())
+        {
+            month_amount++;
+            average_money += value["amount"].toInt();
+        }
+        
+        if (month_amount >= 3)
+        {
+            average_money = average_money / month_amount;
+            break;
+        }
+    }
+    
+    return average_money;
 }
 
 void Stats::addRemainingStats()
@@ -134,18 +165,18 @@ void Stats::onMoneyTargetChanged(QString target)
 void Stats::onMoneyTargetCalculate()
 {
     QMap<QString,QVariant> money = this->db->selectMoneyStats();
-    int monthly_sum = money["monthly_sum"].toInt();
+    //int monthly_sum = money["monthly_sum"].toInt();
     int monthly_sum_promised = money["monthly_sum_promised"].toInt();
     
     QMap<QString,QVariant> data = this->db->selectPeopleStats();
     int dp = data["donation_partners"].toInt();
     int dpp = data["donation_partners_promised"].toInt();
     
-    this->label_need_remaining->setText(QString::number( this->edit_money_needed->text().toInt() - monthly_sum - monthly_sum_promised ));
+    this->label_need_remaining->setText(QString::number( this->edit_money_needed->text().toInt() - this->monthly_sum ));
     
     if (monthly_sum + monthly_sum_promised > 0)
     {
-        this->label_need_donors->setText(QString::number( ((dp + dpp) * this->edit_money_needed->text().toInt()) / (monthly_sum + monthly_sum_promised) ));
+        this->label_need_donors->setText(QString::number( ((dp + dpp) * this->edit_money_needed->text().toInt()) / (this->monthly_sum + monthly_sum_promised) ));
     }
 }
 

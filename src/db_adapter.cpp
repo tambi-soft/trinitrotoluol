@@ -161,7 +161,10 @@ void DbAdapter::initializeTables()
     QSqlQuery query_people_import_map("CREATE TABLE IF NOT EXISTS people_donations_map ("
                                       "tnt_name TEXT,"
                                       "rowid_people INTEGER)", this->db);
-
+    
+    QSqlQuery query_vcard_import("CREATE TABLE IF NOT EXISTS vcard_import_original ("
+                                 "rowid INTEGER PRIMARY KEY AUTOINCREMENT, rowid_people INTEGER, content TEXT)", this->db);
+    
     //qDebug() << this->db.lastError();
     //qDebug() << query_sent_mail.lastQuery();
 }
