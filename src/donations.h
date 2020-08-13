@@ -41,6 +41,10 @@ class DonationsChart : public QWidget
 public:
     explicit DonationsChart(DbAdapter *db, QWidget *parent = nullptr);
     
+protected:
+    void hideEvent(QHideEvent */**event**/);
+    void showEvent(QShowEvent */**event**/);
+    
 private:
     DbAdapter *db;
     
@@ -85,6 +89,10 @@ public:
     explicit DonationsMapEdit(DbAdapter *db, GridWidget *parent = nullptr);
     
     void showData();
+    
+protected:
+    void hideEvent(QHideEvent */**event**/);
+    void showEvent(QShowEvent */**event**/);
     
 private:
     DbAdapter *db;

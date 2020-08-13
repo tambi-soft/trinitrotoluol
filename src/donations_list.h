@@ -18,14 +18,18 @@ public:
     explicit DonationsList(DbAdapter *db, QWidget *parent = nullptr);
 
     void showData();
-    void refresh();
+    void recreateView();
+    void initGrid();
     
+protected:
+    void hideEvent(QHideEvent */**event**/);
+    void showEvent(QShowEvent */**event**/);
     
 private:
     DbAdapter *db;
     QGridLayout *layout = new QGridLayout;
     
-    QGridLayout *grid; // inner layout containing the qscrollarea
+    QGridLayout *grid = new QGridLayout;// inner layout containing the qscrollarea
     QScrollArea *scroll_area = new QScrollArea(this);
     QWidget *scroll_widget = nullptr;
     int scrollbar_pos;

@@ -190,6 +190,16 @@ void DonationsChart::onFullHover(QPointF pos, bool state)
     }
 }
 
+void DonationsChart::hideEvent(QHideEvent */**event**/)
+{
+    
+}
+
+void DonationsChart::showEvent(QShowEvent */**event**/)
+{
+    
+}
+
 
 
 
@@ -272,5 +282,15 @@ void DonationsMapEdit::onPersonSelected(qlonglong rowid, QString name)
     
     this->dialog_select_person->close();
     
+    showData();
+}
+
+void DonationsMapEdit::hideEvent(QHideEvent */**event**/)
+{
+    
+}
+
+void DonationsMapEdit::showEvent(QShowEvent */**event**/)
+{
     showData();
 }

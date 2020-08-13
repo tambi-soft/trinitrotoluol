@@ -29,7 +29,7 @@ void GridWidget::showData()
 
 void GridWidget::recreateView()
 {
-    if (this->scroll_widget == nullptr)
+    if (this->scroll_widget != nullptr)
     {
         this->scroll_widget->deleteLater();
     }
