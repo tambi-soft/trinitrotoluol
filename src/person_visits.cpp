@@ -44,7 +44,12 @@ void PersonVisits::showData()
         this->grid->addWidget(button_edit, i+1, 1);
         this->grid->addWidget(new QLabel(name), i+1, 2);
         this->grid->addWidget(new QLabel(visit["date"].toString()), i+1, 3);
-        this->grid->addWidget(new QLabel(visit["notes"].toString()), i+1, 4);
+        QString notes = visit["notes"].toString().replace("\n", " ").left(15);
+        if (visit["notes"].toString().length() > 15)
+        {
+            notes.append(" [...]");
+        }
+        this->grid->addWidget(new QLabel(notes), i+1, 4);
     }
 }
 
