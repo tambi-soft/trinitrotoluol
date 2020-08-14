@@ -24,6 +24,22 @@ signals:
 
 
 
+class DonationsChartContainer : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit DonationsChartContainer(DbAdapter *db, QWidget *parent = nullptr);
+    
+protected:
+    void hideEvent(QHideEvent */**event**/);
+    void showEvent(QShowEvent */**event**/);
+    
+private:
+    DbAdapter *db;
+    
+    QWidget *chart = nullptr;
+};
+
 #include <QtCharts>
 #include <QLineSeries>
 #include <QScatterSeries>
@@ -41,23 +57,22 @@ class DonationsChart : public QWidget
 public:
     explicit DonationsChart(DbAdapter *db, QWidget *parent = nullptr);
     
-protected:
-    void hideEvent(QHideEvent */**event**/);
-    void showEvent(QShowEvent */**event**/);
-    
 private:
     DbAdapter *db;
     
+    QWidget *container_widget = nullptr;
+    QLayout *container_layout = nullptr;
+    
     QChart *chart = new QChart;
-    QScatterSeries *scatter_monthly;
-    QScatterSeries *scatter_full;
+    QScatterSeries *scatter_monthly = nullptr;
+    QScatterSeries *scatter_full = nullptr;
     
     QList<QMap<QString,QVariant>> data_monthly;
     QList<QMap<QString,QVariant>> data_full;
     QString currency_code;
     
     QLabel *label_value = new QLabel;
-
+    
     void drawChart();
     
 protected:
