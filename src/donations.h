@@ -25,6 +25,11 @@ signals:
 
 
 
+
+
+// for reloading the chart, just delete this container and reinit it
+// this way is far easier and has lower risks for memory leaks and so on
+
 #include "donations_chart.h"
 
 class DonationsChartContainer : public QWidget
