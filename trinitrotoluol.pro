@@ -77,10 +77,12 @@ HEADERS += \
     src/combo_vcard_prop.h \
     src/currencies.h \
     src/donations.h \
+    src/donations_chart.h \
     src/donations_import.h \
     src/donations_import_matrix.h \
     src/donations_import_progress.h \
     src/donations_list.h \
+    src/donations_map_edit.h \
     src/expenses_list.h \
     src/export.h \
     src/firstrun.h \
@@ -132,10 +134,12 @@ SOURCES += \
     src/combo_vcard_prop.cpp \
     src/currencies.cpp \
     src/donations.cpp \
+    src/donations_chart.cpp \
     src/donations_import.cpp \
     src/donations_import_matrix.cpp \
     src/donations_import_progress.cpp \
     src/donations_list.cpp \
+    src/donations_map_edit.cpp \
     src/expenses_list.cpp \
     src/export.cpp \
     src/firstrun.cpp \
