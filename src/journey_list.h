@@ -20,8 +20,6 @@
 #include "db_adapter.h"
 #include "journey_edit.h"
 
-// https://sabre.io/dav/building-a-carddav-client/
-
 class JourneyList : public QWidget
 {
     Q_OBJECT

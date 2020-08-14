@@ -9,6 +9,8 @@
 
 #include "db_adapter.h"
 
+// https://sabre.io/dav/building-a-carddav-client/
+
 class VCardExport : public QWidget
 {
     Q_OBJECT

@@ -14,22 +14,12 @@ DonationsList::DonationsList(DbAdapter *db, QWidget *parent) : QWidget(parent)
     this->layout->addWidget(this->scroll_area, 1, 0, 1, 1);
     this->layout->addWidget(button_import, 2, 0);
     
-    showData();
+    //recreateView();
 }
-
 
 void DonationsList::showData()
 {
     setUpdatesEnabled(false);
-    
-    //recreateView();
-    
-    
-    this->grid = new QGridLayout(this);
-    this->scroll_widget = new QWidget(this);
-    this->scroll_widget->setLayout(this->grid);
-    this->scroll_area->setWidget(this->scroll_widget);
-    
     
     QList<QMap<QString,QVariant>> data_monthly = this->db->donationsByMonth();
     QMap<QString,QVariant> data_monthly_map;
@@ -78,13 +68,6 @@ void DonationsList::showData()
 
 void DonationsList::recreateView()
 {
-    /*
-    this->grid = new QGridLayout(this);
-    this->scroll_widget = new QWidget(this);
-    this->scroll_widget->setLayout(this->grid);
-    this->scroll_area->setWidget(this->scroll_widget);
-    */
-    
     if (this->scroll_widget != nullptr)
     {
         this->scroll_widget->deleteLater();
@@ -113,5 +96,5 @@ void DonationsList::hideEvent(QHideEvent */**event**/)
 
 void DonationsList::showEvent(QShowEvent */**event**/)
 {
-    showData();
+    recreateView();
 }
