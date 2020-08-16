@@ -43,6 +43,8 @@ signals:
 
 
 
+// https://tools.ietf.org/html/rfc6350
+
 class VCard : public QObject
 {
     Q_OBJECT
