@@ -43,21 +43,18 @@ private:
     
     void loadEmailParams();
     
-    //QLineEdit *edit_email_from_address;
-    //QLineEdit *edit_email_reply;
-    //QLineEdit *edit_email_server_address;
     QSpinBox *edit_email_port;
     QComboBox *combo_connection_security;
     QComboBox *combo_authentication_method;
-    //QLineEdit *edit_email_username;
-    //QLineEdit *edit_email_password;
-    //quint64 KEY = 95839583;
     
     
     
 private slots:
     void saveEmailParams();
     void savePort(int just_for_compatibility);
+    
+    void syncronizeCalDavNow();
+    void syncronizeCardDavNow();
 };
 
 

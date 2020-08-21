@@ -143,7 +143,9 @@ QWidget *SettingsWidget::addWebDavSettingsArea()
     edit_caldav_password->setPlaceholderText("Password for your CalDav-Server");
     layout_caldav->addWidget(edit_caldav_password, 4, 1);
     
-    
+    QPushButton *button_caldav_sync = new QPushButton("Synchronize Now");
+    connect(button_caldav_sync, &QPushButton::clicked, this, &SettingsWidget::syncronizeCalDavNow);
+    layout_caldav->addWidget(button_caldav_sync);
     
     
     QGroupBox *group_carddav = new QGroupBox("CardDav Settings");
@@ -175,6 +177,10 @@ QWidget *SettingsWidget::addWebDavSettingsArea()
     SettingsLineEdit *edit_carddav_password = new SettingsLineEdit(this->db, "carddav-password", QLineEdit::Password);
     edit_carddav_password->setPlaceholderText("Password for your CardDav-Server");
     layout_carddav->addWidget(edit_carddav_password, 4, 1);
+    
+    QPushButton *button_carddav_sync = new QPushButton("Synchronize Now");
+    connect(button_carddav_sync, &QPushButton::clicked, this, &SettingsWidget::syncronizeCardDavNow);
+    layout_carddav->addWidget(button_carddav_sync);
     
     layout->addStretch();
     
@@ -219,6 +225,16 @@ void SettingsWidget::loadEmailParams()
     this->edit_email_port->setValue(email_port);
     this->combo_connection_security->setCurrentText(email_security);
     this->combo_authentication_method->setCurrentText(email_auth);
+    
+}
+
+void SettingsWidget::syncronizeCalDavNow()
+{
+    
+}
+
+void SettingsWidget::syncronizeCardDavNow()
+{
     
 }
 
