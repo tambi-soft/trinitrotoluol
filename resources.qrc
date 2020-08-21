@@ -18,5 +18,7 @@
         <file alias="help_tntware_import">assets/help_html/tntware_import.html</file>
         <file alias="help_import_map">assets/help_html/import_map.html</file>
         <file alias="help_users">assets/help_html/users.html</file>
+        <file alias="help_caldav">assets/help_html/caldav.html</file>
+        <file alias="help_carddav">assets/help_html/carddav.html</file>
     </qresource>
 </RCC>

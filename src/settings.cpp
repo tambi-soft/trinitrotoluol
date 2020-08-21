@@ -9,106 +9,95 @@ SettingsWidget::SettingsWidget(Config *config, DbAdapter *db, QWidget *parent)
     
     setLayout(this->layout);
     
-    addGeneralSettingsArea();
-    addDatabasePathSettingsArea();
-    addEmailSettingsArea();
-    addWebDavSettingsArea();
+    QTabWidget *tab_widget = new QTabWidget;
+    this->layout->addWidget(tab_widget);
     
-    this->layout->addStretch();
+    tab_widget->addTab(addGeneralSettingsArea(), "General");
+    tab_widget->addTab(addEmailSettingsArea(), "Email");
+    tab_widget->addTab(addWebDavSettingsArea(), "CardDav/CalDav");
+    
+    
 }
 
-void SettingsWidget::addGeneralSettingsArea()
+QWidget* SettingsWidget::addGeneralSettingsArea()
 {
-    QGroupBox *group = new QGroupBox("General");
-    QVBoxLayout *layout = new QVBoxLayout;
-    group->setLayout(layout);
-    this->layout->addWidget(group);
+    QWidget *widget = new QWidget;
+    QGridLayout *layout = new QGridLayout;
+    widget->setLayout(layout);
     
     this->edit_name = new QLineEdit;
+    this->edit_name->setToolTip("Your Name (will be shown on bills / emails)");
     this->edit_name->setText(this->db->selectSettings("username"));
     connect(this->edit_name, &QLineEdit::textChanged, this, &SettingsWidget::saveGeneralParams);
     
-    layout->addWidget(new QLabel("Your Name (will be shown on bills / emails)"));
-    layout->addWidget(this->edit_name);
-}
-
-void SettingsWidget::addDatabasePathSettingsArea()
-{
-    QGroupBox *group = new QGroupBox("Path for the Database");
-    QVBoxLayout *layout_outer = new QVBoxLayout;
-    QHBoxLayout *layout = new QHBoxLayout();
+    layout->addWidget(new QLabel("Your Name"), 0, 0);
+    layout->addWidget(this->edit_name, 0, 1);
     
+    layout->addWidget(new QLabel("Database Path"), 1, 0);
     this->edit_path = new QLineEdit;
-    
-    layout->addWidget(this->edit_path);
-    
+    layout->addWidget(this->edit_path, 1, 1);
     edit_path->setText(this->config->getDbPath());
     
     QPushButton *button = new QPushButton("select Folder");
-    layout->addWidget(button);
+    layout->addWidget(button, 1, 2);
     connect(button, &QPushButton::clicked, this, &SettingsWidget::showFileSelectDialog);
     
-    QWidget *edit_and_button_widget = new QWidget;
-    layout->setMargin(0);
-    edit_and_button_widget->setLayout(layout);
-    
     QLabel *hint = new QLabel("<b>Hint:</b> You have to restart <i>trinitrotoluol</i> for a changed path to take effect!");
-    layout_outer->addWidget(edit_and_button_widget);
-    layout_outer->addWidget(hint);
+    layout->addWidget(hint, 2, 1);
     
-    group->setLayout(layout_outer);
-    this->layout->addWidget(group);
+    layout->setRowStretch(100, 100);
+    
+    return widget;
 }
 
-void SettingsWidget::addEmailSettingsArea()
+QWidget *SettingsWidget::addEmailSettingsArea()
 {
-    QGroupBox *group = new QGroupBox("Email Settings");
-    QVBoxLayout *layout = new QVBoxLayout;
-    group->setLayout(layout);
-    this->layout->addWidget(group);
+    QWidget *widget = new QWidget;
+    QGridLayout *layout = new QGridLayout;
+    widget->setLayout(layout);
     
-    layout->addWidget(new QLabel("From-Address"));
+    layout->addWidget(new QLabel("From-Address"), 0, 0);
     this->edit_email_from_address = new QLineEdit;
     this->edit_email_from_address->setPlaceholderText("more often than not, this has to be the same as the \"Username\"");
-    layout->addWidget(this->edit_email_from_address);
+    layout->addWidget(this->edit_email_from_address, 0, 1);
     
-    layout->addWidget(new QLabel("Reply-To"));
+    layout->addWidget(new QLabel("Reply-To"), 1, 0);
     this->edit_email_reply = new QLineEdit;
     this->edit_email_reply->setPlaceholderText("The Reply-To address. Leave empty for none");
-    layout->addWidget(this->edit_email_reply);
+    layout->addWidget(this->edit_email_reply, 1, 1);
     
-    layout->addWidget(new QLabel("SMTP Server Address"));
+    layout->addWidget(new QLabel("SMTP Server Address"), 2, 0);
     this->edit_email_server_address = new QLineEdit;
-    layout->addWidget(this->edit_email_server_address);
+    layout->addWidget(this->edit_email_server_address, 2, 1);
     
-    layout->addWidget(new QLabel("SMTP Port"));
+    layout->addWidget(new QLabel("SMTP Port"), 3, 0);
     this->edit_email_port = new QSpinBox;
     this->edit_email_port->setRange(1, 65535); // The port number is an unsigned 16-bit integer, so 65535
     this->edit_email_port->setValue(587);
-    layout->addWidget(this->edit_email_port);
+    layout->addWidget(this->edit_email_port, 3, 1);
     
-    layout->addWidget(new QLabel("Connection Security"));
+    layout->addWidget(new QLabel("Connection Security"), 4, 0);
     this->combo_connection_security = new QComboBox;
     QStringList connection_security;
     connection_security << "None" << "STARTTLS" << "SSL/TLS";
     this->combo_connection_security->addItems(connection_security);
-    layout->addWidget(this->combo_connection_security);
+    layout->addWidget(this->combo_connection_security, 4, 1);
     
-    layout->addWidget(new QLabel("Authentication Method"));
+    layout->addWidget(new QLabel("Authentication Method"), 5, 0);
     this->combo_authentication_method = new QComboBox;
     QStringList authentication_medhod;
     authentication_medhod << "No Authentication" << "Normal Password" << "Encrypted Password" << "Kerberos / GSSAPI" << "NTLM" << "OAuth2";
     this->combo_authentication_method->addItems(authentication_medhod);
-    layout->addWidget(this->combo_authentication_method);
+    layout->addWidget(this->combo_authentication_method, 5, 1);
     
-    layout->addWidget(new QLabel("Username"));
+    layout->addWidget(new QLabel("Username"), 6, 0);
     this->edit_email_username = new QLineEdit;
-    layout->addWidget(this->edit_email_username);
+    layout->addWidget(this->edit_email_username, 6, 1);
     
-    layout->addWidget(new QLabel("Password"));
+    layout->addWidget(new QLabel("Password"), 7, 0);
     this->edit_email_password = new QLineEdit;
     this->edit_email_password->setEchoMode(QLineEdit::Password);
-    layout->addWidget(this->edit_email_password);
+    layout->addWidget(this->edit_email_password, 7, 1);
     
     loadEmailParams();
     
@@ -125,57 +114,82 @@ void SettingsWidget::addEmailSettingsArea()
     
     connect(this->combo_connection_security, &QComboBox::currentTextChanged, this, &SettingsWidget::saveEmailParams);
     connect(this->combo_authentication_method, &QComboBox::currentTextChanged, this, &SettingsWidget::saveEmailParams);
+    
+    layout->setRowStretch(100, 100);
+    
+    return widget;
 }
 
-void SettingsWidget::addWebDavSettingsArea()
+QWidget *SettingsWidget::addWebDavSettingsArea()
 {
-    QGroupBox *group = new QGroupBox("CalDav / CardDav Settings");
+    QWidget *widget = new QWidget;
     QVBoxLayout *layout = new QVBoxLayout;
-    group->setLayout(layout);
-    this->layout->addWidget(group);
+    widget->setLayout(layout);
     
-    layout->addWidget(new QLabel("CalDav-Address"));
+    GrowingTextEdit *help_caldav = new GrowingTextEdit;
+    help_caldav->loadTextFromAssets(":help_caldav");
+    layout->addWidget(help_caldav);
+    
+    QGroupBox *group_caldav = new QGroupBox("CalDav Settings");
+    QGridLayout *layout_caldav = new QGridLayout;
+    group_caldav->setLayout(layout_caldav);
+    layout->addWidget(group_caldav);
+    
+    layout_caldav->addWidget(new QLabel("CalDav-Address"), 0, 0);
     this->edit_caldav_address = new SettingsLineEdit(this->db, "caldav-server", QLineEdit::Normal);
     this->edit_caldav_address->setPlaceholderText("URL to your CalDav-Server");
-    layout->addWidget(this->edit_caldav_address);
+    layout_caldav->addWidget(this->edit_caldav_address, 0, 1);
     
-    layout->addWidget(new QLabel("CalDav Update Interval [Minutes]"));
+    layout_caldav->addWidget(new QLabel("CalDav Update Interval [Minutes]"), 1, 0);
     this->edit_caldav_update_interval = new SettingsLineEdit(this->db, "caldav-update-interval", QLineEdit::Normal);
     this->edit_caldav_update_interval->setValidator(new QIntValidator(1, 1500));
-    this->edit_caldav_update_interval->setPlaceholderText("Update-Interval for the CalDav-Server in Minutes");
-    layout->addWidget(this->edit_caldav_update_interval);
+    this->edit_caldav_update_interval->setPlaceholderText("Default or Empty Value: every 5 Minutes");
+    layout_caldav->addWidget(this->edit_caldav_update_interval, 1, 1);
     
-    layout->addWidget(new QLabel("CalDav Username"));
+    layout_caldav->addWidget(new QLabel("CalDav Username"), 2, 0);
     this->edit_caldav_username = new SettingsLineEdit(this->db, "caldav-username", QLineEdit::Normal);
     this->edit_caldav_username->setPlaceholderText("Username for your CalDav-Server");
-    layout->addWidget(this->edit_caldav_username);
+    layout_caldav->addWidget(this->edit_caldav_username, 2, 1);
     
-    layout->addWidget(new QLabel("CalDav Password"));
+    layout_caldav->addWidget(new QLabel("CalDav Password"), 3, 0);
     this->edit_caldav_password = new SettingsLineEdit(this->db, "caldav-password", QLineEdit::Password);
     this->edit_caldav_password->setPlaceholderText("Password for your CalDav-Server");
-    layout->addWidget(this->edit_caldav_password);
+    layout_caldav->addWidget(this->edit_caldav_password, 3, 1);
     
     
-    layout->addWidget(new QLabel("CardDav-Address"));
+    GrowingTextEdit *help_carddav = new GrowingTextEdit;
+    help_carddav->loadTextFromAssets(":help_carddav");
+    layout->addWidget(help_carddav);
+    
+    QGroupBox *group_carddav = new QGroupBox("CardDav Settings");
+    QGridLayout *layout_carddav = new QGridLayout;
+    group_carddav->setLayout(layout_carddav);
+    layout->addWidget(group_carddav);
+    
+    layout_carddav->addWidget(new QLabel("CardDav-Address"), 0, 0);
     this->edit_carddav_address = new SettingsLineEdit(this->db, "carddav-server", QLineEdit::Normal);
     this->edit_carddav_address->setPlaceholderText("URL to your CardDav-Server");
-    layout->addWidget(this->edit_carddav_address);
+    layout_carddav->addWidget(this->edit_carddav_address, 0, 1);
     
-    layout->addWidget(new QLabel("CardDav Update Interval [Minutes]"));
+    layout_carddav->addWidget(new QLabel("CardDav Update Interval [Minutes]"), 1, 0);
     this->edit_carddav_update_interval = new SettingsLineEdit(this->db, "carddav-update-interval", QLineEdit::Normal);
     this->edit_carddav_update_interval->setValidator(new QIntValidator(1, 1500));
-    this->edit_carddav_update_interval->setPlaceholderText("Update-Interval for the CardDav-Server in Minutes");
-    layout->addWidget(this->edit_carddav_update_interval);
+    this->edit_carddav_update_interval->setPlaceholderText("Default or Empty Value: every 5 Minutes");
+    layout_carddav->addWidget(this->edit_carddav_update_interval, 1, 1);
     
-    layout->addWidget(new QLabel("CardDav Username"));
+    layout_carddav->addWidget(new QLabel("CardDav Username"), 2, 0);
     this->edit_carddav_username = new SettingsLineEdit(this->db, "carddav-username", QLineEdit::Normal);
     this->edit_carddav_username->setPlaceholderText("Username to your CardDav-Server");
-    layout->addWidget(this->edit_carddav_username);
+    layout_carddav->addWidget(this->edit_carddav_username, 2, 1);
     
-    layout->addWidget(new QLabel("CardDav Password"));
+    layout_carddav->addWidget(new QLabel("CardDav Password"), 3, 0);
     this->edit_carddav_password = new SettingsLineEdit(this->db, "carddav-password", QLineEdit::Password);
     this->edit_carddav_password->setPlaceholderText("Password for your CardDav-Server");
-    layout->addWidget(this->edit_carddav_password);
+    layout_carddav->addWidget(this->edit_carddav_password, 3, 1);
+    
+    layout->addStretch();
+    
+    return widget;
 }
 
 void SettingsWidget::showFileSelectDialog()

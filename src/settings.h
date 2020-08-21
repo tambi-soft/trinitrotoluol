@@ -13,12 +13,14 @@
 #include <QLabel>
 #include <QFileDialog>
 #include <QPalette>
+#include <QTabWidget>
 
 #include <QStringList>
 
 #include "db_adapter.h"
 #include "config.h"
 #include "simplecrypt.h"
+#include "lib/growing_text_edit.h"
 
 class SettingsWidget : public QWidget
 {
@@ -30,10 +32,9 @@ private:
     DbAdapter *db;
     QVBoxLayout *layout;
     
-    void addGeneralSettingsArea();
-    void addDatabasePathSettingsArea();
-    void addEmailSettingsArea();
-    void addWebDavSettingsArea();
+    QWidget* addGeneralSettingsArea();
+    QWidget* addEmailSettingsArea();
+    QWidget* addWebDavSettingsArea();
     
     void showFileSelectDialog();
     QLineEdit *edit_name;
