@@ -113,66 +113,68 @@ QWidget *SettingsWidget::addWebDavSettingsArea()
     QVBoxLayout *layout = new QVBoxLayout;
     widget->setLayout(layout);
     
-    GrowingTextEdit *help_caldav = new GrowingTextEdit;
-    help_caldav->loadTextFromAssets(":help_caldav");
-    layout->addWidget(help_caldav);
-    
     QGroupBox *group_caldav = new QGroupBox("CalDav Settings");
     QGridLayout *layout_caldav = new QGridLayout;
     group_caldav->setLayout(layout_caldav);
     layout->addWidget(group_caldav);
     
-    layout_caldav->addWidget(new QLabel("CalDav-Address"), 0, 0);
+    GrowingTextEdit *help_caldav = new GrowingTextEdit;
+    help_caldav->loadTextFromAssets(":help_caldav");
+    layout_caldav->addWidget(help_caldav, 0, 0, 1, 2);
+    
+    layout_caldav->addWidget(new QLabel("CalDav-Address"), 1, 0);
     SettingsLineEdit *edit_caldav_address = new SettingsLineEdit(this->db, "caldav-server", QLineEdit::Normal);
     edit_caldav_address->setPlaceholderText("URL to your CalDav-Server");
-    layout_caldav->addWidget(edit_caldav_address, 0, 1);
+    layout_caldav->addWidget(edit_caldav_address, 1, 1);
     
-    layout_caldav->addWidget(new QLabel("CalDav Update Interval [Minutes]"), 1, 0);
+    layout_caldav->addWidget(new QLabel("CalDav Update Interval [Minutes]"), 2, 0);
     SettingsLineEdit *edit_caldav_update_interval = new SettingsLineEdit(this->db, "caldav-update-interval", QLineEdit::Normal);
     edit_caldav_update_interval->setValidator(new QIntValidator(1, 1500));
     edit_caldav_update_interval->setPlaceholderText("Default or Empty Value: every 5 Minutes");
-    layout_caldav->addWidget(edit_caldav_update_interval, 1, 1);
+    layout_caldav->addWidget(edit_caldav_update_interval, 2, 1);
     
-    layout_caldav->addWidget(new QLabel("CalDav Username"), 2, 0);
+    layout_caldav->addWidget(new QLabel("CalDav Username"), 3, 0);
     SettingsLineEdit *edit_caldav_username = new SettingsLineEdit(this->db, "caldav-username", QLineEdit::Normal);
     edit_caldav_username->setPlaceholderText("Username for your CalDav-Server");
-    layout_caldav->addWidget(edit_caldav_username, 2, 1);
+    layout_caldav->addWidget(edit_caldav_username, 3, 1);
     
-    layout_caldav->addWidget(new QLabel("CalDav Password"), 3, 0);
+    layout_caldav->addWidget(new QLabel("CalDav Password"), 4, 0);
     SettingsLineEdit *edit_caldav_password = new SettingsLineEdit(this->db, "caldav-password", QLineEdit::Password);
     edit_caldav_password->setPlaceholderText("Password for your CalDav-Server");
-    layout_caldav->addWidget(edit_caldav_password, 3, 1);
+    layout_caldav->addWidget(edit_caldav_password, 4, 1);
     
     
-    GrowingTextEdit *help_carddav = new GrowingTextEdit;
-    help_carddav->loadTextFromAssets(":help_carddav");
-    layout->addWidget(help_carddav);
+    
     
     QGroupBox *group_carddav = new QGroupBox("CardDav Settings");
     QGridLayout *layout_carddav = new QGridLayout;
     group_carddav->setLayout(layout_carddav);
     layout->addWidget(group_carddav);
     
-    layout_carddav->addWidget(new QLabel("CardDav-Address"), 0, 0);
+    GrowingTextEdit *help_carddav = new GrowingTextEdit;
+    help_carddav->loadTextFromAssets(":help_carddav");
+    layout_carddav->addWidget(help_carddav, 0, 0, 1, 2);
+    
+    layout_carddav->addWidget(new QLabel("CardDav-Address"), 1, 0);
     SettingsLineEdit *edit_carddav_address = new SettingsLineEdit(this->db, "carddav-server", QLineEdit::Normal);
     edit_carddav_address->setPlaceholderText("URL to your CardDav-Server");
-    layout_carddav->addWidget(edit_carddav_address, 0, 1);
+    layout_carddav->addWidget(edit_carddav_address, 1, 1);
     
-    layout_carddav->addWidget(new QLabel("CardDav Update Interval [Minutes]"), 1, 0);
+    layout_carddav->addWidget(new QLabel("CardDav Update Interval [Minutes]"), 2, 0);
     SettingsLineEdit *edit_carddav_update_interval = new SettingsLineEdit(this->db, "carddav-update-interval", QLineEdit::Normal);
     edit_carddav_update_interval->setValidator(new QIntValidator(1, 1500));
     edit_carddav_update_interval->setPlaceholderText("Default or Empty Value: every 5 Minutes");
-    layout_carddav->addWidget(edit_carddav_update_interval, 1, 1);
+    layout_carddav->addWidget(edit_carddav_update_interval, 2, 1);
     
-    layout_carddav->addWidget(new QLabel("CardDav Username"), 2, 0);
+    layout_carddav->addWidget(new QLabel("CardDav Username"), 3, 0);
     SettingsLineEdit *edit_carddav_username = new SettingsLineEdit(this->db, "carddav-username", QLineEdit::Normal);
     edit_carddav_username->setPlaceholderText("Username to your CardDav-Server");
-    layout_carddav->addWidget(edit_carddav_username, 2, 1);
+    layout_carddav->addWidget(edit_carddav_username, 3, 1);
     
-    layout_carddav->addWidget(new QLabel("CardDav Password"), 3, 0);
+    layout_carddav->addWidget(new QLabel("CardDav Password"), 4, 0);
     SettingsLineEdit *edit_carddav_password = new SettingsLineEdit(this->db, "carddav-password", QLineEdit::Password);
     edit_carddav_password->setPlaceholderText("Password for your CardDav-Server");
-    layout_carddav->addWidget(edit_carddav_password, 3, 1);
+    layout_carddav->addWidget(edit_carddav_password, 4, 1);
     
     layout->addStretch();
     
