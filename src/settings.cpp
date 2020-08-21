@@ -12,6 +12,7 @@ SettingsWidget::SettingsWidget(Config *config, DbAdapter *db, QWidget *parent)
     addGeneralSettingsArea();
     addDatabasePathSettingsArea();
     addEmailSettingsArea();
+    addWebDavSettingsArea();
     
     this->layout->addStretch();
 }
@@ -126,6 +127,40 @@ void SettingsWidget::addEmailSettingsArea()
     connect(this->combo_authentication_method, &QComboBox::currentTextChanged, this, &SettingsWidget::saveEmailParams);
 }
 
+void SettingsWidget::addWebDavSettingsArea()
+{
+    QGroupBox *group = new QGroupBox("CalDav / CardDav Settings");
+    QVBoxLayout *layout = new QVBoxLayout;
+    group->setLayout(layout);
+    this->layout->addWidget(group);
+    
+    layout->addWidget(new QLabel("CalDav-Address"));
+    this->edit_caldav_address = new SettingsLineEdit(this->db, "caldav-server");
+    this->edit_caldav_address->setPlaceholderText("URL to your CalDav-Server");
+    layout->addWidget(this->edit_caldav_address);
+    
+    layout->addWidget(new QLabel("CalDav Update Interval [Minutes]"));
+    this->edit_caldav_update_interval = new SettingsLineEdit(this->db, "caldav-update-interval");
+    this->edit_caldav_update_interval->setValidator(new QIntValidator(1, 1500));
+    this->edit_caldav_update_interval->setPlaceholderText("Update-Interval for the CalDav-Server in Minutes");
+    layout->addWidget(this->edit_caldav_update_interval);
+    
+    layout->addWidget(new QLabel("CardDav-Address"));
+    this->edit_carddav_address = new SettingsLineEdit(this->db, "carddav-server");
+    this->edit_carddav_address->setPlaceholderText("URL to your CardDav-Server");
+    layout->addWidget(this->edit_carddav_address);
+    
+    layout->addWidget(new QLabel("CardDav Update Interval [Minutes]"));
+    this->edit_carddav_update_interval = new SettingsLineEdit(this->db, "carddav-update-interval");
+    this->edit_carddav_update_interval->setValidator(new QIntValidator(1, 1500));
+    this->edit_carddav_update_interval->setPlaceholderText("Update-Interval for the CardDav-Server in Minutes");
+    layout->addWidget(this->edit_carddav_update_interval);
+    
+    /*
+    connect(this->edit_name, &QLineEdit::textChanged, this, &SettingsWidget::saveGeneralParams);
+    */
+}
+
 void SettingsWidget::showFileSelectDialog()
 {
     QString dir_old = this->edit_path->text();
@@ -200,4 +235,23 @@ void SettingsWidget::saveGeneralParams()
     QString username = this->edit_name->text();
     
     this->db->insertSettings("username", username);
+}
+
+
+
+
+
+SettingsLineEdit::SettingsLineEdit(DbAdapter *db, QString setting_name, QWidget *parent) : QLineEdit(parent)
+{
+    this->db = db;
+    this->setting_name = setting_name;
+    
+    this->setText(this->db->selectSettings(this->setting_name));
+    
+    connect(this, &QLineEdit::textChanged, this, &SettingsLineEdit::textChanged);
+}
+
+void SettingsLineEdit::textChanged()
+{
+    this->db->insertSettings(this->setting_name, this->text().toInt());
 }

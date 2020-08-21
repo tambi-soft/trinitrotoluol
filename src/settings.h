@@ -33,6 +33,7 @@ private:
     void addGeneralSettingsArea();
     void addDatabasePathSettingsArea();
     void addEmailSettingsArea();
+    void addWebDavSettingsArea();
     
     void showFileSelectDialog();
     QLineEdit *edit_name;
@@ -50,10 +51,31 @@ private:
     QLineEdit *edit_email_password;
     quint64 KEY = 95839583;
     
+    QLineEdit *edit_caldav_address;
+    QLineEdit *edit_carddav_address;
+    QLineEdit *edit_caldav_update_interval;
+    QLineEdit *edit_carddav_update_interval;
+    
 private slots:
     void saveGeneralParams();
     void saveEmailParams();
     void savePort(int just_for_compatibility);
+};
+
+
+
+
+
+class SettingsLineEdit : public QLineEdit
+{
+public:
+    SettingsLineEdit(DbAdapter *db, QString setting_name, QWidget *parent = nullptr);
+    
+private:
+    DbAdapter *db;
+    QString setting_name;
+    
+    void textChanged();
 };
 
 #endif // SETTINGS_H
