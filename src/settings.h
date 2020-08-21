@@ -37,32 +37,25 @@ private:
     QWidget* addWebDavSettingsArea();
     
     void showFileSelectDialog();
-    QLineEdit *edit_name;
+    
+    // edit_path is the only entity here not saved in the db but the ini-file!
     QLineEdit *edit_path;
     
     void loadEmailParams();
     
-    QLineEdit *edit_email_from_address;
-    QLineEdit *edit_email_reply;
-    QLineEdit *edit_email_server_address;
+    //QLineEdit *edit_email_from_address;
+    //QLineEdit *edit_email_reply;
+    //QLineEdit *edit_email_server_address;
     QSpinBox *edit_email_port;
     QComboBox *combo_connection_security;
     QComboBox *combo_authentication_method;
-    QLineEdit *edit_email_username;
-    QLineEdit *edit_email_password;
-    quint64 KEY = 95839583;
+    //QLineEdit *edit_email_username;
+    //QLineEdit *edit_email_password;
+    //quint64 KEY = 95839583;
     
-    QLineEdit *edit_caldav_address;
-    QLineEdit *edit_carddav_address;
-    QLineEdit *edit_caldav_update_interval;
-    QLineEdit *edit_carddav_update_interval;
-    QLineEdit *edit_caldav_username;
-    QLineEdit *edit_caldav_password;
-    QLineEdit *edit_carddav_username;
-    QLineEdit *edit_carddav_password;
+    
     
 private slots:
-    void saveGeneralParams();
     void saveEmailParams();
     void savePort(int just_for_compatibility);
 };

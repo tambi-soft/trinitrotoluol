@@ -25,13 +25,11 @@ QWidget* SettingsWidget::addGeneralSettingsArea()
     QGridLayout *layout = new QGridLayout;
     widget->setLayout(layout);
     
-    this->edit_name = new QLineEdit;
-    this->edit_name->setToolTip("Your Name (will be shown on bills / emails)");
-    this->edit_name->setText(this->db->selectSettings("username"));
-    connect(this->edit_name, &QLineEdit::textChanged, this, &SettingsWidget::saveGeneralParams);
+    SettingsLineEdit *edit_name = new SettingsLineEdit(this->db, "username", QLineEdit::Normal);
+    edit_name->setToolTip("Your Name (will be shown on bills / emails)");
     
     layout->addWidget(new QLabel("Your Name"), 0, 0);
-    layout->addWidget(this->edit_name, 0, 1);
+    layout->addWidget(edit_name, 0, 1);
     
     layout->addWidget(new QLabel("Database Path"), 1, 0);
     this->edit_path = new QLineEdit;
@@ -57,18 +55,18 @@ QWidget *SettingsWidget::addEmailSettingsArea()
     widget->setLayout(layout);
     
     layout->addWidget(new QLabel("From-Address"), 0, 0);
-    this->edit_email_from_address = new QLineEdit;
-    this->edit_email_from_address->setPlaceholderText("more often than not, this has to be the same as the \"Username\"");
-    layout->addWidget(this->edit_email_from_address, 0, 1);
+    SettingsLineEdit *edit_email_from_address = new SettingsLineEdit(this->db, "email_from_address", QLineEdit::Normal);
+    edit_email_from_address->setPlaceholderText("more often than not, this has to be the same as the \"Username\"");
+    layout->addWidget(edit_email_from_address, 0, 1);
     
     layout->addWidget(new QLabel("Reply-To"), 1, 0);
-    this->edit_email_reply = new QLineEdit;
-    this->edit_email_reply->setPlaceholderText("The Reply-To address. Leave empty for none");
-    layout->addWidget(this->edit_email_reply, 1, 1);
+    SettingsLineEdit *edit_email_reply = new SettingsLineEdit(this->db, "email_reply", QLineEdit::Normal);
+    edit_email_reply->setPlaceholderText("The Reply-To address. Leave empty for none");
+    layout->addWidget(edit_email_reply, 1, 1);
     
     layout->addWidget(new QLabel("SMTP Server Address"), 2, 0);
-    this->edit_email_server_address = new QLineEdit;
-    layout->addWidget(this->edit_email_server_address, 2, 1);
+    SettingsLineEdit *edit_email_server_address = new SettingsLineEdit(this->db, "email_server", QLineEdit::Normal);
+    layout->addWidget(edit_email_server_address, 2, 1);
     
     layout->addWidget(new QLabel("SMTP Port"), 3, 0);
     this->edit_email_port = new QSpinBox;
@@ -91,27 +89,16 @@ QWidget *SettingsWidget::addEmailSettingsArea()
     layout->addWidget(this->combo_authentication_method, 5, 1);
     
     layout->addWidget(new QLabel("Username"), 6, 0);
-    this->edit_email_username = new QLineEdit;
-    layout->addWidget(this->edit_email_username, 6, 1);
+    SettingsLineEdit *edit_email_username = new SettingsLineEdit(this->db, "email_username", QLineEdit::Normal);
+    layout->addWidget(edit_email_username, 6, 1);
     
     layout->addWidget(new QLabel("Password"), 7, 0);
-    this->edit_email_password = new QLineEdit;
-    this->edit_email_password->setEchoMode(QLineEdit::Password);
-    layout->addWidget(this->edit_email_password, 7, 1);
+    SettingsLineEdit *edit_email_password = new SettingsLineEdit(this->db, "email_password", QLineEdit::Password);
+    edit_email_password->setEchoMode(QLineEdit::Password);
+    layout->addWidget(edit_email_password, 7, 1);
     
     loadEmailParams();
-    
-    connect(this->edit_email_from_address, &QLineEdit::textChanged, this, &SettingsWidget::saveEmailParams);
-    
-    connect(this->edit_email_server_address, &QLineEdit::textChanged, this, &SettingsWidget::saveEmailParams);
-    
-    connect(this->edit_email_reply, &QLineEdit::textChanged, this, &SettingsWidget::saveEmailParams);
-    
     connect(this->edit_email_port, qOverload<int>(&QSpinBox::valueChanged), this, &SettingsWidget::savePort);
-    
-    connect(this->edit_email_username, &QLineEdit::textChanged, this, &SettingsWidget::saveEmailParams);
-    connect(this->edit_email_password, &QLineEdit::textChanged, this, &SettingsWidget::saveEmailParams);
-    
     connect(this->combo_connection_security, &QComboBox::currentTextChanged, this, &SettingsWidget::saveEmailParams);
     connect(this->combo_authentication_method, &QComboBox::currentTextChanged, this, &SettingsWidget::saveEmailParams);
     
@@ -136,25 +123,25 @@ QWidget *SettingsWidget::addWebDavSettingsArea()
     layout->addWidget(group_caldav);
     
     layout_caldav->addWidget(new QLabel("CalDav-Address"), 0, 0);
-    this->edit_caldav_address = new SettingsLineEdit(this->db, "caldav-server", QLineEdit::Normal);
-    this->edit_caldav_address->setPlaceholderText("URL to your CalDav-Server");
-    layout_caldav->addWidget(this->edit_caldav_address, 0, 1);
+    SettingsLineEdit *edit_caldav_address = new SettingsLineEdit(this->db, "caldav-server", QLineEdit::Normal);
+    edit_caldav_address->setPlaceholderText("URL to your CalDav-Server");
+    layout_caldav->addWidget(edit_caldav_address, 0, 1);
     
     layout_caldav->addWidget(new QLabel("CalDav Update Interval [Minutes]"), 1, 0);
-    this->edit_caldav_update_interval = new SettingsLineEdit(this->db, "caldav-update-interval", QLineEdit::Normal);
-    this->edit_caldav_update_interval->setValidator(new QIntValidator(1, 1500));
-    this->edit_caldav_update_interval->setPlaceholderText("Default or Empty Value: every 5 Minutes");
-    layout_caldav->addWidget(this->edit_caldav_update_interval, 1, 1);
+    SettingsLineEdit *edit_caldav_update_interval = new SettingsLineEdit(this->db, "caldav-update-interval", QLineEdit::Normal);
+    edit_caldav_update_interval->setValidator(new QIntValidator(1, 1500));
+    edit_caldav_update_interval->setPlaceholderText("Default or Empty Value: every 5 Minutes");
+    layout_caldav->addWidget(edit_caldav_update_interval, 1, 1);
     
     layout_caldav->addWidget(new QLabel("CalDav Username"), 2, 0);
-    this->edit_caldav_username = new SettingsLineEdit(this->db, "caldav-username", QLineEdit::Normal);
-    this->edit_caldav_username->setPlaceholderText("Username for your CalDav-Server");
-    layout_caldav->addWidget(this->edit_caldav_username, 2, 1);
+    SettingsLineEdit *edit_caldav_username = new SettingsLineEdit(this->db, "caldav-username", QLineEdit::Normal);
+    edit_caldav_username->setPlaceholderText("Username for your CalDav-Server");
+    layout_caldav->addWidget(edit_caldav_username, 2, 1);
     
     layout_caldav->addWidget(new QLabel("CalDav Password"), 3, 0);
-    this->edit_caldav_password = new SettingsLineEdit(this->db, "caldav-password", QLineEdit::Password);
-    this->edit_caldav_password->setPlaceholderText("Password for your CalDav-Server");
-    layout_caldav->addWidget(this->edit_caldav_password, 3, 1);
+    SettingsLineEdit *edit_caldav_password = new SettingsLineEdit(this->db, "caldav-password", QLineEdit::Password);
+    edit_caldav_password->setPlaceholderText("Password for your CalDav-Server");
+    layout_caldav->addWidget(edit_caldav_password, 3, 1);
     
     
     GrowingTextEdit *help_carddav = new GrowingTextEdit;
@@ -167,25 +154,25 @@ QWidget *SettingsWidget::addWebDavSettingsArea()
     layout->addWidget(group_carddav);
     
     layout_carddav->addWidget(new QLabel("CardDav-Address"), 0, 0);
-    this->edit_carddav_address = new SettingsLineEdit(this->db, "carddav-server", QLineEdit::Normal);
-    this->edit_carddav_address->setPlaceholderText("URL to your CardDav-Server");
-    layout_carddav->addWidget(this->edit_carddav_address, 0, 1);
+    SettingsLineEdit *edit_carddav_address = new SettingsLineEdit(this->db, "carddav-server", QLineEdit::Normal);
+    edit_carddav_address->setPlaceholderText("URL to your CardDav-Server");
+    layout_carddav->addWidget(edit_carddav_address, 0, 1);
     
     layout_carddav->addWidget(new QLabel("CardDav Update Interval [Minutes]"), 1, 0);
-    this->edit_carddav_update_interval = new SettingsLineEdit(this->db, "carddav-update-interval", QLineEdit::Normal);
-    this->edit_carddav_update_interval->setValidator(new QIntValidator(1, 1500));
-    this->edit_carddav_update_interval->setPlaceholderText("Default or Empty Value: every 5 Minutes");
-    layout_carddav->addWidget(this->edit_carddav_update_interval, 1, 1);
+    SettingsLineEdit *edit_carddav_update_interval = new SettingsLineEdit(this->db, "carddav-update-interval", QLineEdit::Normal);
+    edit_carddav_update_interval->setValidator(new QIntValidator(1, 1500));
+    edit_carddav_update_interval->setPlaceholderText("Default or Empty Value: every 5 Minutes");
+    layout_carddav->addWidget(edit_carddav_update_interval, 1, 1);
     
     layout_carddav->addWidget(new QLabel("CardDav Username"), 2, 0);
-    this->edit_carddav_username = new SettingsLineEdit(this->db, "carddav-username", QLineEdit::Normal);
-    this->edit_carddav_username->setPlaceholderText("Username to your CardDav-Server");
-    layout_carddav->addWidget(this->edit_carddav_username, 2, 1);
+    SettingsLineEdit *edit_carddav_username = new SettingsLineEdit(this->db, "carddav-username", QLineEdit::Normal);
+    edit_carddav_username->setPlaceholderText("Username to your CardDav-Server");
+    layout_carddav->addWidget(edit_carddav_username, 2, 1);
     
     layout_carddav->addWidget(new QLabel("CardDav Password"), 3, 0);
-    this->edit_carddav_password = new SettingsLineEdit(this->db, "carddav-password", QLineEdit::Password);
-    this->edit_carddav_password->setPlaceholderText("Password for your CardDav-Server");
-    layout_carddav->addWidget(this->edit_carddav_password, 3, 1);
+    SettingsLineEdit *edit_carddav_password = new SettingsLineEdit(this->db, "carddav-password", QLineEdit::Password);
+    edit_carddav_password->setPlaceholderText("Password for your CardDav-Server");
+    layout_carddav->addWidget(edit_carddav_password, 3, 1);
     
     layout->addStretch();
     
@@ -212,60 +199,25 @@ void SettingsWidget::savePort(int /*just_for_compatibility*/)
 
 void SettingsWidget::saveEmailParams()
 {
-    QString email_from_address = this->edit_email_from_address->text();
-    QString email_reply = this->edit_email_reply->text();
-    QString email_server = this->edit_email_server_address->text();
     int email_port = this->edit_email_port->value();
     QString email_security = this->combo_connection_security->currentText();
     QString email_auth = this->combo_authentication_method->currentText();
-    QString email_username = this->edit_email_username->text();
-    QString email_password = this->edit_email_password->text();
     
-    //SimpleCrypt crypto(Q_UINT64_C(0xbe890cb92bce0900)); //some random number
-    //QString encryptToString(const QString& plaintext);
-    
-    SimpleCrypt processSimpleCrypt(KEY);
-    QString email_pw_enc = processSimpleCrypt.encryptToString(email_password);
-    
-    this->db->insertSettings("email_from_address", email_from_address);
-    this->db->insertSettings("email_server", email_server);
     this->db->insertSettings("email_port", email_port);
     this->db->insertSettings("email_security", email_security);
     this->db->insertSettings("email_auth", email_auth);
-    this->db->insertSettings("email_username", email_username);
-    this->db->insertSettings("email_password", email_pw_enc);
-    this->db->insertSettings("email_reply", email_reply);
 }
 
 void SettingsWidget::loadEmailParams()
 {
-    QString email_from_address = this->db->selectSettings("email_from_address");
-    QString email_reply = this->db->selectSettings("email_reply");
-    QString email_server = this->db->selectSettings("email_server");
     int email_port = this->db->selectSettings("email_port").toInt();
     QString email_security = this->db->selectSettings("email_security");
     QString email_auth = this->db->selectSettings("email_auth");
-    QString email_username = this->db->selectSettings("email_username");
-    QString email_password = this->db->selectSettings("email_password");
     
-    this->edit_email_from_address->setText(email_from_address);
-    this->edit_email_reply->setText(email_reply);
-    this->edit_email_server_address->setText(email_server);
     this->edit_email_port->setValue(email_port);
     this->combo_connection_security->setCurrentText(email_security);
     this->combo_authentication_method->setCurrentText(email_auth);
-    this->edit_email_username->setText(email_username);
     
-    SimpleCrypt processSimpleCrypt(KEY);
-    QString email_pw_dec = processSimpleCrypt.decryptToString(email_password);
-    this->edit_email_password->setText(email_pw_dec);
-}
-
-void SettingsWidget::saveGeneralParams()
-{
-    QString username = this->edit_name->text();
-    
-    this->db->insertSettings("username", username);
 }
 
 
