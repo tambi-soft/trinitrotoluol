@@ -53,8 +53,8 @@ private slots:
     void saveEmailParams();
     void savePort(int just_for_compatibility);
     
-    void syncronizeCalDavNow();
-    void syncronizeCardDavNow();
+    void synchroniseCalDavNow();
+    void synchroniseCardDavNow();
 };
 
 

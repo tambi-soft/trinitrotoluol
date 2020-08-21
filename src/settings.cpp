@@ -143,8 +143,8 @@ QWidget *SettingsWidget::addWebDavSettingsArea()
     edit_caldav_password->setPlaceholderText("Password for your CalDav-Server");
     layout_caldav->addWidget(edit_caldav_password, 4, 1);
     
-    QPushButton *button_caldav_sync = new QPushButton("Synchronize Now");
-    connect(button_caldav_sync, &QPushButton::clicked, this, &SettingsWidget::syncronizeCalDavNow);
+    QPushButton *button_caldav_sync = new QPushButton("Synchronise Now");
+    connect(button_caldav_sync, &QPushButton::clicked, this, &SettingsWidget::synchroniseCalDavNow);
     layout_caldav->addWidget(button_caldav_sync);
     
     
@@ -178,8 +178,8 @@ QWidget *SettingsWidget::addWebDavSettingsArea()
     edit_carddav_password->setPlaceholderText("Password for your CardDav-Server");
     layout_carddav->addWidget(edit_carddav_password, 4, 1);
     
-    QPushButton *button_carddav_sync = new QPushButton("Synchronize Now");
-    connect(button_carddav_sync, &QPushButton::clicked, this, &SettingsWidget::syncronizeCardDavNow);
+    QPushButton *button_carddav_sync = new QPushButton("Synchronise Now");
+    connect(button_carddav_sync, &QPushButton::clicked, this, &SettingsWidget::synchroniseCardDavNow);
     layout_carddav->addWidget(button_carddav_sync);
     
     layout->addStretch();
@@ -228,12 +228,12 @@ void SettingsWidget::loadEmailParams()
     
 }
 
-void SettingsWidget::syncronizeCalDavNow()
+void SettingsWidget::synchroniseCalDavNow()
 {
     
 }
 
-void SettingsWidget::syncronizeCardDavNow()
+void SettingsWidget::synchroniseCardDavNow()
 {
     
 }
