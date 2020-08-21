@@ -135,30 +135,47 @@ void SettingsWidget::addWebDavSettingsArea()
     this->layout->addWidget(group);
     
     layout->addWidget(new QLabel("CalDav-Address"));
-    this->edit_caldav_address = new SettingsLineEdit(this->db, "caldav-server");
+    this->edit_caldav_address = new SettingsLineEdit(this->db, "caldav-server", QLineEdit::Normal);
     this->edit_caldav_address->setPlaceholderText("URL to your CalDav-Server");
     layout->addWidget(this->edit_caldav_address);
     
     layout->addWidget(new QLabel("CalDav Update Interval [Minutes]"));
-    this->edit_caldav_update_interval = new SettingsLineEdit(this->db, "caldav-update-interval");
+    this->edit_caldav_update_interval = new SettingsLineEdit(this->db, "caldav-update-interval", QLineEdit::Normal);
     this->edit_caldav_update_interval->setValidator(new QIntValidator(1, 1500));
     this->edit_caldav_update_interval->setPlaceholderText("Update-Interval for the CalDav-Server in Minutes");
     layout->addWidget(this->edit_caldav_update_interval);
     
+    layout->addWidget(new QLabel("CalDav Username"));
+    this->edit_caldav_username = new SettingsLineEdit(this->db, "caldav-username", QLineEdit::Normal);
+    this->edit_caldav_username->setPlaceholderText("Username for your CalDav-Server");
+    layout->addWidget(this->edit_caldav_username);
+    
+    layout->addWidget(new QLabel("CalDav Password"));
+    this->edit_caldav_password = new SettingsLineEdit(this->db, "caldav-password", QLineEdit::Password);
+    this->edit_caldav_password->setPlaceholderText("Password for your CalDav-Server");
+    layout->addWidget(this->edit_caldav_password);
+    
+    
     layout->addWidget(new QLabel("CardDav-Address"));
-    this->edit_carddav_address = new SettingsLineEdit(this->db, "carddav-server");
+    this->edit_carddav_address = new SettingsLineEdit(this->db, "carddav-server", QLineEdit::Normal);
     this->edit_carddav_address->setPlaceholderText("URL to your CardDav-Server");
     layout->addWidget(this->edit_carddav_address);
     
     layout->addWidget(new QLabel("CardDav Update Interval [Minutes]"));
-    this->edit_carddav_update_interval = new SettingsLineEdit(this->db, "carddav-update-interval");
+    this->edit_carddav_update_interval = new SettingsLineEdit(this->db, "carddav-update-interval", QLineEdit::Normal);
     this->edit_carddav_update_interval->setValidator(new QIntValidator(1, 1500));
     this->edit_carddav_update_interval->setPlaceholderText("Update-Interval for the CardDav-Server in Minutes");
     layout->addWidget(this->edit_carddav_update_interval);
     
-    /*
-    connect(this->edit_name, &QLineEdit::textChanged, this, &SettingsWidget::saveGeneralParams);
-    */
+    layout->addWidget(new QLabel("CardDav Username"));
+    this->edit_carddav_username = new SettingsLineEdit(this->db, "carddav-username", QLineEdit::Normal);
+    this->edit_carddav_username->setPlaceholderText("Username to your CardDav-Server");
+    layout->addWidget(this->edit_carddav_username);
+    
+    layout->addWidget(new QLabel("CardDav Password"));
+    this->edit_carddav_password = new SettingsLineEdit(this->db, "carddav-password", QLineEdit::Password);
+    this->edit_carddav_password->setPlaceholderText("Password for your CardDav-Server");
+    layout->addWidget(this->edit_carddav_password);
 }
 
 void SettingsWidget::showFileSelectDialog()
@@ -241,17 +258,38 @@ void SettingsWidget::saveGeneralParams()
 
 
 
-SettingsLineEdit::SettingsLineEdit(DbAdapter *db, QString setting_name, QWidget *parent) : QLineEdit(parent)
+SettingsLineEdit::SettingsLineEdit(DbAdapter *db, QString setting_name, EchoMode mode, QWidget *parent) : QLineEdit(parent)
 {
     this->db = db;
     this->setting_name = setting_name;
+    setEchoMode(mode);
     
-    this->setText(this->db->selectSettings(this->setting_name));
+    if (this->echoMode() == QLineEdit::Password)
+    {
+        SimpleCrypt processSimpleCrypt(KEY);
+        QString pw_dec = processSimpleCrypt.decryptToString(this->db->selectSettings(this->setting_name));
+        
+        this->setText(pw_dec);
+    }
+    else
+    {
+        this->setText(this->db->selectSettings(this->setting_name));
+    }
     
     connect(this, &QLineEdit::textChanged, this, &SettingsLineEdit::textChanged);
 }
 
 void SettingsLineEdit::textChanged()
 {
-    this->db->insertSettings(this->setting_name, this->text().toInt());
+    if (this->echoMode() == QLineEdit::Password)
+    {
+        SimpleCrypt processSimpleCrypt(KEY);
+        QString pw_enc = processSimpleCrypt.encryptToString(this->text());
+        
+        this->db->insertSettings(this->setting_name, pw_enc);
+    }
+    else
+    {
+        this->db->insertSettings(this->setting_name, this->text());
+    }
 }

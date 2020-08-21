@@ -6,3 +6,4 @@ Makefile
 .qmake.stash
 debug
 *.pro.user*
+*.autosave

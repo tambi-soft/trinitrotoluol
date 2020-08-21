@@ -55,6 +55,10 @@ private:
     QLineEdit *edit_carddav_address;
     QLineEdit *edit_caldav_update_interval;
     QLineEdit *edit_carddav_update_interval;
+    QLineEdit *edit_caldav_username;
+    QLineEdit *edit_caldav_password;
+    QLineEdit *edit_carddav_username;
+    QLineEdit *edit_carddav_password;
     
 private slots:
     void saveGeneralParams();
@@ -69,11 +73,12 @@ private slots:
 class SettingsLineEdit : public QLineEdit
 {
 public:
-    SettingsLineEdit(DbAdapter *db, QString setting_name, QWidget *parent = nullptr);
+    SettingsLineEdit(DbAdapter *db, QString setting_name, EchoMode mode, QWidget *parent = nullptr);
     
 private:
     DbAdapter *db;
     QString setting_name;
+    quint64 KEY = 95839583;
     
     void textChanged();
 };
