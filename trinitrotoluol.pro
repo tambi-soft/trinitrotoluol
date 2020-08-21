@@ -127,7 +127,8 @@ HEADERS += \
     src/tnt_adapter.h \
     src/help_about_widget.h \
     src/user_select.h \
-    src/vcard.h
+    src/vcard.h \
+    src/lib/rest_adapter.h
     
 SOURCES += \
     src/combo_currencies.cpp \
@@ -185,7 +186,8 @@ SOURCES += \
     src/db_adapter.cpp \
     src/help_about_widget.cpp \
     src/user_select.cpp \
-    src/vcard.cpp
+    src/vcard.cpp \
+    src/lib/rest_adapter.cpp
 
 RESOURCES += \
     resources.qrc
