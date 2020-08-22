@@ -65,26 +65,30 @@ void MailSend::addRecipientsArea()
     for (int i=0; i < people.length(); ++i)
     {
         QMap<QString,QVariant> person = people.at(i);
-        QString name = person["name"].toString();
-        QString email = person["email"].toString();
         
-        QLabel *label_name = new QLabel(name);
-        QLabel *label_email = new QLabel(email);
-        
-        QCheckBox *check_send_mail = new QCheckBox;
-        if (email.length() > 0)
+        if (person["email"].toString().length() > 0)
         {
-            check_send_mail->setChecked(false);
+            QString name = person["name"].toString();
+            QString email = person["email"].toString();
+            
+            QLabel *label_name = new QLabel(name);
+            QLabel *label_email = new QLabel(email);
+            
+            QCheckBox *check_send_mail = new QCheckBox;
+            if (email.length() > 0)
+            {
+                check_send_mail->setChecked(false);
+            }
+            
+            this->list_checkboxes.append(check_send_mail);
+            this->list_emails.append(email);
+            this->list_people_rowids.append(person["rowid"].toLongLong());
+            
+            check_send_mail->setMaximumWidth(15);
+            grid->addWidget(check_send_mail, i, 0);
+            grid->addWidget(label_name, i, 1);
+            grid->addWidget(label_email, i, 2);
         }
-        
-        this->list_checkboxes.append(check_send_mail);
-        this->list_emails.append(email);
-        this->list_people_rowids.append(person["rowid"].toLongLong());
-        
-        check_send_mail->setMaximumWidth(15);
-        grid->addWidget(check_send_mail, i, 0);
-        grid->addWidget(label_name, i, 1);
-        grid->addWidget(label_email, i, 2);
     }
 }
 

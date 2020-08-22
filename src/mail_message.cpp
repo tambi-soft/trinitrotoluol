@@ -154,7 +154,7 @@ void MailMessage::saveMessage(QString filepath)
     if ( file.open(QIODevice::ReadWrite) )
     {
         QTextStream stream( &file );
-        stream << this->message << endl;
+        stream << this->message << Qt::endl;
     }
 }
 
@@ -185,7 +185,8 @@ int MailMessage::sendMailWithExternalCURL()
     
     QDateTime time = QDateTime::currentDateTime();
     
-    QString path = "/tmp/trinitrotoluol/outmail_"+time.toString("yyyy.MM.dd_HH:mm:ss:zzz")+".eml";
+    // underscores can cause EHLO 501 (syntax) error
+    QString path = "/tmp/trinitrotoluol/outmail-"+time.toString("yyyy-MM-dd--HH-mm-ss-zzz")+".eml";
     QFile file;
     file.remove(path);
     saveMessage(path);

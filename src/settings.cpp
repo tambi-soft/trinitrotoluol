@@ -145,7 +145,7 @@ QWidget *SettingsWidget::addWebDavSettingsArea()
     
     QPushButton *button_caldav_sync = new QPushButton("Synchronise Now");
     connect(button_caldav_sync, &QPushButton::clicked, this, &SettingsWidget::synchroniseCalDavNow);
-    layout_caldav->addWidget(button_caldav_sync);
+    layout_caldav->addWidget(button_caldav_sync, 5, 0, 1, 2, Qt::AlignCenter);
     
     
     QGroupBox *group_carddav = new QGroupBox("CardDav Settings");
@@ -180,9 +180,9 @@ QWidget *SettingsWidget::addWebDavSettingsArea()
     
     QPushButton *button_carddav_sync = new QPushButton("Synchronise Now");
     connect(button_carddav_sync, &QPushButton::clicked, this, &SettingsWidget::synchroniseCardDavNow);
-    layout_carddav->addWidget(button_carddav_sync);
+    layout_carddav->addWidget(button_carddav_sync, 5, 0, 1, 2, Qt::AlignCenter);
     
-    layout->addStretch();
+    //layout->addStretch();
     
     return widget;
 }
