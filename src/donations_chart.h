@@ -27,6 +27,7 @@ private:
     QLayout *container_layout = nullptr;
     
     QChart *chart = new QChart;
+    QScatterSeries *scatter_needed = nullptr;
     QScatterSeries *scatter_monthly = nullptr;
     QScatterSeries *scatter_full = nullptr;
     
@@ -43,6 +44,8 @@ protected:
     
 private slots:
     void onMonthlyHover(QPointF pos, bool state);
+    void onMonthlyHoverNeeded(QPointF pos, bool state);
+    void onMonthlyHoverHelper(QPointF pos, bool state, QScatterSeries *series);
     void onFullHover(QPointF pos, bool state);
     
 signals:
