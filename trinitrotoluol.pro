@@ -4,7 +4,7 @@
 
 TEMPLATE = app
 
-CONFIG += qt debug release
+CONFIG += qt debug release console
 
 CONFIG( debug, debug|release ) {
     # debug

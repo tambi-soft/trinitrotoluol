@@ -103,12 +103,12 @@ int Stats::calculateAverageMoney()
     for (int i = 1; i < 10; i++)
     {
         QMap<QString,QVariant> value = donations_monthly.at(donations_monthly.length()-i);
-        
         // the amount in the current month is probably not complete, so better skip the current month
-        if (QDate::currentDate().month() > QDate::fromString(value["year-month"].toString(), "yyyy-MM").month())
+        if (QDate::currentDate().toString("yyyyMM").toInt() > QDate::fromString(value["year-month"].toString(), "yyyy-MM").toString("yyyyMM").toInt())
         {
             month_amount++;
             average_money += value["amount"].toInt();
+            qDebug() << month_amount << " " << average_money;
         }
         
         if (month_amount >= 3)
