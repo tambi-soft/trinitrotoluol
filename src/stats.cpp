@@ -108,7 +108,6 @@ int Stats::calculateAverageMoney()
         {
             month_amount++;
             average_money += value["amount"].toInt();
-            qDebug() << month_amount << " " << average_money;
         }
         
         if (month_amount >= 3)
