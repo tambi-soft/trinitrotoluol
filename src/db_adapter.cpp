@@ -104,7 +104,8 @@ void DbAdapter::initializeTables()
         "SELECT SUM(donations_monthly) AS monthly_sum, "
         "SUM(donations_monthly_promised) AS monthly_sum_promised, "
         "MAX(MAX(donations_monthly), MAX(donations_monthly_promised)) AS donations_max, "
-        "MIN(MIN(NULLIF(donations_monthly,0)),  MIN(NULLIF(donations_monthly_promised,0))) AS donations_min, "
+        "MIN(NULLIF(donations_monthly,0)) AS donations_min, "
+        "MIN(NULLIF(donations_monthly_promised,0)) AS donations_monthly_min, "
         "(SUM(donations_monthly) + SUM(donations_monthly_promised)) "
          " / (COUNT(NULLIF(donations_monthly,0)) + COUNT(NULLIF(donations_monthly_promised,0))) AS donations_average "
         "FROM people", this->db);
