@@ -75,7 +75,7 @@ void PersonGroups::loadGroupsComboData()
     QList<QMap<QString,QVariant>> group_data = this->db->selectGroups();
     
     QList<QString> gr;
-    gr << "[Add Group]";
+    gr << "[Add to Group]";
     for (int i=0; i < group_data.length(); ++i)
     {
         gr.append(group_data.at(i)["name"].toString());
