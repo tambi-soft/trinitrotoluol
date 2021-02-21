@@ -103,7 +103,7 @@ int Stats::calculateAverageMoney()
     QList<QMap<QString,QVariant>> donations_monthly = this->db->donationsByMonth();
     int average_money = 0;
     int month_amount = 0;
-    for (int i = 1; i < 10; i++)
+    for (int i = 1; i < donations_monthly.length(); i++)
     {
         QMap<QString,QVariant> value = donations_monthly.at(donations_monthly.length()-i);
         // the amount in the current month is probably not complete, so better skip the current month

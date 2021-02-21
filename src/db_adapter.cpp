@@ -1029,8 +1029,8 @@ bool DbAdapter::donationDoesEntryAlreadyExist(QString person_name, QString amoun
 
 QList<QMap<QString,QVariant>> DbAdapter::donationsByMonth()
 {
-    QSqlQuery query("SELECT SUM(people_donations.amount) AS amount, strftime('%Y-%m', people_donations.date) as 'year-month' "
-                    "FROM people_donations "
+    QSqlQuery query("SELECT SUM(people_donations.amount * exchange_rate) AS amount, strftime('%Y-%m', people_donations.date) as 'year-month' "
+                    "FROM people_donations JOIN currencies ON people_donations.rowid_currencies=currencies.rowid "
                     "GROUP BY strftime('%Y-%m', people_donations.date) "
                     "ORDER BY 'year-month' ASC", this->db);
     
