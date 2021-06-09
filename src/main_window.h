@@ -32,6 +32,7 @@
 #include "merge_database_widget.h"
 #include "export.h"
 #include "vcard.h"
+#include "tool_copy_email_addresses.h"
 
 class QTNTMainWindow : public QMainWindow
 {
@@ -72,6 +73,7 @@ private slots:
     
     void addPersonEditTab(qlonglong rowid, QString name);
     void addSettingsTab();
+    void addCopyMailTab();
     void addSQLEditorTab();
     void addStatsTab();
     void addPeopleTab();

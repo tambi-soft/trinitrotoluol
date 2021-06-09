@@ -22,6 +22,7 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
     connect(this->menu_bar, &MenuBar::signalUserManagement, this, &QTNTMainWindow::showUsernManagementDialog);
     connect(this->menu_bar, &MenuBar::signalMailList, this, &QTNTMainWindow::addMailListTab);
     connect(this->menu_bar, &MenuBar::signalSettings, this, &QTNTMainWindow::addSettingsTab);
+    connect(this->menu_bar, &MenuBar::signalCopyMailAdresses, this, &QTNTMainWindow::addCopyMailTab);
     connect(this->menu_bar, &MenuBar::signalSQLEditor, this, &QTNTMainWindow::addSQLEditorTab);
     connect(this->menu_bar, &MenuBar::signalJourneyList, this, &QTNTMainWindow::addJourneyListTab);
     connect(this->menu_bar, &MenuBar::signalExpensesList, this, &QTNTMainWindow::addExpensesListTab);
@@ -192,6 +193,13 @@ void QTNTMainWindow::addSettingsTab()
     
     QIcon *icon = new QIcon(QIcon::fromTheme("applications-system"));
     createSingleTab("Settings", settings, icon);
+}
+
+void QTNTMainWindow::addCopyMailTab()
+{
+    ToolCopyEmailAddresses *w = new ToolCopyEmailAddresses(this->db);
+    
+    createSingleTab("Copy Email Addresses", w);
 }
 
 void QTNTMainWindow::addSQLEditorTab()

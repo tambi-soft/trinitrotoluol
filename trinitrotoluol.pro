@@ -126,6 +126,7 @@ HEADERS += \
     src/stats.h \
     src/tnt_adapter.h \
     src/help_about_widget.h \
+    src/tool_copy_email_addresses.h \
     src/user_select.h \
     src/vcard.h \
     src/lib/rest_adapter.h
@@ -180,6 +181,7 @@ SOURCES += \
     src/sqlite_sync.cpp \
     src/stats.cpp \
     src/tnt_adapter.cpp \
+    src/tool_copy_email_addresses.cpp \
     src/trinitrotoluol.cpp \
     src/main_window.cpp \
     src/config.cpp \

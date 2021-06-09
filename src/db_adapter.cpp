@@ -607,7 +607,7 @@ QMap<QString,QVariant> DbAdapter::selectMail(qlonglong rowid)
 
 QList<QMap<QString,QVariant>> DbAdapter::selectAllMails()
 {
-    QSqlQuery query("SELECT rowid, number, subject, cover, content_path, date, date_last_edit FROM mail ORDER BY number DESC", this->db);
+    QSqlQuery query("SELECT rowid, number, subject, cover, content_path, date, date_last_edit FROM mail ORDER BY date DESC", this->db);
     
     return dbIteratorToMapList(query);
 }

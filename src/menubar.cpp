@@ -99,6 +99,9 @@ void MenuBar::addToolsMenu()
     QAction *settingsAction = new QAction(QIcon::fromTheme("applications-system"), "&Settings");
     connect(settingsAction, &QAction::triggered, this, &MenuBar::signalSettings);
     
+    QAction *copyMailAction = new QAction("Copy Mail Adresses");
+    connect(copyMailAction, &QAction::triggered, this, &MenuBar::signalCopyMailAdresses);
+    
     QMenu *menu = addMenu("&Tools");
     menu->addAction(mailListAction);
     menu->addAction(journeyListAction);
@@ -107,6 +110,7 @@ void MenuBar::addToolsMenu()
     menu->addAction(currenciesAction);
     menu->addAction(donationsAction);
     menu->addAction(settingsAction);
+    menu->addAction(copyMailAction);
 }
 
 void MenuBar::addHelpMenu()

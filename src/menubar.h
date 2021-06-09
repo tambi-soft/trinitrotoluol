@@ -40,6 +40,7 @@ signals:
     void signalUserManagement();
     void signalMailList();
     void signalSettings();
+    void signalCopyMailAdresses();
     void signalSQLEditor();
     void signalJourneyList();
     void signalExpensesList();
