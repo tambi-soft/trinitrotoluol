@@ -32,7 +32,7 @@ QString DonationsReceiptGenerator::numberToStringGerman(QString number)
         }
     }
     
-    number = number.remove( QRegExp("^0+") ); // Remove any number of leading 0's
+    number.remove( QRegExp("^0+") ); // Remove any number of leading 0's
     qDebug() << number;
     if (number.length() == 0)
     {
