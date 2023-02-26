@@ -8,13 +8,14 @@ Donations::Donations(DbAdapter *db, QTabWidget *parent) : QTabWidget(parent)
     //DonationsChart *donations_chart = new DonationsChart(db);
     DonationsChartContainer *donations_chart_container = new DonationsChartContainer(db);
     DonationsMapEdit *donations_map_edit = new DonationsMapEdit(db);
+    DonationsReceiptGenerator *donations_receipt_generator = new DonationsReceiptGenerator(db);
     
     //addTab(donations_chart, "Charts");
     addTab(donations_chart_container, "Charts");
     addTab(donations_list, "List");
     addTab(donations_map_edit, "Import Map");
+    addTab(donations_receipt_generator, "Receipt Generator");
 }
-
 
 
 

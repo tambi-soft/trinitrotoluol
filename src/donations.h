@@ -9,6 +9,7 @@
 #include "db_adapter.h"
 #include "donations_list.h"
 #include "donations_map_edit.h"
+#include "donations_receipt_generator.h"
 
 class Donations : public QTabWidget
 {

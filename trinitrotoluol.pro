@@ -83,6 +83,7 @@ HEADERS += \
     src/donations_import_progress.h \
     src/donations_list.h \
     src/donations_map_edit.h \
+    src/donations_receipt_generator.h \
     src/expenses_list.h \
     src/export.h \
     src/firstrun.h \
@@ -142,6 +143,7 @@ SOURCES += \
     src/donations_import_progress.cpp \
     src/donations_list.cpp \
     src/donations_map_edit.cpp \
+    src/donations_receipt_generator.cpp \
     src/expenses_list.cpp \
     src/export.cpp \
     src/firstrun.cpp \
