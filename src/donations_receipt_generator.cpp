@@ -33,14 +33,13 @@ QString DonationsReceiptGenerator::numberToStringGerman(QString number)
     }
     
     number.remove( QRegExp("^0+") ); // Remove any number of leading 0's
-    qDebug() << number;
     if (number.length() == 0)
     {
-        return "null";
+        return "";
     }
-    else if (number.length() >= 5)
+    else if (number.length() >= 6)
     {
-        return "mehr als " + numberToStringGerman("9999");
+        return "mehr als " + numberToStringGerman("99999");
     }
     
     QMap<QString, QString> einer;
@@ -96,7 +95,7 @@ QString DonationsReceiptGenerator::numberToStringGerman(QString number)
         {
             QString result = einer[number.at(1)];
             result.append("und");
-            result.append(zehner[number[0] +"0"]);
+            result.append(zehner[number[0] + "0"]);
             return result;
         }
     }
@@ -132,6 +131,41 @@ QString DonationsReceiptGenerator::numberToStringGerman(QString number)
             result.append("tausend");
             result.append(numberToStringGerman(number.remove(0, 1)));
             return result;
+        }
+    }
+    else if (number.length() == 5)
+    {
+        QString removed = number;
+        if (removed.remove(0, 1) == "0000")
+        {
+            QString result = zehner[number[0] + "0"];
+            result.append("tausend");
+            return result;
+        }
+        else
+        {
+            QString num = number.at(0);
+            num.append(number[1]);
+            if (num == "11")
+            {
+                QString result = "elftausend";
+                result.append(numberToStringGerman(number.remove(0, 2)));
+                return result;
+            }
+            else if (num == "12")
+            {
+                QString result = "zwölftausend";
+                result.append(numberToStringGerman(number.remove(0, 2)));
+                return result;
+            }
+            else
+            {
+                QString result = einer[number.at(1)];
+                result.append(zehner[number[0] + "0"]);
+                result.append("tausend");
+                result.append(numberToStringGerman(number.remove(0, 2)));
+                return result;
+            }
         }
     }
 }
