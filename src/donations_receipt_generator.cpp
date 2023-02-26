@@ -39,7 +39,7 @@ QString DonationsReceiptGenerator::numberToStringGerman(QString number)
     }
     else if (number.length() > 6)
     {
-        return "mehr als " + numberToStringGerman("999.999");
+        return "mehr als " + numberToStringGerman("999999");
     }
     
     QMap<QString, QString> einer;
