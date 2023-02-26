@@ -1,6 +1,6 @@
-    #include "donations_import.h"
+    #include "donations_import_tnt.h"
 
-DonationsImport::DonationsImport(DbAdapter *db, QWidget *parent) : QWidget(parent)
+DonationsImportTNT::DonationsImportTNT(DbAdapter *db, QWidget *parent) : QWidget(parent)
 {
     this->db = db;
     
@@ -14,7 +14,7 @@ DonationsImport::DonationsImport(DbAdapter *db, QWidget *parent) : QWidget(paren
     //showCSVFileDialog();
 }
 
-QWidget *DonationsImport::stackSelectSourceFormat()
+QWidget *DonationsImportTNT::stackSelectSourceFormat()
 {
     QWidget *widget = new QWidget;
     
@@ -28,7 +28,7 @@ QWidget *DonationsImport::stackSelectSourceFormat()
     // multiple file open dialog with filter "csv"
     // (more formats maybe later)
     QPushButton *button_import_csv = new QPushButton("import CSV from TntWare");
-    connect(button_import_csv, &QPushButton::clicked, this, &DonationsImport::showCSVFileDialog);
+    connect(button_import_csv, &QPushButton::clicked, this, &DonationsImportTNT::showCSVFileDialog);
     
     lay->addWidget(help);
     lay->addWidget(button_import_csv);
@@ -37,7 +37,7 @@ QWidget *DonationsImport::stackSelectSourceFormat()
     return widget;
 }
 
-void DonationsImport::showCSVFileDialog()
+void DonationsImportTNT::showCSVFileDialog()
 {
     QString last_import_path = this->db->selectSettings("last_tnt_csv_import_path");
     QString url_csv = QFileDialog::getOpenFileName(this, "Please select a CSV-File", last_import_path, "csv(*.csv *.CSV)");
@@ -50,7 +50,7 @@ void DonationsImport::showCSVFileDialog()
         QList<QMap<QString,QString>> data = parser->processCSVFile(url_csv);
         
         /*
-        this->stack_assignment_matrix = new DonationsImportMatrix(url_csv);
+        this->stack_assignment_matrix = new DonationsImportTNTMatrix(url_csv);
         this->stack->addWidget(this->stack_assignment_matrix);
         // activate this widget
         this->stack->setCurrentWidget(this->stack_assignment_matrix);

@@ -1,5 +1,5 @@
-#ifndef DONATIONSIMPORT_H
-#define DONATIONSIMPORT_H
+#ifndef DonationsImportTNT_H
+#define DonationsImportTNT_H
 
 #include <QObject>
 #include <QWidget>
@@ -20,11 +20,11 @@
 #include "parse_csv.h"
 #include "lib/growing_text_edit.h"
 
-class DonationsImport : public QWidget
+class DonationsImportTNT : public QWidget
 {
     Q_OBJECT
 public:
-    explicit DonationsImport(DbAdapter *db, QWidget *parent = nullptr);
+    explicit DonationsImportTNT(DbAdapter *db, QWidget *parent = nullptr);
     
 private:
     DbAdapter *db;
@@ -45,4 +45,4 @@ signals:
     
 };
 
-#endif // DONATIONSIMPORT_H
+#endif // DonationsImportTNT_H

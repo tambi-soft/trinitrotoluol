@@ -29,7 +29,7 @@
 #include "help_about_widget.h"
 #include "donations.h"
 //#include "donations_list.h"
-#include "donations_import.h"
+#include "donations_import_tnt.h"
 #include "merge_database_widget.h"
 #include "export.h"
 #include "vcard.h"

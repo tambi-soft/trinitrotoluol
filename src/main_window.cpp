@@ -256,7 +256,7 @@ void QTNTMainWindow::addDonationsListTab()
 
 void QTNTMainWindow::addDonationsImportTntWareCSVTab()
 {
-    DonationsImport *don = new DonationsImport(this->db);
+    DonationsImportTNT *don = new DonationsImportTNT(this->db);
     QIcon *icon = new QIcon(QIcon::fromTheme("emblem-downloads"));
     createSingleTab("Import Donations", don, icon);
 }
