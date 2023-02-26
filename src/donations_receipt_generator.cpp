@@ -37,9 +37,9 @@ QString DonationsReceiptGenerator::numberToStringGerman(QString number)
     {
         return "";
     }
-    else if (number.length() >= 6)
+    else if (number.length() > 6)
     {
-        return "mehr als " + numberToStringGerman("99999");
+        return "mehr als " + numberToStringGerman("999.999");
     }
     
     QMap<QString, QString> einer;
@@ -167,5 +167,13 @@ QString DonationsReceiptGenerator::numberToStringGerman(QString number)
                 return result;
             }
         }
+    }
+    else if (number.length() == 6)
+    {
+        QString removed = number;
+        QString result = numberToStringGerman(removed.remove(3, 3));
+        result.append("tausend");
+        result.append(numberToStringGerman(number.remove(0, 3)));
+        return result;
     }
 }
