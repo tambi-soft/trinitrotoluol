@@ -46,6 +46,7 @@ signals:
     void signalJourneyList();
     void signalExpensesList();
     void signalCurrencies();
+    void signalGenerateDonationReceipts();
     void signalAbout();
     
 public slots:
