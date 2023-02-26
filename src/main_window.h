@@ -8,6 +8,7 @@
 #include <QMouseEvent>
 #include <QToolTip>
 #include <QCloseEvent>
+#include <QFileDialog>
 
 #include "config.h"
 #include "people_list.h"
@@ -82,6 +83,7 @@ private slots:
     void addDonationsTab();
     //void addDonationsListTab();
     void addDonationsImportTntWareCSVTab();
+    void donationsImportBankCSV();
     void addExportTab();
     void addMergeDatabaseTab();
     void showUsernManagementDialog();

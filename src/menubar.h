@@ -33,6 +33,7 @@ private:
 signals:
     void signalDonations();
     void signalImportDonationsTntWareCSV();
+    void signalImportDonationsBankCSV();
     void signalExport();
     void signalImportVCard();
     void signalExportVCard();

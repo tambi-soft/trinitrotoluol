@@ -11,6 +11,9 @@ MenuBar::MenuBar(QMenuBar *parent) : QMenuBar(parent)
 
 void MenuBar::addFileMenu()
 {
+    QAction *importDonationsBankCSV = new QAction(QIcon::fromTheme("emblem-downloads"), "Import Donations from Bank CSV");
+    connect(importDonationsBankCSV, &QAction::triggered, this, [this]{ emit signalImportDonationsBankCSV(); });
+    
     QAction *importDonationsTntWareCSVAction = new QAction(QIcon::fromTheme("emblem-downloads"), "&Import Donations from TntWare");
     importDonationsTntWareCSVAction->setStatusTip("Import Donations from TntConnect");
     connect(importDonationsTntWareCSVAction, &QAction::triggered, this, &MenuBar::signalImportDonationsTntWareCSV);
@@ -39,6 +42,7 @@ void MenuBar::addFileMenu()
     connect(exitAction, &QAction::triggered, this, &MenuBar::quitApplication);
     
     QMenu *menu = addMenu("&File");
+    menu->addAction(importDonationsBankCSV);
     menu->addAction(importDonationsTntWareCSVAction);
     menu->addAction(importTNTConnect);
     menu->addSeparator();
@@ -126,6 +130,7 @@ void MenuBar::quitApplication()
 {
     QApplication::quit();
 }
+
 /*
 void MenuBar::mailList()
 {

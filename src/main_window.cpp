@@ -14,6 +14,7 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
     setMenuBar(this->menu_bar);
     //connect(this->menu_bar, &MenuBar::signalDonations, this, &QTNTMainWindow::addDonationsListTab);
     connect(this->menu_bar, &MenuBar::signalDonations, this, &QTNTMainWindow::addDonationsTab);
+    connect(this->menu_bar, &MenuBar::signalImportDonationsBankCSV, this, &QTNTMainWindow::donationsImportBankCSV);
     connect(this->menu_bar, &MenuBar::signalImportDonationsTntWareCSV, this, &QTNTMainWindow::addDonationsImportTntWareCSVTab);
     connect(this->menu_bar, &MenuBar::signalExport, this, &QTNTMainWindow::addExportTab);
     connect(this->menu_bar, &MenuBar::signalExportVCard, this, &QTNTMainWindow::addVcardExportTab);
@@ -258,6 +259,46 @@ void QTNTMainWindow::addDonationsImportTntWareCSVTab()
     DonationsImport *don = new DonationsImport(this->db);
     QIcon *icon = new QIcon(QIcon::fromTheme("emblem-downloads"));
     createSingleTab("Import Donations", don, icon);
+}
+
+void QTNTMainWindow::donationsImportBankCSV()
+{
+    QString last_import_path = this->db->selectSettings("last_bank_csv_import_path");
+    QString url_csv = QFileDialog::getOpenFileName(this, "Please select a CSV-File", last_import_path, "csv(*.csv *.CSV)");
+    
+    if (url_csv != nullptr)
+    {
+        this->db->insertSettings("last_bank_csv_import_path", url_csv);
+        
+        ParseCSV *parser = new ParseCSV;
+        QList<QMap<QString,QString>> data = parser->processCSVFile(url_csv);
+        
+        /*
+        this->stack_assignment_matrix = new DonationsImportMatrix(url_csv);
+        this->stack->addWidget(this->stack_assignment_matrix);
+        // activate this widget
+        this->stack->setCurrentWidget(this->stack_assignment_matrix);
+        */
+        
+        // [this slotnames] -> [csv colname]
+        QMap<QString,QString> data_map;
+        // for testing
+        data_map["person_name"] = "DonorName";
+        data_map["person_tnt_code"] = "DonorCode";
+        data_map["amount"] = "Amount";
+        data_map["currency_code"] = "TenderedCurrency";
+        data_map["date"] = "GiftDate";
+        data_map["memo"] = "Memo";
+        data_map["tnt_code"] = "Code";
+        data_map["tnt_donor_code"] = "DonorCode";
+        
+        /*
+        this->stack_import_progress = new DonationsImportProgress(this->db, data, data_map);
+        this->stack->addWidget(this->stack_import_progress);
+        // activate
+        this->stack->setCurrentWidget(this->stack_import_progress);
+        */
+    }
 }
 
 void QTNTMainWindow::addExportTab()

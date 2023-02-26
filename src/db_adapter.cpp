@@ -138,7 +138,9 @@ void DbAdapter::initializeTables()
                                      " rowid_currencies INTEGER,"
                                      " date TEXT,"
                                      " memo TEXT,"
-                                     " tnt_code TEXT)", this->db);
+                                     " tnt_code TEXT,"
+                                     " mandate_reference TEXT,"
+                                     " bank_name TEXT)", this->db);
     
     QSqlQuery query_expenses("CREATE TABLE IF NOT EXISTS expenses ("
                              "rowid INTEGER PRIMARY KEY AUTOINCREMENT,"
