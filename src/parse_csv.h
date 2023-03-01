@@ -14,6 +14,7 @@ public:
     explicit ParseCSV(QObject *parent = nullptr);
     
     QList<QMap<QString,QString>> processCSVFile(QString importfile_path);
+    QList<QMap<QString,QString>> processCSVStringList(QStringList csv);
     QStringList processCSVLine(QString line_input);
     
 signals:

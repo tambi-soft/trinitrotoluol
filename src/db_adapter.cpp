@@ -990,7 +990,7 @@ QList<QMap<QString,QVariant>> DbAdapter::donationsSelectForPerson(qlonglong rowi
 void DbAdapter::donationInsert(QMap<QString, QVariant> data)
 {
     QSqlQuery query(this->db);
-    query.prepare("INSERT INTO people_donations (rowid_people, person_name, amount, rowid_currencies, date, memo, tnt_code) VALUES (:rowid_people, :person_name, :amount, :rowid_currencies, :date, :memo, :tnt_code)");
+    query.prepare("INSERT INTO people_donations (rowid_people, person_name, amount, rowid_currencies, date, memo, tnt_code, bank_name) VALUES (:rowid_people, :person_name, :amount, :rowid_currencies, :date, :memo, :tnt_code, :bank_name)");
     
     query.bindValue(":rowid_people", data["rowid_people"].toString());
     query.bindValue(":person_name", data["person_name"].toString());
@@ -998,7 +998,22 @@ void DbAdapter::donationInsert(QMap<QString, QVariant> data)
     query.bindValue(":rowid_currencies", data["rowid_currencies"].toString());
     query.bindValue(":date", data["date"].toString());
     query.bindValue(":memo", data["memo"].toString());
-    query.bindValue(":tnt_code", data["tnt_code"].toString());
+    if (data.contains("tnt_code"))
+    {
+        query.bindValue(":tnt_code", data["tnt_code"].toString());
+    }
+    else
+    {
+        query.bindValue(":tnt_code", QVariant(QVariant::String)); // insert NULL
+    }
+    if (data.contains("bank_name"))
+    {
+        query.bindValue(":bank_name", data["bank_name"]);
+    }
+    else
+    {
+        query.bindValue(":bank_name", QVariant(QVariant::String)); // insert NULL
+    }
     query.exec();
 }
 

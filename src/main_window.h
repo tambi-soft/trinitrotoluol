@@ -30,6 +30,7 @@
 #include "donations.h"
 //#include "donations_list.h"
 #include "donations_import_tnt.h"
+#include "donations_import_bank.h"
 #include "merge_database_widget.h"
 #include "export.h"
 #include "vcard.h"

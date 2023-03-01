@@ -7,67 +7,61 @@ ParseCSV::ParseCSV(QObject *parent) : QObject(parent)
 
 QList<QMap<QString,QString>> ParseCSV::processCSVFile(QString importfile_path)
 {
-    QList<QMap<QString,QString>> data;
-    QStringList headers;
-    QStringList line_last;
+    QStringList data;
     
     QFile file(importfile_path);
-    if (!file.open(QIODevice::ReadOnly)) {
+    if (!file.open(QIODevice::ReadOnly))
+    {
         qDebug() << file.errorString();
     }
     else
     {
-        QString line_last;
-        bool line_with_linebreak = false;
-        int x = -1;
         while (! file.atEnd())
         {
-            x++;
-            
             QByteArray line_input_b = file.readLine();
             QString line_input = QString(line_input_b);
-            
-            QStringList splitted = processCSVLine(line_input);
-            
-            if (line_with_linebreak)
-            {
-                splitted = processCSVLine(line_last.replace("\n", "") + line_input);
-            }
-            
-            if (x == 0)
-            {
-                headers = splitted;
-            }
-            else
-            {
-                if (splitted.length() == headers.length())
-                {
-                    // everything (hopefully) OK
-                    QMap<QString,QString> line;
-                    for (int y=0; y < splitted.length(); y++)
-                    {
-                        line[headers.at(y)] = splitted.at(y);
-                    }
-                    data.append(line);
-                    
-                    line_with_linebreak = false;
-                }
-                // problem: there can be line-breaks in the data fooling the "line-by-line" logic
-                // we assume we do not have such an issue at the header, and take this length as the correct one
-                else if (splitted.length() < headers.length())
-                {
-                    line_with_linebreak = true;
-                    line_last = line_input;
-                    continue;
-                }
-                else
-                {
-                    qDebug() << "ERROR: csv is really messed up!";
-                    qDebug() << splitted;
-                    break;
-                }
-            }
+            //qDebug() << line_input.length();
+            data.append(line_input);
         }
+    }
+    
+    return processCSVStringList(data);
+}
+
+QList<QMap<QString,QString>> ParseCSV::processCSVStringList(QStringList csv)
+{
+    QList<QMap<QString,QString>> data;
+    QStringList headers;
+    
+    QString line_last;
+    bool line_with_linebreak = false;
+    for (int i=0; i < csv.length(); i++)
+    {
+        QString line_input = csv.at(i);
+        
+        QStringList splitted = processCSVLine(line_input);
+        
+        //qDebug() << "#";
+        //qDebug() << line_input;
+        //qDebug() << splitted.length() << "|" << headers.length() << "|" << splitted;
+        //qDebug() << "$";
+        
+        if (i == 0)
+        {
+            headers = splitted;
+            //qDebug() << headers;
+        }
+        else
+        {
+            QMap<QString,QString> line;
+            for (int y=0; y < splitted.length(); y++)
+            {
+                if (headers.length() > y)
+                    line[headers.at(y)] = splitted.at(y);
+            }
+            data.append(line);
+        }
+        
     }
     
     return data;
@@ -79,41 +73,42 @@ QStringList ParseCSV::processCSVLine(QString line_input)
     // "bla, blub", "aaa, bbb" 
     // so before splitting at ',' we have to deal with this situation first
     
-    QStringList splitted;
+    QStringList result;
     bool in_quotation = false;
     QString line;
-    for (int i=0; i < line_input.length(); ++i)
+    for (int i=0; i < line_input.length(); i++)
     {
-        // assuming we have a linebreak in midst of the payload
-        if (i == 0 && line_input.at(0) != "\"")
-        {
-            //linebreak_in_the_middle = true;
-            in_quotation = true;
-        }
+        QString cur = line_input.at(i);
         
-        if (line_input.at(i) == "\"")
+        if (! in_quotation)
         {
-            // flip the boolean
-            in_quotation ^= true;
-            
-            if (! in_quotation)
+            if (cur == "\"")
             {
-                splitted.append(line);
+                in_quotation = true;
+            }
+            else if (cur == ",")
+            {
+                result.append(line);
                 line = "";
             }
-        }
-        
-        if (in_quotation)
-        {
-            if (line_input.at(i) != "\"")
+            else
             {
-                line.append(line_input.at(i));
+                line.append(cur);
+            }
+        }
+        else
+        {
+            if (cur == "\"")
+            {
+                in_quotation = false;
+            }
+            else
+            {
+                line.append(cur);
             }
         }
     }
+    //result.append(line);
     
-    // maybe the line ends with an inner linebreak, so just to be shure, we dont miss anything
-    splitted.append(line);
-    //qDebug() << splitted;
-    return splitted;
+    return result;
 }

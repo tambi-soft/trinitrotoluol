@@ -78,6 +78,7 @@ HEADERS += \
     src/currencies.h \
     src/donations.h \
     src/donations_chart.h \
+    src/donations_import_bank.h \
     src/donations_import_matrix.h \
     src/donations_import_progress.h \
     src/donations_import_tnt.h \
@@ -138,6 +139,7 @@ SOURCES += \
     src/currencies.cpp \
     src/donations.cpp \
     src/donations_chart.cpp \
+    src/donations_import_bank.cpp \
     src/donations_import_matrix.cpp \
     src/donations_import_progress.cpp \
     src/donations_import_tnt.cpp \
