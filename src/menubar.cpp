@@ -106,9 +106,6 @@ void MenuBar::addToolsMenu()
     QAction *copyMailAction = new QAction("Copy Mail Adresses");
     connect(copyMailAction, &QAction::triggered, this, &MenuBar::signalCopyMailAdresses);
     
-    QAction *generateDonationReceipts = new QAction("Generate Donation Receipts");
-    connect(generateDonationReceipts, &QAction::triggered, this, [this]{ emit signalGenerateDonationReceipts(); });
-    
     QMenu *menu = addMenu("&Tools");
     menu->addAction(mailListAction);
     menu->addAction(journeyListAction);
@@ -118,7 +115,6 @@ void MenuBar::addToolsMenu()
     menu->addAction(donationsAction);
     menu->addAction(settingsAction);
     menu->addAction(copyMailAction);
-    menu->addAction(generateDonationReceipts);
 }
 
 void MenuBar::addHelpMenu()

@@ -30,6 +30,7 @@ void DbAdapter::initializeTables()
 {
     QSqlQuery query_table_people("CREATE TABLE IF NOT EXISTS people ( "
         "rowid	INTEGER PRIMARY KEY AUTOINCREMENT, "
+        "donorid INTEGER UNIQE, "
         "tnt_id    INTEGER, "
         "name	TEXT, "
         "email	TEXT, "
@@ -560,6 +561,58 @@ QMap<QString,QVariant> DbAdapter::selectPeopleStats()
     QSqlQuery query("SELECT sum_all, sum_agreed_mail, sum_agreed_prayer, donation_partners, donation_partners_promised FROM people_stats", this->db);
     
     return  dbIteratorToMap(query);
+}
+
+QList<QMap<QString,QVariant>> DbAdapter::selectDonationsForReceipt(QString date_from, QString date_to)
+{
+    QSqlQuery query(this->db);
+    query.prepare("SELECT people.rowid, people.donorid, people.name, people.address, vcard.value AS geo, donations.amount_sum, donations.code AS currency"
+                    " FROM people"
+                    " LEFT JOIN people_donations ON people.rowid = people_donations.rowid_people"
+                    " LEFT JOIN ("
+                        " SELECT people_vcard.rowid_people, people_vcard.key, people_vcard.value"
+                        " FROM people_vcard"
+                        " WHERE people_vcard.key = 'GEO'"
+                        " ) AS vcard"
+                        " ON people.rowid = vcard.rowid_people"
+                    " LEFT JOIN ("
+                        " SELECT people_donations.rowid_people, SUM(people_donations.amount) AS amount_sum, currencies.code"
+                        " FROM people_donations"
+                        " JOIN currencies"
+                        " ON currencies.rowid = people_donations.rowid_currencies"
+                        " WHERE people_donations.bank_name NOT NULL"
+                        " AND people_donations.date >= DATE(:date_from)"
+                        " AND people_donations.date <= DATE(:date_to)"
+                        " GROUP BY people_donations.rowid_people"
+                        " ) AS donations"
+                        " ON people.rowid = donations.rowid_people"
+                    " WHERE people_donations.bank_name NOT NULL"
+                    " AND people_donations.date >= DATE(:date_from)"
+                    " AND people_donations.date <= DATE(:date_to)"
+                    " GROUP BY people.name");
+    query.bindValue(":date_from", date_from);
+    query.bindValue(":date_to", date_to);
+    query.exec();
+    
+    return dbIteratorToMapList(query);
+}
+QList<QMap<QString,QVariant>> DbAdapter::selectDonationsForPerson(qlonglong people_rowid, QString date_from, QString date_to)
+{
+    QSqlQuery query(this->db);
+    query.prepare("SELECT people_donations.date, people_donations.amount, currencies.code"
+                  " FROM people_donations"
+                  " JOIN currencies ON currencies.rowid = people_donations.rowid_currencies"
+                  " WHERE bank_name NOT NULL"
+                  " AND people_donations.rowid_people = :people_rowid"
+                  " AND people_donations.date >= DATE(:date_from)"
+                  " AND people_donations.date <= DATE(:date_to)"
+                  " ORDER BY people_donations.date");
+    query.bindValue(":people_rowid", people_rowid);
+    query.bindValue(":date_from", date_from);
+    query.bindValue(":date_to", date_to);
+    query.exec();
+    
+    return dbIteratorToMapList(query);
 }
 
 qlonglong DbAdapter::insertNewMail()

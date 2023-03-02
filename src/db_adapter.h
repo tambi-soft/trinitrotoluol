@@ -59,6 +59,9 @@ public:
     QMap<QString, QVariant> selectMoneyStats();
     QMap<QString, QVariant> selectPeopleStats();
     
+    QList<QMap<QString, QVariant>> selectDonationsForReceipt(QString date_from, QString date_to);
+    QList<QMap<QString, QVariant>> selectDonationsForPerson(qlonglong people_rowid, QString date_from, QString date_to);
+    
     qlonglong insertNewMail();
     void updateMail(qlonglong rowid, QMap<QString, QVariant> data);
     void deleteMail(qlonglong rowid);
