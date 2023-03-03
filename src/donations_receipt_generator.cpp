@@ -103,22 +103,33 @@ void DonationsReceiptGenerator::selectDonorsFromDB()
         header.append("amount_sum_string");
         
         this->table->setColumnCount(header.length());
-        this->table->setRowCount(this->data.length());
+        this->table->setRowCount(this->data.length()+1);
         this->table->setHorizontalHeaderLabels(header);
         
+        float sum = 0;
         for (int x=0; x < this->data.length(); x++)
         {
+            // adding SUM line to this->data
+            sum += data.at(x)["amount_sum"].toFloat();
+            
             for (int y=0; y < header.length(); y++)
             {
                 // adding field "amount_sum_string" to this->data
-                QString sum = data.at(x)["amount_sum"].toString().split(".").at(0);
-                this->data[x]["amount_sum_string"] = QVariant(numberToStringGerman(sum));
+                QString amount = data.at(x)["amount_sum"].toString().split(".").at(0);
+                this->data[x]["amount_sum_string"] = QVariant(numberToStringGerman(amount));
                 
                 QTableWidgetItem *item = new QTableWidgetItem(this->data.at(x)[header.at(y)].toString());
                 item->setFlags(item->flags() ^ Qt::ItemIsEditable);
                 this->table->setItem(x, y, item);
             }
         }
+        
+        qDebug() << this->data.length()+1;
+        qDebug() << header.indexOf("amount_sum");
+        this->table->setItem(
+                    this->data.length(),
+                    header.indexOf("amount_sum"),
+                    new QTableWidgetItem("Σ: "+QString::number(sum)));
         
         this->table->resizeColumnsToContents();
     }
@@ -235,8 +246,6 @@ void DonationsReceiptGenerator::generator(QString donorid, QString name, QString
             }
         }
     }
-    
-    
 }
 QStringList DonationsReceiptGenerator::openInputTeXFile()
 {
