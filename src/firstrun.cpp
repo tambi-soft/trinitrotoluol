@@ -8,6 +8,7 @@ FirstRun::FirstRun(QString message, QDialog *parent) : QDialog(parent)
     SelectDatabase *select_database = new SelectDatabase;
     select_database->setMessage(message);
     connect(select_database, &SelectDatabase::databasePathSelected, this, &FirstRun::onDatabaseSelected);
+    connect(select_database, &SelectDatabase::signalAbort, this, [this]{ emit signalAbort(); } );
     
     QWidget *setup_name = new SetupName;
     
@@ -46,9 +47,13 @@ SelectDatabase::SelectDatabase(QWidget *parent) : QWidget(parent)
     QPushButton *button_create_db = new QPushButton("create new Database");
     connect(button_create_db, &QPushButton::clicked, this, [this]{ selectNewFileDialog(); });
     
+    QPushButton *button_abort = new QPushButton("Abort");
+    connect(button_abort, &QPushButton::clicked, this, [this]{emit signalAbort();} );
+    
     layout()->addWidget(this->label_message);
     layout()->addWidget(button_select_db);
     layout()->addWidget(button_create_db);
+    layout()->addWidget(button_abort);
 }
 
 void SelectDatabase::setMessage(QString message)

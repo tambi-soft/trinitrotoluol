@@ -30,13 +30,19 @@ Config::Config(QObject *parent) : QObject(parent)
     
     openConfigFile();
     
-    if (! config_file->exists())
+    if (! this->abortApp)
     {
-        FirstRun *run = new FirstRun("");
-        connect(run, &FirstRun::databasePathSelected, this, &Config::setDbPath);
-        run->exec();
+        if (! config_file->exists())
+        {
+            FirstRun *run = new FirstRun("");
+            connect(run, &FirstRun::databasePathSelected, this, &Config::setDbPath);
+            run->exec();
+        }
     }
-    
+    else
+    {
+        emit signalAbort();
+    }
     //openConfigFile();
 }
 
@@ -62,7 +68,7 @@ void Config::openConfigFile()
         else
         {
             // select the user manually
-            showUsernManagementDialog();
+            showUserManagementDialog();
         }
     }
     qDebug() << this->user_name_active;
@@ -70,14 +76,31 @@ void Config::openConfigFile()
     QString db_path = this->settings->value(this->user_name_active + "/db_path").toString();
     qDebug() << db_path;
     QFile *database_file = new QFile(db_path);
-    if (! database_file->exists())
+    if (! database_file->exists() && ! abortApp)
     {
         FirstRun *run = new FirstRun("The File \""+db_path+"\" could not be found. Please select a valid database file!");
         connect(run, &FirstRun::databasePathSelected, this, &Config::setDbPath);
-        run->exec();
+        connect(run, &FirstRun::signalAbort, this, [this]{ emit signalAbort(); this->abortApp = true; } );
+        switch( run->exec() )
+        {
+            case QDialog::Rejected:
+            {
+                this->abortApp = true;
+                emit signalAmArsch();
+                qDebug() << "cccc";
+                emit signalAbort();
+                QCoreApplication::quit();
+                qApp->exit();
+                QApplication::closeAllWindows();
+                break;
+            }
+        }
     }
     if (! database_file->exists())
     {
+        this->abortApp = true;
+        emit signalAmArsch();
+        emit signalAbort();
         QCoreApplication::quit();
         qApp->exit();
         QApplication::closeAllWindows();
@@ -85,7 +108,7 @@ void Config::openConfigFile()
     
     //initializeWithDefaultValues(config_dir);
 }
-void Config::showUsernManagementDialog()
+void Config::showUserManagementDialog()
 {
     QStringList keys = this->settings->childGroups();
     keys.removeDuplicates();
@@ -100,7 +123,19 @@ void Config::showUsernManagementDialog()
     this->user_select_dialog = new QDialog;
     this->user_select_dialog->setLayout(new QHBoxLayout);
     this->user_select_dialog->layout()->addWidget(this->user_select);
-    this->user_select_dialog->exec();
+    switch (this->user_select_dialog->exec())
+    {
+        case QDialog::Rejected:
+        {
+            this->abortApp = true;
+            qDebug() << "aaaaaa";
+            //QCoreApplication::quit();
+            emit signalAbort();
+            qDebug() << "bbbbb";
+            
+            break;
+        }
+    }
 }
 void Config::userNameSelected(QString user_name)
 {

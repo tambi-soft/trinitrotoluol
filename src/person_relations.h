@@ -38,7 +38,7 @@ private:
 private slots:
     void onDeleteButtonClicked(qlonglong rowid_a, qlonglong rowid_b, qlonglong rowid_peoples_relations, QString relation, QString name);
     void onEditRelationsButton();
-    void onSaveRelation(qlonglong rowid, QString /*name*/);
+    void onSaveRelation(qlonglong rowid, QString name);
     
 signals:
     

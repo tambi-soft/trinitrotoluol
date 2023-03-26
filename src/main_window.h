@@ -44,6 +44,7 @@ public:
     QTNTMainWindow(QWidget *parent = nullptr);
     
     void calculateWindowSize();
+    void abort();
     
 protected:
     void closeEvent(QCloseEvent *event) override;
@@ -87,7 +88,7 @@ private slots:
     void donationsImportBankCSV();
     void addExportTab();
     void addMergeDatabaseTab();
-    void showUsernManagementDialog();
+    void showUserManagementDialog();
     void addMailListTab();
     void addMailEditTab(qlonglong rowid, QString name);
     void addMailSendTab(qlonglong rowid, QString number);
@@ -95,4 +96,5 @@ private slots:
     void addCurrenciesTab();
     
     void addHelpAboutTab();
+    
 };

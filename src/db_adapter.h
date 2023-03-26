@@ -108,8 +108,11 @@ public:
     
     QList<QMap<QString, QVariant> > donationsSelect();
     QList<QMap<QString,QVariant>> donationsSelectForPerson(qlonglong rowid_people);
+    QMap<QString,QVariant> donationSelect(qlonglong rowid);
     void donationInsert(QMap<QString,QVariant> data);
+    void donationUpdate(qlonglong rowid, QMap<QString,QVariant> data);
     void donationDelete(qlonglong rowid_donation);
+    qlonglong donationNewRow();
     bool donationDoesEntryAlreadyExist(QString person_name, QString amount, QString date, QString memo, QString tnt_code);
     
     QList<QMap<QString,QVariant>> donationsByMonth();

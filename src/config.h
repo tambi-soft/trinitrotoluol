@@ -24,7 +24,7 @@ class Config : public QObject
 public:
     explicit Config(QObject *parent = nullptr);
     
-    void showUsernManagementDialog();
+    void showUserManagementDialog();
     
     QString getDbPath();
     void setDbPath(QString path);
@@ -43,9 +43,14 @@ private:
     void newUserAdded(QString user_name);
     void userDeleted(QString user_name);
     
+    bool abortApp = false;
+    
 signals:
+    void signalAbort();
+    void signalAmArsch();
     
 public slots:
+    
 };
 
 #endif // CONFIG_H

@@ -27,8 +27,10 @@ private:
     QStackedLayout *stacked_layout;
     
     void onDatabaseSelected(QString db_path);
+    
 signals:
     void databasePathSelected(QString db_path);
+    void signalAbort();
 };
 
 
@@ -50,6 +52,7 @@ private:
     
 signals:
     void databasePathSelected(QString db_path);
+    void signalAbort();
     
 public slots:
     void selectExistingFileDialog();

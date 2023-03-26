@@ -1039,7 +1039,15 @@ QList<QMap<QString,QVariant>> DbAdapter::donationsSelectForPerson(qlonglong rowi
     
     return dbIteratorToMapList(query);
 }
-
+QMap<QString,QVariant> DbAdapter::donationSelect(qlonglong rowid)
+{
+    QSqlQuery query(this->db);
+    query.prepare("SELECT people_donations.rowid, rowid_people, person_name, amount, rowid_currencies, date, memo, tnt_code, mandate_reference, bank_name, people.name FROM people_donations JOIN people ON people_donations.rowid_people = people.rowid WHERE people_donations.rowid=:rowid");
+    query.bindValue(":rowid", rowid);
+    query.exec();
+    
+    return dbIteratorToMap(query);
+}
 void DbAdapter::donationInsert(QMap<QString, QVariant> data)
 {
     QSqlQuery query(this->db);
@@ -1069,10 +1077,36 @@ void DbAdapter::donationInsert(QMap<QString, QVariant> data)
     }
     query.exec();
 }
-
+void DbAdapter::donationUpdate(qlonglong rowid, QMap<QString, QVariant> data)
+{
+    QSqlQuery query(this->db);
+    query.prepare("UPDATE people_donations SET rowid_people=:rowid_people, person_name=:person_name, amount=:amount, rowid_currencies=:rowid_currencies, date=:date, memo=:memo, tnt_code=:tnt_code, bank_name=:bank_name WHERE rowid=:rowid");
+    query.bindValue(":rowid_people", data["rowid_people"].toLongLong());
+    query.bindValue(":person_name", data["person_name"].toString());
+    query.bindValue(":amount", data["amount"].toString());
+    query.bindValue(":rowid_currencies", data["rowid_currencies"].toLongLong());
+    query.bindValue(":date", data["date"].toString());
+    query.bindValue(":memo", data["memo"].toString());
+    query.bindValue(":tnt_code", data["tnt_code"].toString());
+    query.bindValue(":bank_name", data["bank_name"].toString());
+    query.bindValue(":rowid", rowid);
+    query.exec();
+}
 void DbAdapter::donationDelete(qlonglong rowid_donation)
 {
+    QSqlQuery query(this->db);
+    query.prepare("DELETE FROM people_donations WHERE rowid=:rowid");
+    query.bindValue(":rowid", rowid_donation);
+    query.exec();
+}
+qlonglong DbAdapter::donationNewRow()
+{
+    QSqlQuery query(this->db);
+    query.prepare("INSERT INTO people_donations DEFAULT VALUES");
+    query.exec();
     
+    this->db.commit();
+    return query.lastInsertId().toLongLong();
 }
 
 bool DbAdapter::donationDoesEntryAlreadyExist(QString person_name, QString amount, QString date, QString memo, QString tnt_code)

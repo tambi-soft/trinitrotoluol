@@ -6,6 +6,8 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
     , tab_widget (new QTabWidget)
 {
     this->config = new Config(this);
+    connect(this->config, &Config::signalAbort, this, &QTNTMainWindow::abort);
+    connect(this->config, &Config::signalAmArsch, this, [this]{ qDebug() << "SIGNAL AM ARSCH"; });
     this->db = new DbAdapter(this->config);
     
     connect(this->tab_widget, &QTabWidget::tabCloseRequested, this, &QTNTMainWindow::closeTab);
@@ -20,7 +22,7 @@ QTNTMainWindow::QTNTMainWindow(QWidget *parent)
     connect(this->menu_bar, &MenuBar::signalExportVCard, this, &QTNTMainWindow::addVcardExportTab);
     connect(this->menu_bar, &MenuBar::signalImportVCard, this, &QTNTMainWindow::addVcardImportTab);
     connect(this->menu_bar, &MenuBar::signalMergeDatabase, this, &QTNTMainWindow::addMergeDatabaseTab);
-    connect(this->menu_bar, &MenuBar::signalUserManagement, this, &QTNTMainWindow::showUsernManagementDialog);
+    connect(this->menu_bar, &MenuBar::signalUserManagement, this, &QTNTMainWindow::showUserManagementDialog);
     connect(this->menu_bar, &MenuBar::signalMailList, this, &QTNTMainWindow::addMailListTab);
     connect(this->menu_bar, &MenuBar::signalSettings, this, &QTNTMainWindow::addSettingsTab);
     connect(this->menu_bar, &MenuBar::signalCopyMailAdresses, this, &QTNTMainWindow::addCopyMailTab);
@@ -282,9 +284,9 @@ void QTNTMainWindow::addMergeDatabaseTab()
     createSingleTab("Merge from other Database", merge, icon);
 }
 
-void QTNTMainWindow::showUsernManagementDialog()
+void QTNTMainWindow::showUserManagementDialog()
 {
-    this->config->showUsernManagementDialog();
+    this->config->showUserManagementDialog();
 }
 
 void QTNTMainWindow::addMailListTab()
@@ -357,4 +359,10 @@ void QTNTMainWindow::closeEvent( QCloseEvent* event )
     this->db->commit();
     
     event->accept();
+}
+
+void QTNTMainWindow::abort()
+{
+    qDebug() << "AM ARSCH";
+    QCoreApplication::quit();
 }

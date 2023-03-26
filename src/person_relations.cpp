@@ -105,8 +105,10 @@ void PersonRelations::addPersonToRelation(qlonglong rowid_relations)
     blockSignals(false);
 }
 
-void PersonRelations::onSaveRelation(qlonglong rowid, QString /*name*/)
+void PersonRelations::onSaveRelation(qlonglong rowid, QString name)
 {
+    Q_UNUSED(name);
+    
     this->dialog_select_spouse->close();
     
     this->db->relationMatrixInsert(this->rowid_people, rowid, this->relation_selected);
