@@ -112,7 +112,17 @@ void DonationsList::showEvent(QShowEvent *event)
 
 void DonationsList::donationDelete(qlonglong rowid)
 {
-    qDebug() << "delete " << rowid;
+    QMessageBox message;
+    message.setText("Delete Entry");
+    message.setInformativeText("Do you really want to delete the selected entry?");
+    message.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    int ret = message.exec();
+    
+    if (ret == QMessageBox::Yes)
+    {
+        this->db->donationDelete(rowid);
+        showData();
+    }
 }
 void DonationsList::donationEdit(qlonglong rowid)
 {
@@ -149,7 +159,7 @@ DonationsEdit::DonationsEdit(qlonglong rowid, DbAdapter *db, QWidget *parent) : 
     setLayout(this->layout);
     
     this->date->setCalendarPopup(true);
-    this->date->setDate(QDate::fromString(QDate::currentDate().toString(), "yyyy-MM-dd"));
+    this->date->setDate(QDate::fromString(QDate::currentDate().toString("yyyy-MM-dd"), "yyyy-MM-dd"));
     
     this->combo_currencies = new ComboCurrencies(this->db);
     
@@ -195,6 +205,8 @@ DonationsEdit::DonationsEdit(qlonglong rowid, DbAdapter *db, QWidget *parent) : 
     connect(this->edit_tnt_code, &QLineEdit::textChanged, this, &DonationsEdit::saveData);
     connect(this->edit_mandate_reference, &QLineEdit::textChanged, this, &DonationsEdit::saveData);
     connect(this->edit_bank_name, &QLineEdit::textChanged, this, &DonationsEdit::saveData);
+    
+    saveData();
 }
 
 void DonationsEdit::changePerson()
